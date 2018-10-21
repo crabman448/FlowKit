@@ -78,7 +78,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="749.60000000000002" y="-320.68965517241384"/>
+            <point key="canvasLocation" x="750" y="-777"/>
         </scene>
         <!--Second-->
         <scene sceneID="wg7-f3-ORb">
@@ -181,7 +181,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="749.60000000000002" y="359.37031484257875"/>
+            <point key="canvasLocation" x="750" y="790"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="yl2-sM-qoP">
@@ -195,11 +195,46 @@
                     <connections>
                         <segue destination="9pv-A4-QxB" kind="relationship" relationship="viewControllers" id="u7Y-xg-7CH"/>
                         <segue destination="8rJ-Kc-sve" kind="relationship" relationship="viewControllers" id="lzU-1b-eKA"/>
+                        <segue destination="zEm-uy-p0X" kind="relationship" relationship="viewControllers" id="4Kl-Yu-goH"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="0.0" y="0.0"/>
+        </scene>
+        <!--Item-->
+        <scene sceneID="Gkv-KG-1lH">
+            <objects>
+                <viewController id="zEm-uy-p0X" customClass="ContainersViewController" customModule="ExampleApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="CaX-pn-wqj"/>
+                        <viewControllerLayoutGuide type="bottom" id="pzm-wA-aQA"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="hLN-IS-7A7">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="T5c-3D-MxB">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="618"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="T5c-3D-MxB" secondAttribute="trailing" id="22S-ic-ltm"/>
+                            <constraint firstItem="T5c-3D-MxB" firstAttribute="top" secondItem="hLN-IS-7A7" secondAttribute="top" id="5kQ-lM-ifw"/>
+                            <constraint firstItem="pzm-wA-aQA" firstAttribute="top" secondItem="T5c-3D-MxB" secondAttribute="bottom" id="7aK-Gm-JI9"/>
+                            <constraint firstItem="T5c-3D-MxB" firstAttribute="leading" secondItem="hLN-IS-7A7" secondAttribute="leading" id="MVh-Bb-hJu"/>
+                        </constraints>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Item" id="9ib-A9-F7U"/>
+                    <connections>
+                        <outlet property="tableView" destination="T5c-3D-MxB" id="apk-Dh-dfn"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="u7Z-mB-efQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="749.60000000000002" y="-0.44977511244377816"/>
         </scene>
     </scenes>
     <resources>
