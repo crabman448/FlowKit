@@ -34,15 +34,15 @@ import UIKit
 public extension TableDirector {
 	
 	public struct Events {
-		typealias HeaderFooterEvent = (view: UIView, section: Int, table: UITableView)
+		public typealias HeaderFooterEvent = (view: UIView, section: Int, table: UITableView)
 
-		var sectionForSectionIndex: ((_ title: String, _ index: Int) -> Int)? = nil
+		public var sectionForSectionIndex: ((_ title: String, _ index: Int) -> Int)? = nil
 		
-		var willDisplayHeader: ((HeaderFooterEvent) -> Void)? = nil
-		var willDisplayFooter: ((HeaderFooterEvent) -> Void)? = nil
+		public var willDisplayHeader: ((HeaderFooterEvent) -> Void)? = nil
+		public var willDisplayFooter: ((HeaderFooterEvent) -> Void)? = nil
 		
-		var endDisplayHeader: ((HeaderFooterEvent) -> Void)? = nil
-		var endDisplayFooter: ((HeaderFooterEvent) -> Void)? = nil
+		public var endDisplayHeader: ((HeaderFooterEvent) -> Void)? = nil
+		public var endDisplayFooter: ((HeaderFooterEvent) -> Void)? = nil
 	}
 	
 }
