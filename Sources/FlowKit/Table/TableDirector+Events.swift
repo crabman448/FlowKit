@@ -36,6 +36,7 @@ public extension TableDirector {
 	public struct Events {
 		public typealias HeaderFooterEvent = (view: UIView, section: Int, table: UITableView)
 
+        public var sectionIndexes: (() -> [String]?)? = nil
 		public var sectionForSectionIndex: ((_ title: String, _ index: Int) -> Int)? = nil
 		
 		public var willDisplayHeader: ((HeaderFooterEvent) -> Void)? = nil

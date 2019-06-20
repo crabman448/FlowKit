@@ -75,9 +75,6 @@ open class TableSection: ModelProtocol {
 		}
 	}
 	
-	/// Optional index title for this section (used for `sectionIndexTitles(for: UITableView)`)
-	public var indexTitle: String?
-	
 	/// Unique identifier of the section
 	public let UUID: String = NSUUID().uuidString
 	

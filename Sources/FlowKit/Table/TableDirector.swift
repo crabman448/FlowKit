@@ -673,23 +673,11 @@ public extension TableDirector {
 	/// Indexes
 	
 	public func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-		return self.tableIndexes()
+		return self.on.sectionIndexes?()
 	}
 	
 	public func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
-		let indexes = (self.tableIndexes() ?? [])
-		guard indexes.count != self.sections.count else { return index } // same items
-		
-		guard let callback = self.on.sectionForSectionIndex else {
-			fatalError("You must implement TableDirector's `sectionForSectionIndex` event if you use `indexTitle` from sections.")
-		}
-		return callback(title,index)
-	}
-		
-	private func tableIndexes() -> [String]? {
-		let indexes = self.sections.compactMap({ $0.indexTitle })
-		guard indexes.count > 0 else { return nil }
-		return indexes
+        return self.on.sectionForSectionIndex?(title,index) ?? 0
 	}
 	
 	/// Prefetch Support
