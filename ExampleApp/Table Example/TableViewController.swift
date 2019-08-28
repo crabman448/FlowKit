@@ -35,15 +35,7 @@ class TableViewController: UIViewController {
 		header.on.willDisplay = { ctx in
 			guard let section = ctx.table?.director.sections[ctx.section] else { return }
 			
-			ctx.view?.titleLabel?.text = section.collapsed ? "Tap to expand" : "Tap to collapse"
-			ctx.view?.whenTapped = {
-				ctx.table?.director.reloadData(after: { (director) -> (TableReloadAnimations?) in
-					section.collapsed = !section.collapsed
-					return TableReloadAnimations.default()
-				}, onEnd: {
-					ctx.view?.titleLabel?.text = section.collapsed ? "Tap to expand" : "Tap to collapse"
-				})
-			}
+			ctx.view?.titleLabel?.text = "Header title"
 		}
 		header.on.height = { _ in
 			return 150
