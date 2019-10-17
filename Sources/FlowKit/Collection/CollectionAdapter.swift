@@ -172,7 +172,7 @@ open class CollectionAdapter<M: ModelProtocol, C: CellProtocol>: CollectionAdapt
 	
 }
 
-public extension CollectionAdapter {
+extension CollectionAdapter {
 	
 	/// Context of the adapter.
 	public struct Context<M,C> {

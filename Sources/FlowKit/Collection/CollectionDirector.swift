@@ -370,11 +370,8 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource
 		
 		return Array(list.values)
 	}
-}
 
-//MARK: CollectionManager UICollectionViewDataSource Protocol Implementation
-
-public extension CollectionDirector {
+    //MARK: CollectionManager UICollectionViewDataSource Protocol Implementation
 	
 	public func numberOfSections(in collectionView: UICollectionView) -> Int {
 		return self.sections.count
@@ -391,24 +388,24 @@ public extension CollectionDirector {
 		return cell
 	}
 	
-	func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+	public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
 		let (model,adapter) = self.context(forItemAt: indexPath)
 		adapter.dispatch(.willDisplay, context: InternalContext.init(model, indexPath, cell, collectionView))
 	}
 	
-	func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+	public func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
 		self.adapters.forEach {
 			($0.value as! AbstractAdapterProtocolFunctions).dispatch(.endDisplay, context: InternalContext.init(nil, indexPath, cell, collectionView))
 		}
 	}
 
 	
-	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+	public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		let (model,adapter) = self.context(forItemAt: indexPath)
 		adapter.dispatch(.didSelect, context: InternalContext.init(model, indexPath, nil, collectionView))
 	}
 	
-	func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+	public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
 		let (model,adapter) = self.context(forItemAt: indexPath)
 		adapter.dispatch(.didDeselect, context: InternalContext.init(model, indexPath, nil, collectionView))
 	}
@@ -428,12 +425,12 @@ public extension CollectionDirector {
 		return ((adapter.dispatch(.shouldHighlight, context: InternalContext.init(model, indexPath, nil, collectionView)) as? Bool) ?? true)
 	}
 	
-	func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
+	public func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
 		let (model,adapter) = self.context(forItemAt: indexPath)
 		adapter.dispatch(.didHighlight, context: InternalContext.init(model, indexPath, nil, collectionView))
 	}
 	
-	func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath) {
+	public func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath) {
 		let (model,adapter) = self.context(forItemAt: indexPath)
 		adapter.dispatch(.didUnhighlight, context: InternalContext.init(model, indexPath, nil, collectionView))
 	}
@@ -498,7 +495,7 @@ public extension CollectionDirector {
 		self.on.didUpdateFocus?(context,coordinator)
 	}
 	
-	func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+    public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
 		let section = sections[indexPath.section]
 		
 		var identifier: String!
@@ -578,12 +575,8 @@ public extension CollectionDirector {
 			$0.adapter.dispatch(.cancelPrefetch, context: InternalContext.init($0.models, $0.indexPaths, collectionView))
 		}
 	}
-	
-}
 
-// MARK: - UIScrollViewDelegate Events
-
-public extension CollectionDirector {
+    // MARK: - UIScrollViewDelegate Events
 	
 	public func scrollViewDidScroll(_ scrollView: UIScrollView) {
 		self.onScroll?.didScroll?(scrollView)
@@ -640,12 +633,9 @@ public extension CollectionDirector {
 	public func scrollViewDidChangeAdjustedContentInset(_ scrollView: UIScrollView) {
 		self.onScroll?.didChangeAdjustedContentInset?(scrollView)
 	}
-	
-}
 
+    // MARK: ReusableRegister
 
-public extension CollectionDirector {
-	
 	/// It keeps the status of the registration of both cell and header/footer reusable identifiers
 	public class ReusableRegister {
 		
@@ -715,6 +705,4 @@ public extension CollectionDirector {
 		}
 		
 	}
-	
 }
-

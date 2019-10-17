@@ -219,7 +219,7 @@ open class TableAdapter<M: ModelProtocol, C: CellProtocol>: TableAdapterProtocol
 
 }
 
-public extension TableAdapter {
+extension TableAdapter {
 	
 	/// Context of the adapter.
 	/// A context is sent when an event is fired and includes type-safe informations (context)

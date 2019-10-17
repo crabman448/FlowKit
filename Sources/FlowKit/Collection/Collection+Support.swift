@@ -210,7 +210,7 @@ internal enum CollectionSectionViewEventsKey: Int {
 	case willDisplay
 }
 
-public extension UICollectionView {
+extension UICollectionView {
 	
 	private static let DIRECTOR_KEY = "flowkit.director"
 	

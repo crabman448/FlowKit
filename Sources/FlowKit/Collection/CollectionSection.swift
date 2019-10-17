@@ -86,7 +86,7 @@ open class CollectionSection: Equatable, ModelProtocol {
 	/// Index of the section in manager.
 	/// If section is not part of a manager it returns `nil`.
 	private var index: Int? {
-		guard let man = manager, let idx = man.sections.index(of: self) else { return nil }
+        guard let man = manager, let idx = man.sections.firstIndex(of: self) else { return nil }
 		return idx
 	}
 	

@@ -31,7 +31,7 @@ import Foundation
 import UIKit
 
 // MARK: - TableDirector Events
-public extension TableDirector {
+extension TableDirector {
 	
 	public struct Events {
 		public typealias HeaderFooterEvent = (view: UIView, section: Int, table: UITableView)
@@ -49,7 +49,7 @@ public extension TableDirector {
 }
 
 // MARK: - TableSection Events
-public extension TableSectionView {
+extension TableSectionView {
 	
 	public struct Events<T> {
 		public var dequeue: ((Context<T>) -> Void)? = nil
@@ -65,7 +65,7 @@ public extension TableSectionView {
 }
 
 // MARK: - TableAdapter Events
-public extension TableAdapter {
+extension TableAdapter {
 	
 	public struct Events<M,C> {
 		public typealias EventContext = Context<M,C>

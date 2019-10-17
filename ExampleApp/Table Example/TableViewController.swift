@@ -33,7 +33,7 @@ class TableViewController: UIViewController {
 		
 		let header = TableSectionView<TableExampleHeaderView>()
 		header.on.willDisplay = { ctx in
-			guard let section = ctx.table?.director.sections[ctx.section] else { return }
+            guard (ctx.table?.director.sections[ctx.section]) != nil else { return }
 			
 			ctx.view?.titleLabel?.text = "Header title"
 		}

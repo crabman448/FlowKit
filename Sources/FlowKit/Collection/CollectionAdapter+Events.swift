@@ -32,7 +32,7 @@ import UIKit
 
 // MARK: - CollectionSection Events
 
-public extension CollectionSectionView {
+extension CollectionSectionView {
 	
 	public struct Event<T> {
 		public typealias EventContext = Context<T>
@@ -48,7 +48,7 @@ public extension CollectionSectionView {
 }
 
 // MARK: - CollectionAdapter Events
-public extension CollectionAdapter {
+extension CollectionAdapter {
 	
 	public struct Events<M,C> {
 		public typealias EventContext = Context<M,C>
@@ -78,7 +78,7 @@ public extension CollectionAdapter {
 }
 
 // MARK: - CollectionDirector Events
-public extension CollectionDirector {
+extension CollectionDirector {
 	
 	public struct Events {
 		typealias HeaderFooterEvent = (view: UICollectionReusableView, path: IndexPath, table: UICollectionView)

@@ -378,13 +378,8 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 			self.adapter = adapter
 		}
 	}
-}
-
-
-// MARK: - TableDirector UITableViewDataSource/UITableViewDelegate
-public extension TableDirector {
 	
-	//MARK: UITableViewDataSource
+	// MARK: UITableViewDataSource
 	
 	public func numberOfSections(in tableView: UITableView) -> Int {
 		return self.sections.count
@@ -401,7 +396,7 @@ public extension TableDirector {
 		return cell
 	}
 	
-	// Header & Footer
+	// MARK: Header & Footer
 	
 	public func tableView(_ tableView: UITableView, viewForHeaderInSection sectionIdx: Int) -> UIView? {
 		guard let header = sections[sectionIdx].headerView else { return nil }
@@ -489,7 +484,7 @@ public extension TableDirector {
 		self.on.endDisplayFooter?( (view,section,tableView) )
 	}
 	
-	// Inserting or Deleting Table Rows
+	// MARK: Inserting or Deleting Table Rows
 	
     public func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
 		let (model,adapter) = self.context(forItemAt: indexPath)
@@ -501,7 +496,7 @@ public extension TableDirector {
 		return ((adapter.dispatch(.canEdit, context: InternalContext(model, indexPath, nil, tableView)) as? Bool) ?? false)
 	}
 	
-	// Reordering Table Rows
+	// MARK: Reordering Table Rows
 
 	public func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
 		let (model,adapter) = self.context(forItemAt: indexPath)
@@ -512,6 +507,8 @@ public extension TableDirector {
 		let (model,adapter) = self.context(forItemAt: sourceIndexPath)
 		adapter.dispatch(.moveRow, context: InternalContext(model, sourceIndexPath, nil, tableView, param1: destinationIndexPath))
 	}
+
+    // MARK: Row height
 	
 	public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		if case .fixed(let h) = self.rowHeight {
@@ -533,6 +530,8 @@ public extension TableDirector {
 		let (model,adapter) = self.context(forItemAt: indexPath)
         return ((adapter.dispatch(.rowHeightEstimated, context: InternalContext(model, indexPath, nil, tableView)) as? CGFloat) ?? UITableView.automaticDimension)
 	}
+
+    // MARK: Row Indentation Level
 	
 	public func tableView(_ tableView: UITableView, indentationLevelForRowAt indexPath: IndexPath) -> Int {
 		let (model,adapter) = self.context(forItemAt: indexPath)
@@ -670,7 +669,7 @@ public extension TableDirector {
 		return adapter.dispatch(.trailingSwipeActions, context: InternalContext.init(model, indexPath, nil, tableView)) as? UISwipeActionsConfiguration
 	}
 	
-	/// Indexes
+	// MARK: Indexes
 	
 	public func sectionIndexTitles(for tableView: UITableView) -> [String]? {
 		return self.on.sectionIndexes?()
@@ -680,7 +679,7 @@ public extension TableDirector {
         return self.on.sectionForSectionIndex?(title,index) ?? 0
 	}
 	
-	/// Prefetch Support
+	// MARK: Prefetch Support
 	
 	public func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
 		self.adapters(forIndexPaths: indexPaths).forEach {
@@ -693,12 +692,8 @@ public extension TableDirector {
 			$0.adapter.dispatch(.cancelPrefetch, context: InternalContext($0.models, $0.indexPaths, tableView))
 		}
 	}
-	
-}
 
-// MARK: - UIScrollViewDelegate Events
-
-public extension TableDirector {
+    // MARK: - UIScrollViewDelegate Events
 	
 	public func scrollViewDidScroll(_ scrollView: UIScrollView) {
 		self.onScroll?.didScroll?(scrollView)

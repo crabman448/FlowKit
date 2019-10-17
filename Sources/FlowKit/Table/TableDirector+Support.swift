@@ -30,7 +30,7 @@
 import Foundation
 import UIKit
 
-public extension UITableView {
+extension UITableView {
 	
 	private static let DIRECTOR_KEY = "flowkit.director"
 	

@@ -46,21 +46,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 public extension String {
 	
-	public var loc: String {
+	var loc: String {
 		return NSLocalizedString(self, comment: self)
 	}
 	
-	public func loc(default str: String?) -> String? {
+	func loc(default str: String?) -> String? {
 		let localized = NSLocalizedString(self, comment: self)
 		if localized == self { return str }
 		return localized
 	}
 	
-	public var locUp: String {
+	var locUp: String {
 		return NSLocalizedString(self, comment: self).uppercased()
 	}
 	
-	public func loc(_ args: CVarArg...) -> String {
+	func loc(_ args: CVarArg...) -> String {
 		return String(format: self.loc, locale: nil, arguments: args)
 	}
 	
