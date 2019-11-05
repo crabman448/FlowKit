@@ -502,7 +502,7 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource
         case UICollectionView.elementKindSectionHeader:
             guard let header = section.header else { return UICollectionReusableView() }
 
-            let identifier = self.reusableRegister.registerHeaderFooter(header, type: kind)
+            let identifier = self.reusableRegister.registerHeaderFooter(header, type: kind, at: indexPath)
             let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath)
 
             let headerItem = header as? AbstractCollectionHeaderFooterItem
@@ -513,7 +513,7 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource
         case UICollectionView.elementKindSectionFooter:
             guard let footer = section.footer else { return UICollectionReusableView() }
 
-            let identifier = self.reusableRegister.registerHeaderFooter(footer, type: kind)
+            let identifier = self.reusableRegister.registerHeaderFooter(footer, type: kind, at: indexPath)
             let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath)
 
             let footerItem = footer as? AbstractCollectionHeaderFooterItem
@@ -530,12 +530,12 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource
 		
 		switch elementKind {
         case UICollectionView.elementKindSectionHeader:
-			let header = (sections[indexPath.section].header as? AbstractCollectionHeaderFooterItem)
-			let _ = header?.dispatch(.willDisplay, type: .header, view: view, section: indexPath.section, collection: collectionView)
+			let header = reusableRegister.footer(at: indexPath) as? AbstractCollectionHeaderFooterItem
+			header?.dispatch(.willDisplay, type: .header, view: view, section: indexPath.section, collection: collectionView)
 			self.on.willDisplayHeader?( (view,indexPath,collectionView) )
         case UICollectionView.elementKindSectionFooter:
-			let footer = (sections[indexPath.section].footer as? AbstractCollectionHeaderFooterItem)
-			let _ = footer?.dispatch(.willDisplay, type: .footer, view: view, section: indexPath.section, collection: collectionView)
+			let footer = reusableRegister.footer(at: indexPath) as? AbstractCollectionHeaderFooterItem
+			footer?.dispatch(.willDisplay, type: .footer, view: view, section: indexPath.section, collection: collectionView)
 			self.on.willDisplayFooter?( (view,indexPath,collectionView) )
 		default:
 			break
@@ -547,16 +547,16 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource
 		
 		switch elementKind {
         case UICollectionView.elementKindSectionHeader:
-			let header = (sections[indexPath.section].header as? AbstractCollectionHeaderFooterItem)
-			let _ = header?.dispatch(.endDisplay, type: .header, view: view, section: indexPath.section, collection: collectionView)
-			self.on.endDisplayHeader?( (view,indexPath,collectionView) )
+            let header = reusableRegister.header(at: indexPath) as? AbstractCollectionHeaderFooterItem
+			header?.dispatch(.endDisplay, type: .header, view: view, section: indexPath.section, collection: collectionView)
         case UICollectionView.elementKindSectionFooter:
-			let footer = (sections[indexPath.section].footer as? AbstractCollectionHeaderFooterItem)
-			let _ = footer?.dispatch(.endDisplay, type: .footer, view: view, section: indexPath.section, collection: collectionView)
-			self.on.endDisplayFooter?( (view,indexPath,collectionView) )
+            let footer = reusableRegister.footer(at: indexPath) as? AbstractCollectionHeaderFooterItem
+			footer?.dispatch(.endDisplay, type: .footer, view: view, section: indexPath.section, collection: collectionView)
 		default:
 			break
 		}
+        on.endDisplayFooter?( (view, indexPath, collectionView) )
+        reusableRegister.unregisterHeaderFooter(type: elementKind, at: indexPath)
 	}
 	
 	//MARK: Prefetching
@@ -653,11 +653,11 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource
 		/// Registered cell identifiers
 		public private(set) var cellIDs: Set<String> = []
 		
-		/// Registered header identifiers
-		public private(set) var headerIDs: Set<String> = []
+		/// Registered headers by IndexPath
+        public private(set) var headers: [IndexPath: CollectionSectionProtocol] = [:]
 		
-		/// Registered footer identifiers
-		public private(set) var footerIDs: Set<String> = []
+		/// Registered footers by IndexPath
+		public private(set) var footers: [IndexPath: CollectionSectionProtocol] = [:]
 		
 		/// Initialize a new register manager for given collection.
 		///
@@ -695,12 +695,20 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource
 		///   - type: is it header or footer
 		/// - Returns: registered identifier
 		@discardableResult
-		internal func registerHeaderFooter(_ headerFooter: CollectionSectionProtocol, type: String) -> String {
+        internal func registerHeaderFooter(_ headerFooter: CollectionSectionProtocol, type: String, at indexPath: IndexPath) -> String {
 			let identifier = headerFooter.reuseIdentifier
-            if 	(type == UICollectionView.elementKindSectionHeader && self.headerIDs.contains(identifier)) ||
-                (type == UICollectionView.elementKindSectionFooter && self.footerIDs.contains(identifier)) {
+            if 	(type == UICollectionView.elementKindSectionHeader && self.headers.contains(where: { $0.key == indexPath })) ||
+                (type == UICollectionView.elementKindSectionFooter && self.footers.contains(where: { $0.key == indexPath })) {
 				return identifier
 			}
+
+            if type == UICollectionView.elementKindSectionHeader {
+                headers[indexPath] = headerFooter
+            }
+
+            if type == UICollectionView.elementKindSectionFooter {
+                footers[indexPath] = headerFooter
+            }
 			
 			let bundle = Bundle(for: headerFooter.viewClass)
 			if let _ = bundle.path(forResource: identifier, ofType: "nib") {
@@ -709,8 +717,26 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource
 			} else if headerFooter.registerAsClass {
 				collection?.register(headerFooter.viewClass, forSupplementaryViewOfKind: type, withReuseIdentifier: identifier)
 			}
+
 			return identifier
 		}
-		
+
+        func unregisterHeaderFooter(type: String, at indexPath: IndexPath) {
+            if type == UICollectionView.elementKindSectionHeader {
+                headers.removeValue(forKey: indexPath)
+            }
+
+            if type == UICollectionView.elementKindSectionFooter {
+                footers.removeValue(forKey: indexPath)
+            }
+        }
+
+        func header(at indexPath: IndexPath) -> CollectionSectionProtocol? {
+            return headers[indexPath]
+        }
+
+        func footer(at indexPath: IndexPath) -> CollectionSectionProtocol? {
+            return footers[indexPath]
+        }
 	}
 }
