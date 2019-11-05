@@ -494,29 +494,37 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource
 	public func collectionView(_ collectionView: UICollectionView, didUpdateFocusIn context: UICollectionViewFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
 		self.on.didUpdateFocus?(context,coordinator)
 	}
-	
+
     public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-		let section = sections[indexPath.section]
-		
-		var identifier: String!
-		
-		switch kind {
+        let section = sections[indexPath.section]
+
+        switch kind {
         case UICollectionView.elementKindSectionHeader:
-			guard let header = section.header else { return UICollectionReusableView() }
-			identifier = self.reusableRegister.registerHeaderFooter(header, type: kind)
-			
+            guard let header = section.header else { return UICollectionReusableView() }
+
+            let identifier = self.reusableRegister.registerHeaderFooter(header, type: kind)
+            let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath)
+
+            let headerItem = header as? AbstractCollectionHeaderFooterItem
+            headerItem?.dispatch(.dequeue, type: .header, view: view, section: indexPath.section, collection: collectionView)
+
+            return view
+
         case UICollectionView.elementKindSectionFooter:
-			guard let footer = section.footer else { return UICollectionReusableView() }
-			identifier = self.reusableRegister.registerHeaderFooter(footer, type: kind)
-			
-		default:
-			return UICollectionReusableView()
-		}
-		
-		let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath)
-	
-		return view
-	}
+            guard let footer = section.footer else { return UICollectionReusableView() }
+
+            let identifier = self.reusableRegister.registerHeaderFooter(footer, type: kind)
+            let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath)
+
+            let footerItem = footer as? AbstractCollectionHeaderFooterItem
+            footerItem?.dispatch(.dequeue, type: .footer, view: view, section: indexPath.section, collection: collectionView)
+
+            return view
+
+        default:
+            return UICollectionReusableView()
+        }
+    }
 	
 	public func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, at indexPath: IndexPath) {
 		

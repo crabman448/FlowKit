@@ -77,6 +77,9 @@ class CollectionExampleController: UIViewController {
 		list.shuffle()
 		
 		let header = CollectionSectionView<CollectionHeader>()
+        header.on.dequeue = { context in
+            context.view?.label?.backgroundColor = .purple
+        }
 		header.on.referenceSize = { _ in
 			return CGSize(width: self.collectionView!.frame.width, height: 40)
 		}
