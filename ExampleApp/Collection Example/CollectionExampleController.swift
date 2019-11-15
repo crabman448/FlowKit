@@ -9,8 +9,8 @@
 import UIKit
 
 public struct Number: ModelProtocol {
-	public var modelID: Int {
-		return value
+	public var modelId: String {
+		return String(value)
 	}
 	
 	let value: Int
@@ -21,8 +21,8 @@ public struct Number: ModelProtocol {
 }
 
 public struct Letter: ModelProtocol {
-	public var modelID: Int {
-		return self.value.hashValue
+	public var modelId: String {
+		return self.value
 	}
 	
 	let value: String

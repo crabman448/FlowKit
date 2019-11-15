@@ -128,8 +128,8 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	///
 	/// - Parameter adapter: adapter to register
 	public func register(adapter: AbstractAdapterProtocol) {
-		let modelID = String(describing: adapter.modelType)
-		self.adapters[modelID] = adapter // register adapter
+		let modelId = String(describing: adapter.modelType)
+		self.adapters[modelId] = adapter // register adapter
 		self.registerCell(forAdapter: adapter)
 	}
 	
@@ -323,9 +323,9 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	/// - Returns: model and adapter
 	internal func context(forItemAt index: IndexPath) -> (ModelProtocol, TableAdaterProtocolFunctions) {
 		let item: ModelProtocol = self.sections[index.section].models[index.row]
-		let modelID = String(describing: type(of: item.self))
-		guard let adapter = self.adapters[modelID] else {
-			fatalError("Failed to found an adapter for model: \(modelID)")
+		let modelId = String(describing: type(of: item.self))
+		guard let adapter = self.adapters[modelId] else {
+			fatalError("Failed to found an adapter for model: \(modelId)")
 		}
 		return (item,adapter as! TableAdaterProtocolFunctions)
 	}
@@ -336,9 +336,9 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	/// - Parameter model: model to read.
 	/// - Returns: adapter.
 	internal func context(forModel model: AnyHashable) -> TableAdaterProtocolFunctions {
-		let modelID = String(describing: type(of: model.self))
-		guard let adapter = self.adapters[modelID] else {
-			fatalError("Failed to found an adapter for \(modelID)")
+		let modelId = String(describing: type(of: model.self))
+		guard let adapter = self.adapters[modelId] else {
+			fatalError("Failed to found an adapter for \(modelId)")
 		}
 		return (adapter as! TableAdaterProtocolFunctions)
 	}
@@ -353,12 +353,12 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 		var list: [String: PrefetchModelsGroup] = [:]
 		paths.forEach { indexPath in
 			let model = self.sections[indexPath.section].models[indexPath.item]
-			let modelID = String(describing: type(of: model.self))
+			let modelId = String(describing: type(of: model.self))
 			
-			var context: PrefetchModelsGroup? = list[modelID]
+			var context: PrefetchModelsGroup? = list[modelId]
 			if context == nil {
-				context = PrefetchModelsGroup(adapter: self.adapters[modelID] as! TableAdaterProtocolFunctions)
-				list[modelID] = context
+				context = PrefetchModelsGroup(adapter: self.adapters[modelId] as! TableAdaterProtocolFunctions)
+				list[modelId] = context
 			}
 			context!.models.append(model)
 			context!.indexPaths.append(indexPath)

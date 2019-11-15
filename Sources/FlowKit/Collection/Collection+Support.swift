@@ -43,17 +43,7 @@ public protocol ModelProtocol {
 	/// Default implementation of this property is provided by any class via the extension
 	/// for `AnyObject` using the `ObjectIdentifier`.
 	/// An explicit implementation must be done by the developer for struct.
-	var modelID: Int { get }
-	
-}
-
-extension ModelProtocol where Self : AnyObject {
-	
-	/// Default implementation of the ModelProtocol protocol is provided for any class using
-	/// the `ObjectIdentifier`. You can still implement your own item.
-	public var modelID: Int {
-		return ObjectIdentifier(self).hashValue
-	}
+	var modelId: String { get }
 	
 }
 

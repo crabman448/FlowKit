@@ -206,7 +206,7 @@ internal final class Heckel: DiffAware {
 	func diff(old: [ModelProtocol], new: [ModelProtocol]) -> [Change<ModelProtocol>] {
 		// The Symbol Table
 		// Each line works as the key in the table look-up, i.e. as table[line].
-		var table: [Int: TableEntry] = [:]
+		var table: [String: TableEntry] = [:]
 		
 		// The arrays OA and NA have one entry for each line in their respective files, O and N
 		var oldArray = [ArrayEntry]()
@@ -221,14 +221,14 @@ internal final class Heckel: DiffAware {
 	
 	private func perform1stPass(
 		new: [ModelProtocol],
-		table: inout [Int: TableEntry],
+		table: inout [String: TableEntry],
 		newArray: inout [ArrayEntry]) {
 		
 		// 1st pass
 		// a. Each line i of file N is read in sequence
 		new.forEach { item in
 			// b. An entry for each line i is created in the table, if it doesn't already exist
-			let entry = table[item.modelID] ?? TableEntry()
+			let entry = table[item.modelId] ?? TableEntry()
 			
 			// c. NC for the line's table entry is incremented
 			entry.newCounter = entry.newCounter.increment()
@@ -237,13 +237,13 @@ internal final class Heckel: DiffAware {
 			newArray.append(.tableEntry(entry))
 			
 			//
-			table[item.modelID] = entry
+			table[item.modelId] = entry
 		}
 	}
 	
 	private func perform2ndPass(
 		old: [ModelProtocol],
-		table: inout [Int: TableEntry],
+		table: inout [String: TableEntry],
 		oldArray: inout [ArrayEntry]) {
 		
 		// 2nd pass
@@ -251,7 +251,7 @@ internal final class Heckel: DiffAware {
 		
 		old.enumerated().forEach { tuple in
 			// old
-			let entry = table[tuple.element.modelID] ?? TableEntry()
+			let entry = table[tuple.element.modelId] ?? TableEntry()
 			
 			// oldCounter
 			entry.oldCounter = entry.oldCounter.increment()
@@ -263,7 +263,7 @@ internal final class Heckel: DiffAware {
 			oldArray.append(.tableEntry(entry))
 			
 			//
-			table[tuple.element.modelID] = entry
+			table[tuple.element.modelId] = entry
 		}
 	}
 	
@@ -394,7 +394,7 @@ internal final class Heckel: DiffAware {
 						index: newTuple.offset
 					)))
 				case .indexInOther(let oldIndex):
-					if old[oldIndex].modelID != new[newTuple.offset].modelID {
+					if old[oldIndex].modelId != new[newTuple.offset].modelId {
 						changes.append(.replace(Replace(
 							oldItem: old[oldIndex],
 							newItem: new[newTuple.offset],

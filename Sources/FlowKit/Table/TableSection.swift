@@ -100,8 +100,8 @@ open class TableSection: ModelProtocol {
 	}
 	
 	/// Hash identifier of the section.
-	public var modelID: Int {
-		return self.UUID.hashValue
+	public var modelId: String {
+		return self.UUID
 	}
 	
 	/// Equatable support.
