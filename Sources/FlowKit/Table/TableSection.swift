@@ -135,13 +135,24 @@ open class TableSection: ModelProtocol {
 	/// - Parameters:
 	///   - model: model to append
 	///   - index: destination index; if invalid or `nil` model is append at the end of the list.
-	public func add(model: ModelProtocol?, at index: Int?) {
-		guard let model = model else { return }
+	public func add(model: ModelProtocol, at index: Int?) {
 		guard let index = index, index < self.models.count else {
 			self.models.append(model)
 			return
 		}
 		self.models.insert(model, at: index)
+	}
+
+	/// Add or update item in section.
+	///
+	/// - Parameters:
+	///   - model: Model to add or update
+	public func addOrUpdate(model: ModelProtocol) {
+		if let indexToUpdate = models.firstIndex(where: { $0.modelId == model.modelId } ) {
+			models[indexToUpdate] = model
+		} else {
+			models.append(model)
+		}
 	}
 	
 	/// Add models starting at given index of the array.
@@ -149,8 +160,7 @@ open class TableSection: ModelProtocol {
 	/// - Parameters:
 	///   - models: models to insert.
 	///   - index: destination starting index; if invalid or `nil` models are append at the end of the list.
-	public func add(models: [ModelProtocol]?, at index: Int?) {
-		guard let models = models else { return }
+	public func add(models: [ModelProtocol], at index: Int?) {
 		guard let index = index, index < self.models.count else {
 			self.models.append(contentsOf: models)
 			return
