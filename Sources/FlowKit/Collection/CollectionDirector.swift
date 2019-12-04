@@ -213,8 +213,8 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource
 	///
 	/// - Parameter adapter: adapter to register
 	public func register(adapter: AbstractAdapterProtocol) {
-		let modelID = String(describing: adapter.modelType)
-		self.adapters[modelID] = adapter // register adapter
+		let modelId = String(describing: adapter.modelType)
+		self.adapters[modelId] = adapter // register adapter
 		self.reusableRegister.registerCell(forAdapter: adapter) // register associated cell types into the collection
 	}
 	
@@ -340,17 +340,17 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource
 	/// - Returns: context
 	internal func context(forItemAt index: IndexPath) -> (ModelProtocol,AbstractAdapterProtocolFunctions) {
 		let item: ModelProtocol = self.sections[index.section].models[index.row]
-		let modelID = String(describing: type(of: item.self))
-		guard let adapter = self.adapters[modelID] else {
-			fatalError("Failed to found an adapter for \(modelID)")
+		let modelId = String(describing: type(of: item.self))
+		guard let adapter = self.adapters[modelId] else {
+			fatalError("Failed to found an adapter for \(modelId)")
 		}
 		return (item,adapter as! AbstractAdapterProtocolFunctions)
 	}
 
 	internal func context(forModel model: ModelProtocol) -> AbstractAdapterProtocolFunctions {
-		let modelID = String(describing: type(of: item.self))
-		guard let adapter = self.adapters[modelID] else {
-			fatalError("Failed to found an adapter for \(modelID)")
+		let modelId = String(describing: type(of: item.self))
+		guard let adapter = self.adapters[modelId] else {
+			fatalError("Failed to found an adapter for \(modelId)")
 		}
 		return (adapter as! AbstractAdapterProtocolFunctions)
 	}
@@ -359,12 +359,12 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource
 		var list: [String: PrefetchModelsGroup] = [:]
 		paths.forEach { indexPath in
 			let model = self.sections[indexPath.section].models[indexPath.item]
-			let modelID = String(describing: type(of: model.self))
+			let modelId = String(describing: type(of: model.self))
 			
-			var context: PrefetchModelsGroup? = list[modelID]
+			var context: PrefetchModelsGroup? = list[modelId]
 			if context == nil {
-				context = PrefetchModelsGroup(adapter: self.adapters[modelID] as! AbstractAdapterProtocolFunctions)
-				list[modelID] = context
+				context = PrefetchModelsGroup(adapter: self.adapters[modelId] as! AbstractAdapterProtocolFunctions)
+				list[modelId] = context
 			}
 			context!.models.append(model)
 			context!.indexPaths.append(indexPath)

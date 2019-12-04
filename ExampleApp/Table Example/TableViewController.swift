@@ -72,7 +72,7 @@ public class ArticleAdapter: TableAdapter<Article,TableArticleCell> {
 		}
 		self.on.tap = { ctx in
 			ctx.cell?.accessoryType = UITableViewCell.AccessoryType.checkmark
-			print("Tapped on article \(ctx.model.modelID)")
+			print("Tapped on article \(ctx.model.modelId)")
 			return .deselectAnimated
 		}
 	}
@@ -82,7 +82,7 @@ public class ArticleAdapter: TableAdapter<Article,TableArticleCell> {
 public class Article: ModelProtocol {
 
 	public static func == (lhs: Article, rhs: Article) -> Bool {
-		return (lhs.modelID == rhs.modelID)
+		return (lhs.modelId == rhs.modelId)
 	}
 	
 	public let title: String
@@ -93,7 +93,10 @@ public class Article: ModelProtocol {
 		self.title = title
 		self.text = text
 	}
-	
+
+	public var modelId: String {
+		return articleId
+	}
 }
 
 public class TableArticleCell: UITableViewCell {
