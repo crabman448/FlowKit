@@ -169,10 +169,18 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource
 	///						if `nil` reload is performed without animation.
 	public func reloadData(after task: (() -> (Void))? = nil, onEnd: (() -> (Void))? = nil) {
 		guard let task = task else {
+
+            // Calling reloadData to indicate new items availability
 			self.collection?.reloadData()
+
+            // Forcing the collection to layout its subviews
+            // Due to that cells are forced to be loaded
+            self.collection?.layoutIfNeeded()
+
             DispatchQueue.main.async {
                 onEnd?()
             }
+
 			return
 		}
 		
