@@ -170,7 +170,9 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource
 	public func reloadData(after task: (() -> (Void))? = nil, onEnd: (() -> (Void))? = nil) {
 		guard let task = task else {
 			self.collection?.reloadData()
-			onEnd?()
+            DispatchQueue.main.async {
+                onEnd?()
+            }
 			return
 		}
 		
