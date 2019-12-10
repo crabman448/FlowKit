@@ -175,7 +175,7 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource
 
             // Forcing the collection to layout its subviews
             // Due to that cells are forced to be loaded
-            self.collection?.layoutIfNeeded()
+//            self.collection?.layoutIfNeeded()
 
             DispatchQueue.main.async {
                 onEnd?()
@@ -408,7 +408,6 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource
 			($0.value as! AbstractAdapterProtocolFunctions).dispatch(.endDisplay, context: InternalContext.init(nil, indexPath, cell, collectionView))
 		}
 	}
-
 	
 	public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		let (model,adapter) = self.context(forItemAt: indexPath)
