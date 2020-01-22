@@ -32,10 +32,7 @@ import UIKit
 
 /// Represent a single section of the collection.
 open class CollectionSection: Equatable, ModelProtocol {
-	
-	/// Identifier of the section
-	public var UUID: String = NSUUID().uuidString
-	
+
 	/// Items inside the collection
 	public private(set) var models: [ModelProtocol]
 	
@@ -103,14 +100,13 @@ open class CollectionSection: Equatable, ModelProtocol {
 	}
 	
 	
-	/// Hash identifier of the section
-	public var modelId: String {
-		return self.UUID
-	}
+	/// Unique identifier of the section
+    /// Could be overriden by subclasses to provide their own modelId
+    open var modelId: String = UUID().uuidString
 	
 	/// Equatable support.
 	public static func == (lhs: CollectionSection, rhs: CollectionSection) -> Bool {
-		return (lhs.UUID == rhs.UUID)
+		return (lhs.modelId == rhs.modelId)
 	}
 	
 	/// Change the content of the section.
@@ -147,11 +143,11 @@ open class CollectionSection: Equatable, ModelProtocol {
 		self.models.insert(model, at: index)
 	}
 
-	/// Add or update item in section.
+	/// Append or update item in section.
 	///
 	/// - Parameters:
 	///   - model: Model to add or update
-	public func addOrUpdate(model: ModelProtocol) {
+	public func appendOrUpdate(model: ModelProtocol) {
 		if let indexToUpdate = models.firstIndex(where: { $0.modelId == model.modelId } ) {
 			models[indexToUpdate] = model
 		} else {

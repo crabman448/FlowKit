@@ -62,9 +62,6 @@ open class TableSection: ModelProtocol {
 		}
 	}
 	
-	/// Unique identifier of the section
-	public let UUID: String = NSUUID().uuidString
-	
 	/// Initialize a new section with given initial models.
 	///
 	/// - Parameter models: items to add (`nil` means empty array)
@@ -99,14 +96,13 @@ open class TableSection: ModelProtocol {
 		self.footerView = footerView
 	}
 	
-	/// Hash identifier of the section.
-	public var modelId: String {
-		return self.UUID
-	}
+	/// Unique identifier of the section
+    /// Could be overriden by subclasses to provide their own modelId
+    open var modelId: String = UUID().uuidString
 	
 	/// Equatable support.
 	public static func == (lhs: TableSection, rhs: TableSection) -> Bool {
-		return (lhs.UUID == rhs.UUID)
+		return (lhs.modelId == rhs.modelId)
 	}
 	
 	/// Change the content of the section.
@@ -143,11 +139,11 @@ open class TableSection: ModelProtocol {
 		self.models.insert(model, at: index)
 	}
 
-	/// Add or update item in section.
+	/// Append or update item in section.
 	///
 	/// - Parameters:
 	///   - model: Model to add or update
-	public func addOrUpdate(model: ModelProtocol) {
+	public func appendOrUpdate(model: ModelProtocol) {
 		if let indexToUpdate = models.firstIndex(where: { $0.modelId == model.modelId } ) {
 			models[indexToUpdate] = model
 		} else {
