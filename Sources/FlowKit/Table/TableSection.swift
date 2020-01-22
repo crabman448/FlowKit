@@ -213,7 +213,7 @@ open class TableSection: ModelProtocol {
 	///   - destIndex: destination index
 	public func move(swappingAt sourceIndex: Int, with destIndex: Int) {
 		guard sourceIndex < self.models.count, destIndex < self.models.count else { return }
-		swap(&self.models[sourceIndex], &self.models[destIndex])
+		self.models.swapAt(sourceIndex, destIndex)
 	}
 	
 	/// Remove model at given index and insert at destination index.
