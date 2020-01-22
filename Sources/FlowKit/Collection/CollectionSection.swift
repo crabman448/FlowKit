@@ -37,7 +37,14 @@ open class CollectionSection: Equatable, ModelProtocol {
     public let modelId: String
 
 	/// Items inside the collection
-	public var models: [ModelProtocol]
+    public var models: [ModelProtocol] = [] {
+        didSet {
+            onModelsDidSet?()
+        }
+    }
+
+    /// Implement this method when you want to observe changes in models array
+    open var onModelsDidSet: (() -> Void)?
 	
 	/// Implement this method when you want to provide margins for sections in the flow layout.
 	/// If you do not implement this method, the margins are obtained from the properties of the flow layout object.
