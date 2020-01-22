@@ -248,7 +248,7 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource
 	/// - Returns: added section instance
 	@discardableResult
 	public func add(models: [ModelProtocol]) -> CollectionSection {
-		let section = CollectionSection(models)
+        let section = CollectionSection(models: models)
 		self.sections.append(section)
 		return section
 	}

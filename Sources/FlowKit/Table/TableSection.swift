@@ -32,9 +32,12 @@ import UIKit
 
 /// Represent a single section of the table
 open class TableSection: ModelProtocol {
+
+    /// Unique identifier of the section
+    public let modelId: String
 	
 	/// Items inside the section.
-	open var models: [ModelProtocol] = []
+	public var models: [ModelProtocol] = []
 	
 	/// Title of the header; if `headerView` is set this value is ignored.
 	public var headerTitle: String?
@@ -65,7 +68,8 @@ open class TableSection: ModelProtocol {
 	/// Initialize a new section with given initial models.
 	///
 	/// - Parameter models: items to add (`nil` means empty array)
-	public init(_ models: [ModelProtocol]?) {
+    public init(modelId: String = UUID().uuidString, models: [ModelProtocol]?) {
+        self.modelId = modelId
 		self.models = (models ?? [])
 	}
 	
@@ -75,9 +79,9 @@ open class TableSection: ModelProtocol {
 	///   - headerTitle: header title as string
 	///   - footerTitle: footer title as string
 	///   - models: models to add (`nil` means empty array)
-	public convenience init(headerTitle: String?, footerTitle: String?,
-							models: [ModelProtocol]? = nil) {
-		self.init(models)
+	public convenience init(modelId: String = UUID().uuidString, headerTitle: String?, footerTitle: String?, models: [ModelProtocol]? = nil) {
+        self.init(modelId: modelId, models: models)
+
 		self.headerTitle = headerTitle
 		self.footerTitle = footerTitle
 	}
@@ -88,17 +92,12 @@ open class TableSection: ModelProtocol {
 	///   - headerView: header view
 	///   - footerView: footer view
 	///   - models: models to add (`nil` means empty array)
-	public convenience init(headerView: TableHeaderFooterProtocol?,
-							footerView: TableHeaderFooterProtocol?,
-							models: [ModelProtocol]? = nil) {
-		self.init(models)
+	public convenience init(modelId: String = UUID().uuidString, headerView: TableHeaderFooterProtocol?, footerView: TableHeaderFooterProtocol?, models: [ModelProtocol]? = nil) {
+        self.init(modelId: modelId, models: models)
+
 		self.headerView = headerView
 		self.footerView = footerView
 	}
-	
-	/// Unique identifier of the section
-    /// Could be overriden by subclasses to provide their own modelId
-    open var modelId: String = UUID().uuidString
 	
 	/// Equatable support.
 	public static func == (lhs: TableSection, rhs: TableSection) -> Bool {

@@ -104,9 +104,9 @@ class CollectionExampleController: UIViewController {
             header.on.endDisplay = { context in
                 print(context)
             }
-            section = CollectionSection(list, headerView: header)
+            section = CollectionSection(models: list, headerView: header)
         } else {
-            section = CollectionSection(list)
+            section = CollectionSection(models: list)
         }
 
         director.removeAll()

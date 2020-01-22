@@ -204,7 +204,7 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	/// - Returns: created section
 	@discardableResult
 	public func add(models: [ModelProtocol]) -> TableSection {
-		let section = TableSection(models)
+        let section = TableSection(models: models)
 		self.sections.append(section)
 		return section
 	}

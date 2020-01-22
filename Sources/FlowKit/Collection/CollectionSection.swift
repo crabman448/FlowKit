@@ -33,8 +33,11 @@ import UIKit
 /// Represent a single section of the collection.
 open class CollectionSection: Equatable, ModelProtocol {
 
+    /// Unique identifier of the section
+    public let modelId: String
+
 	/// Items inside the collection
-	public private(set) var models: [ModelProtocol]
+	public var models: [ModelProtocol]
 	
 	/// Implement this method when you want to provide margins for sections in the flow layout.
 	/// If you do not implement this method, the margins are obtained from the properties of the flow layout object.
@@ -93,16 +96,12 @@ open class CollectionSection: Equatable, ModelProtocol {
 	///   - models: models, `nil` create an empty set
 	///   - headerView: optional custom header
 	///   - footerView: optional custom footer
-	public init(_ models: [ModelProtocol]?, headerView: CollectionSectionProtocol? = nil, footerView: CollectionSectionProtocol? = nil) {
+	public init(modelId: String = UUID().uuidString, models: [ModelProtocol]?, headerView: CollectionSectionProtocol? = nil, footerView: CollectionSectionProtocol? = nil) {
+        self.modelId = modelId
 		self.models = (models ?? [])
 		self.header = headerView
 		self.footer = footerView
 	}
-	
-	
-	/// Unique identifier of the section
-    /// Could be overriden by subclasses to provide their own modelId
-    open var modelId: String = UUID().uuidString
 	
 	/// Equatable support.
 	public static func == (lhs: CollectionSection, rhs: CollectionSection) -> Bool {
