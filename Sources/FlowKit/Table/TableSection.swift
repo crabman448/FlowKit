@@ -44,7 +44,7 @@ open class TableSection: ModelProtocol {
     }
 
     /// Implement this method when you want to observe changes in models array
-    open var onModelsDidSet: (() -> Void)?
+    public var onModelsDidSet: (() -> Void)?
 	
 	/// Title of the header; if `headerView` is set this value is ignored.
 	public var headerTitle: String?

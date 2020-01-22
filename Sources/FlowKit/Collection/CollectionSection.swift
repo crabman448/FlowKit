@@ -44,7 +44,7 @@ open class CollectionSection: Equatable, ModelProtocol {
     }
 
     /// Implement this method when you want to observe changes in models array
-    open var onModelsDidSet: (() -> Void)?
+    public var onModelsDidSet: (() -> Void)?
 	
 	/// Implement this method when you want to provide margins for sections in the flow layout.
 	/// If you do not implement this method, the margins are obtained from the properties of the flow layout object.
