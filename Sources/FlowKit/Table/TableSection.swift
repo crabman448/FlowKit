@@ -131,6 +131,30 @@ open class TableSection: ModelProtocol {
 		self.models[index] = model
 		return oldModel
 	}
+
+    /// Prepend or update item in section.
+    ///
+    /// - Parameters:
+    ///   - model: Model to prepend or update
+    public func prependOrUpdate(model: ModelProtocol) {
+        if let indexToUpdate = models.firstIndex(where: { $0.modelId == model.modelId } ) {
+            models[indexToUpdate] = model
+        } else {
+            models.insert(model, at: 0)
+        }
+    }
+
+    /// Append or update item in section.
+    ///
+    /// - Parameters:
+    ///   - model: Model to append or update
+    public func appendOrUpdate(model: ModelProtocol) {
+        if let indexToUpdate = models.firstIndex(where: { $0.modelId == model.modelId } ) {
+            models[indexToUpdate] = model
+        } else {
+            models.append(model)
+        }
+    }
 	
 	/// Add item at given index.
 	///
@@ -143,18 +167,6 @@ open class TableSection: ModelProtocol {
 			return
 		}
 		self.models.insert(model, at: index)
-	}
-
-	/// Append or update item in section.
-	///
-	/// - Parameters:
-	///   - model: Model to add or update
-	public func appendOrUpdate(model: ModelProtocol) {
-		if let indexToUpdate = models.firstIndex(where: { $0.modelId == model.modelId } ) {
-			models[indexToUpdate] = model
-		} else {
-			models.append(model)
-		}
 	}
 	
 	/// Add models starting at given index of the array.
