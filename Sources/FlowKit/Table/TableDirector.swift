@@ -168,12 +168,15 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 			let changesInSection = SectionChanges.fromTableSections(old: oldSections, new: self.sections)
 			changesInSection.applyChanges(toTable: self.tableView, withAnimations: animationsToPerform)
 			
-			self.sections.enumerated().forEach { (idx,newSection) in
+			self.sections.enumerated().forEach { (newSectionIndex, newSection) in
 				if let oldSectionItems = oldItemsInSections[newSection.modelId] {
 					let diffData = diff(old: oldSectionItems, new: newSection.models)
-					let itemChanges = SectionItemsChanges.create(fromChanges: diffData, section: idx)
+					let itemChanges = SectionItemsChanges.create(fromChanges: diffData, section: newSectionIndex)
 					itemChanges.applyChangesToSectionItems(ofTable: self.tableView, withAnimations: animationsToPerform)
-				}
+                } else {
+                    let indexPaths = (0..<newSection.models.count).map { IndexPath(item: $0, section: newSectionIndex) }
+                    self.tableView?.insertRows(at: indexPaths, with: animationsToPerform.animationForRow(action: .insert))
+                }
 			}
 		}
 		
