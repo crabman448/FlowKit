@@ -155,8 +155,8 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 		}
 
 		// Keep a reference to removed items in order to perform diff and animation
-		let oldSections: [TableSection] = self.sections
-        let oldItemsInSections: [String: [ModelProtocol]] = self.sections.reduce(into: [:], { $0[$1.modelId] = Array($1.models) })
+        let oldSections: [TableSection] = self.sections.map { $0.copy }
+        let oldItemsInSections: [String: [ModelProtocol]] = oldSections.reduce(into: [:], { $0[$1.modelId] = $1.models })
 
 		// Execute callback and return animations to perform
 		let animationsToPerform = (task(self) ?? TableReloadAnimations.default())

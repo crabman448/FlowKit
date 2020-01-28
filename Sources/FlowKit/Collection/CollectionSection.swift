@@ -243,4 +243,9 @@ open class CollectionSection: Equatable, ModelProtocol {
 		self.models.insert(removed, at: destIndex)
 	}
 
+    // MARK: Copy
+
+    public var copy: CollectionSection {
+        return CollectionSection(modelId: modelId, models: models, headerView: header, footerView: footer)
+    }
 }

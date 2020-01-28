@@ -185,9 +185,8 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource
 		}
 		
 		// Keep a reference to removed items in order to perform diff and animation
-		let oldSections: [CollectionSection] = Array.init(self.sections)
-		var oldItemsInSections: [String: [ModelProtocol]] = [:]
-		self.sections.forEach { oldItemsInSections[$0.modelId] = Array($0.models) }
+        let oldSections: [CollectionSection] = self.sections.map { $0.copy }
+        let oldItemsInSections: [String: [ModelProtocol]] = oldSections.reduce(into: [:], { $0[$1.modelId] = $1.models })
 		
 		// Execute block for changes
 		task()

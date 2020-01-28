@@ -76,11 +76,11 @@ public protocol TableReloadAnimationProtocol {
 public extension TableReloadAnimationProtocol {
 	
 	func animationForRow(action: TableAnimationAction) -> UITableView.RowAnimation {
-		return .automatic
+		return .none
 	}
 	
 	func animationForSection(action: TableAnimationAction) -> UITableView.RowAnimation {
-		return .automatic
+		return .none
 	}
 	
 }

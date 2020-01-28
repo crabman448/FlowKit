@@ -238,5 +238,10 @@ open class TableSection: ModelProtocol {
 		let removed = self.models.remove(at: sourceIndex)
 		self.models.insert(removed, at: destIndex)
 	}
-	
+
+    // MARK: Copy
+
+    public var copy: TableSection {
+        return TableSection(modelId: modelId, headerView: headerView, footerView: footerView, models: models)
+    }
 }
