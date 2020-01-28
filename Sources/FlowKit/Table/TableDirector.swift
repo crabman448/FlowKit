@@ -181,8 +181,8 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 		if #available(iOS 11.0, *) {
 			self.tableView?.performBatchUpdates({
 				executeDiffAndUpdate()
-			}, completion: { end in
-				if end { onEnd?() }
+			}, completion: { _ in
+				onEnd?()
 			})
 		} else {
 			self.tableView?.beginUpdates()
