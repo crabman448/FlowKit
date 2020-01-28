@@ -203,7 +203,7 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource
 				if let oldSectionItems = oldItemsInSections[newSection.modelId] {
 					let diffData = diff(old: oldSectionItems, new: newSection.models)
 					let itemChanges = SectionItemsChanges.create(fromChanges: diffData, section: idx)
-					itemChanges.applyChangesToSectionItems(of: collection)
+					itemChanges.applyChanges(of: collection)
 				}
 			}
 			

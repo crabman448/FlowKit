@@ -45,10 +45,10 @@ internal struct SectionChanges {
 		var data = SectionChanges()
 		changes.forEach {
 			switch $0 {
-			case .delete(let v):	data.deletes.insert(v.index)
-			case .insert(let v):	data.inserts.insert(v.index)
-			case .move(let v):		data.moves.append( (from: v.fromIndex, to: v.toIndex) )
-			case .replace(let v):	data.replaces.insert(v.index)
+			case .delete(let value):	data.deletes.insert(value.index)
+			case .insert(let value):	data.inserts.insert(value.index)
+			case .move(let value):		data.moves.append( (from: value.fromIndex, to: value.toIndex) )
+			case .replace(let value):	data.replaces.insert(value.index)
 			}
 		}
 		return data
@@ -59,23 +59,23 @@ internal struct SectionChanges {
 		var data = SectionChanges()
 		changes.forEach {
 			switch $0 {
-			case .delete(let v):	data.deletes.insert(v.index)
-			case .insert(let v):	data.inserts.insert(v.index)
-			case .move(let v):		data.moves.append( (from: v.fromIndex, to: v.toIndex) )
-			case .replace(let v):	data.replaces.insert(v.index)
+			case .delete(let value):	data.deletes.insert(value.index)
+			case .insert(let value):	data.inserts.insert(value.index)
+			case .move(let value):		data.moves.append( (from: value.fromIndex, to: value.toIndex) )
+			case .replace(let value):	data.replaces.insert(value.index)
 			}
 		}
 		return data
 	}
 	
-	func applyChanges(toTable: UITableView?, withAnimations animations: TableReloadAnimationProtocol) {
-		guard let t = toTable, self.hasChanges else { return }
-		t.deleteSections(self.deletes, with: animations.animationForSection(action: .delete))
-		t.insertSections(self.inserts, with: animations.animationForSection(action: .insert))
+	func applyChanges(to table: UITableView?, withAnimations animations: TableReloadAnimationProtocol) {
+		guard let table = table, self.hasChanges else { return }
+		table.deleteSections(self.deletes, with: animations.animationForSection(action: .delete))
+		table.insertSections(self.inserts, with: animations.animationForSection(action: .insert))
 		self.moves.forEach {
-			t.moveSection($0.from, toSection: $0.to)
+			table.moveSection($0.from, toSection: $0.to)
 		}
-		t.reloadSections(self.replaces, with: animations.animationForSection(action: .reload))
+		table.reloadSections(self.replaces, with: animations.animationForSection(action: .reload))
 	}
 	
 	func applyChanges(toCollection: UICollectionView?) {
@@ -129,7 +129,7 @@ internal struct SectionItemsChanges {
 		)
 	}
 	
-	func applyChangesToSectionItems(of collection: UICollectionView?) {
+	func applyChanges(of collection: UICollectionView?) {
 		guard let c = collection else { return }
 		
 		c.deleteItems(at: self.deletes)
@@ -140,15 +140,15 @@ internal struct SectionItemsChanges {
 		c.reloadItems(at: self.replaces)
 	}
 	
-	func applyChangesToSectionItems(ofTable table: UITableView?, withAnimations animations: TableReloadAnimationProtocol) {
-		guard let t = table else { return }
+	func applyChanges(ofTable table: UITableView?, withAnimations animations: TableReloadAnimationProtocol) {
+		guard let table = table else { return }
 		
-		t.deleteRows(at: self.deletes, with: animations.animationForRow(action: .delete))
-		t.insertRows(at: self.inserts, with: animations.animationForRow(action: .insert))
+		table.deleteRows(at: self.deletes, with: animations.animationForRow(action: .delete))
+		table.insertRows(at: self.inserts, with: animations.animationForRow(action: .insert))
 		self.moves.forEach {
-			t.moveRow(at: $0.from, to: $0.to)
+			table.moveRow(at: $0.from, to: $0.to)
 		}
-		t.reloadRows(at: self.replaces, with: animations.animationForRow(action: .reload))
+		table.reloadRows(at: self.replaces, with: animations.animationForRow(action: .reload))
 	}
 }
 

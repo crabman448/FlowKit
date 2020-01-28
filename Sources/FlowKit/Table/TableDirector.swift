@@ -148,20 +148,18 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	///			  returned the `TableReloadAnimations.default()` automatic animation is made.
 	///   - onEnd: optional callback called at the end of the reload.
 	public func reloadData(after task: ((TableDirector) -> (TableReloadAnimationProtocol?))? = nil, onEnd: (() -> (Void))? = nil) {
-		guard let t = task else {
+		guard let task = task else {
 			self.tableView?.reloadData()
 			DispatchQueue.main.asyncAfter(deadline: .now() + 0.25, execute: { onEnd?() })
 			return
 		}
-		
-		
+
 		// Keep a reference to removed items in order to perform diff and animation
-		let oldSections: [TableSection] = Array.init(self.sections)
-		var oldItemsInSections: [String: [ModelProtocol]] = [:]
-		self.sections.forEach { oldItemsInSections[$0.modelId] = Array($0.models) }
+		let oldSections: [TableSection] = self.sections
+        let oldItemsInSections: [String: [ModelProtocol]] = self.sections.reduce(into: [:], { $0[$1.modelId] = $1.models })
 
 		// Execute callback and return animations to perform
-		let animationsToPerform = (t(self) ?? TableReloadAnimations.default())
+		let animationsToPerform = (task(self) ?? TableReloadAnimations.default())
 
 		func executeDiffAndUpdate() {
 			// Execute reload for sections
@@ -172,7 +170,7 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 				if let oldSectionItems = oldItemsInSections[newSection.modelId] {
 					let diffData = diff(old: oldSectionItems, new: newSection.models)
 					let itemChanges = SectionItemsChanges.create(fromChanges: diffData, section: newSectionIndex)
-					itemChanges.applyChangesToSectionItems(ofTable: self.tableView, withAnimations: animationsToPerform)
+					itemChanges.applyChanges(ofTable: self.tableView, withAnimations: animationsToPerform)
                 } else {
                     let indexPaths = (0..<newSection.models.count).map { IndexPath(item: $0, section: newSectionIndex) }
                     self.tableView?.insertRows(at: indexPaths, with: animationsToPerform.animationForRow(action: .insert))
