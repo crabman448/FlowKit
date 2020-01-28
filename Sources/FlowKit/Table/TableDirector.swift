@@ -164,12 +164,12 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 		func executeDiffAndUpdate() {
 			// Execute reload for sections
 			let changesInSection = SectionChanges.fromTableSections(old: oldSections, new: self.sections)
-			changesInSection.applyChanges(toTable: self.tableView, withAnimations: animationsToPerform)
+			changesInSection.applyChanges(to: self.tableView, withAnimations: animationsToPerform)
 			
 			self.sections.enumerated().forEach { (newSectionIndex, newSection) in
 				if let oldSectionItems = oldItemsInSections[newSection.modelId] {
-					let diffData = diff(old: oldSectionItems, new: newSection.models)
-					let itemChanges = SectionItemsChanges.create(fromChanges: diffData, section: newSectionIndex)
+					let changes = diff(old: oldSectionItems, new: newSection.models)
+					let itemChanges = SectionItemsChanges.create(fromChanges: changes, section: newSectionIndex)
 					itemChanges.applyChanges(ofTable: self.tableView, withAnimations: animationsToPerform)
                 } else {
                     let indexPaths = (0..<newSection.models.count).map { IndexPath(item: $0, section: newSectionIndex) }

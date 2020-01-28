@@ -196,7 +196,7 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource
 		let sectionChanges = SectionChanges.fromCollectionSections(old: oldSections, new: self.sections)
 
 		self.collection?.performBatchUpdates({
-			sectionChanges.applyChanges(toCollection: self.collection)
+			sectionChanges.applyChanges(to: self.collection)
 			
 			// For any remaining active section evaluate changes inside
 			self.sections.enumerated().forEach { (idx,newSection) in

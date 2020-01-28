@@ -78,14 +78,14 @@ internal struct SectionChanges {
 		table.reloadSections(self.replaces, with: animations.animationForSection(action: .reload))
 	}
 	
-	func applyChanges(toCollection: UICollectionView?) {
-		guard let c = toCollection, self.hasChanges else { return }
-		c.deleteSections(self.deletes)
-		c.insertSections(self.inserts)
+	func applyChanges(to collection: UICollectionView?) {
+		guard let collection = collection, self.hasChanges else { return }
+		collection.deleteSections(self.deletes)
+		collection.insertSections(self.inserts)
 		self.moves.forEach {
-			c.moveSection($0.from, toSection: $0.to)
+			collection.moveSection($0.from, toSection: $0.to)
 		}
-		c.reloadSections(self.replaces)
+		collection.reloadSections(self.replaces)
 	}
 }
 
