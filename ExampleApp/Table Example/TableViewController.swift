@@ -73,23 +73,25 @@ class TableViewController: UIViewController {
 
         isReloading = true
 
-        switch direction {
-        case .backward:
-            let oldContentHeight = tableView.contentSize.height
-            let oldContentOffsetY = tableView.contentOffset.y
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            switch direction {
+            case .backward:
+                let oldContentHeight = self.tableView.contentSize.height
+                let oldContentOffsetY = self.tableView.contentOffset.y
 
-            print("oldContentHeight: \(oldContentHeight)")
-            print("oldContentOffsetY: \(oldContentOffsetY)")
+                print("oldContentHeight: \(oldContentHeight)")
+                print("oldContentOffsetY: \(oldContentOffsetY)")
 
-            prependAndReload()
+                self.prependAndReload()
 
-            restoreOffset(oldContentHeight: oldContentHeight, oldContentOffsetY: oldContentOffsetY)
+                self.restoreOffset(oldContentHeight: oldContentHeight, oldContentOffsetY: oldContentOffsetY)
 
-        case .forward:
-            appendAndReload()
+            case .forward:
+                self.appendAndReload()
+            }
+
+            self.isReloading = false
         }
-
-        self.isReloading = false
     }
 
     // MARK: Append/Prepend
