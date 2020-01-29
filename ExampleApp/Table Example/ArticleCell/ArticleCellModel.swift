@@ -8,18 +8,24 @@
 
 import UIKit
 
-public struct ArticleCellModel: ModelProtocol {
-    public let title: String
+struct ArticleCellModel: ModelProtocol {
+    let title: String
+    let contentHeight: CGFloat
 
-    public let contentHeight: CGFloat = 100.0
-
-    public init(title: String) {
+    init(title: String, contentHeight: CGFloat) {
         self.title = title
+        self.contentHeight = contentHeight
+    }
+
+    // MARK: - Stub model
+
+    static func prototypeModel(title: String) -> ArticleCellModel {
+        return ArticleCellModel(title: title, contentHeight: 0.0)
     }
 
     // MARK: - ModelProtocol
 
-    public var modelId: String {
+    var modelId: String {
         return title
     }
 }

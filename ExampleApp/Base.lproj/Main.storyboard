@@ -36,49 +36,22 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="jcz-1b-EUS">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="mxb-zr-wgS">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ArticleCell" rowHeight="85" id="1kt-2s-tyG" customClass="ArticleCell" customModule="ExampleApp" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="85"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="1kt-2s-tyG" id="Xoh-1e-1mq">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="85"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Article Title" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gUV-bX-ZXU">
-                                                    <rect key="frame" x="15" y="11" width="345" height="63"/>
-                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="gUV-bX-ZXU" firstAttribute="leading" secondItem="Xoh-1e-1mq" secondAttribute="leadingMargin" id="eSP-3c-LB2"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="gUV-bX-ZXU" secondAttribute="bottom" id="f3k-Yh-SDv"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="gUV-bX-ZXU" secondAttribute="trailing" id="y9p-yp-0lC"/>
-                                                <constraint firstItem="gUV-bX-ZXU" firstAttribute="top" secondItem="Xoh-1e-1mq" secondAttribute="topMargin" id="z4J-NM-eQP"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <connections>
-                                            <outlet property="titleLabel" destination="gUV-bX-ZXU" id="3IO-Hg-Kp3"/>
-                                        </connections>
-                                    </tableViewCell>
-                                </prototypes>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="jcz-1b-EUS" firstAttribute="top" secondItem="tsR-hK-woN" secondAttribute="top" id="8zT-GE-oRW"/>
-                            <constraint firstAttribute="trailing" secondItem="jcz-1b-EUS" secondAttribute="trailing" id="Ch0-Or-Pt1"/>
-                            <constraint firstAttribute="bottom" secondItem="jcz-1b-EUS" secondAttribute="bottom" id="a48-XP-hk9"/>
-                            <constraint firstItem="jcz-1b-EUS" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leading" id="tSm-8k-jbx"/>
+                            <constraint firstItem="mxb-zr-wgS" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leading" id="bIJ-Bu-NWL"/>
+                            <constraint firstAttribute="trailing" secondItem="mxb-zr-wgS" secondAttribute="trailing" id="jqd-1l-zVI"/>
+                            <constraint firstItem="mxb-zr-wgS" firstAttribute="top" secondItem="tsR-hK-woN" secondAttribute="top" id="nAy-41-Wma"/>
+                            <constraint firstAttribute="bottom" secondItem="mxb-zr-wgS" secondAttribute="bottom" id="zqn-6k-FKT"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="bZz-N6-nUg"/>
                     <connections>
-                        <outlet property="tableView" destination="jcz-1b-EUS" id="gTp-4g-FNS"/>
+                        <outlet property="tableView" destination="mxb-zr-wgS" id="WyF-6M-cca"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>

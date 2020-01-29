@@ -9,21 +9,19 @@
 import UIKit
 
 class ArticleCellAdapter: TableAdapter<ArticleCellModel, ArticleCell> {
-
     init() {
         super.init()
 
-        self.on.dequeue = { ctx in
-            ctx.cell?.titleLabel?.text = ctx.model.title
+        self.on.dequeue = { context in
+            context.cell?.configure(with: context.model)
         }
 
-        self.on.rowHeight = { _ in
-            return 100.0
+        self.on.rowHeight = { context in
+            return context.model.contentHeight
         }
 
-        self.on.rowHeightEstimated = { _ in
-            return 100.0
+        self.on.rowHeightEstimated = { context in
+            return context.model.contentHeight
         }
     }
-
 }

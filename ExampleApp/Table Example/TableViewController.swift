@@ -16,6 +16,8 @@ class TableViewController: UIViewController {
 
 	@IBOutlet public var tableView: UITableView!
 
+    let articleCellSizesCalculator = ArticleCellSizesCalculator()
+
     var backwardIteration = 0
     var forwardIteration = 0
 
@@ -77,32 +79,42 @@ class TableViewController: UIViewController {
         case .backward:
             let oldContentHeight = self.tableView.contentSize.height
             let oldContentOffsetY = self.tableView.contentOffset.y
-            
+
             print("oldContentHeight: \(oldContentHeight)")
             print("oldContentOffsetY: \(oldContentOffsetY)")
-            
+
             self.prependAndReload()
-            
+
             self.restoreOffset(oldContentHeight: oldContentHeight, oldContentOffsetY: oldContentOffsetY)
-            
+
         case .forward:
             self.appendAndReload()
         }
-        
+
         self.isReloading = false
     }
 
     // MARK: Append/Prepend
 
+    let loremIpsum = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+
     func prependAndReload() {
-        let models: [ArticleCellModel] = (0..<20).map { ArticleCellModel(title: "Title: \(self.backwardIteration).\($0)") }
+        let models: [ArticleCellModel] = (0..<20).map { index in
+            let title = "Title: \(self.backwardIteration).\(index)\n\(loremIpsum)"
+            let contentHeight = self.articleCellSizesCalculator.calculateContentHeight(with: title, fixedWidth: self.tableView.frame.width)
+            return ArticleCellModel(title: title, contentHeight: contentHeight)
+        }
         let section = TableSection(headerTitle: "Header \(self.backwardIteration)", footerTitle: nil, models: models)
         self.tableView.director.add(section: section, at: 0)
         self.tableView.director.reloadData()
     }
 
     func appendAndReload() {
-        let models: [ArticleCellModel] = (0..<20).map { ArticleCellModel(title: "Title: \(self.forwardIteration).\($0)") }
+        let models: [ArticleCellModel] = (0..<20).map { index in
+            let title = "Title: \(self.forwardIteration).\(index)\n\(loremIpsum)"
+            let contentHeight = self.articleCellSizesCalculator.calculateContentHeight(with: title, fixedWidth: self.tableView.frame.width)
+            return ArticleCellModel(title: title, contentHeight: contentHeight)
+        }
         let section = TableSection(headerTitle: "Header \(self.forwardIteration)", footerTitle: nil, models: models)
         self.tableView.director.add(section: section, at: nil)
         self.tableView.director.reloadData()

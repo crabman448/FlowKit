@@ -8,6 +8,20 @@
 
 import UIKit
 
-public class ArticleCell: UITableViewCell {
-    @IBOutlet public var titleLabel: UILabel?
+class ArticleCell: UITableViewCell {
+    let articleCellView = ArticleCellView()
+
+    // MARK: - Lifecycle
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+
+        self.contentView.constraint(subview: articleCellView, to: .superview)
+    }
+
+    // MARK: - Configuration
+
+    func configure(with model: ArticleCellModel) {
+        articleCellView.configure(with: model)
+    }
 }
