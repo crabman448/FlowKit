@@ -16,8 +16,6 @@ class TableViewController: UIViewController {
 
 	@IBOutlet public var tableView: UITableView!
 
-    let tableSection = TableSection(models: nil)
-
     var backwardIteration = 0
     var forwardIteration = 0
 
@@ -29,6 +27,8 @@ class TableViewController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+
+        self.tableView.director.headerHeight = 24.0
 
 		self.tableView.director.register(adapter: ArticleAdapter())
 
@@ -54,8 +54,6 @@ class TableViewController: UIViewController {
         self.tableView.director.onScroll?.willEndDragging = { [weak self] scrollView, velocity, targetContentOffset in
             self?.targetContentOffsetY = targetContentOffset.pointee.y
         }
-
-        self.tableView.director.set(sections: [tableSection])
 	}
 
     // MARK: Paginate
@@ -98,13 +96,15 @@ class TableViewController: UIViewController {
 
     func prependAndReload() {
         let models: [Article] = (0..<20).map { Article(title: "Title: \(self.backwardIteration).\($0)") }
-        self.tableSection.add(models: models, at: 0)
+        let section = TableSection(headerTitle: "Header \(self.backwardIteration)", footerTitle: nil, models: models)
+        self.tableView.director.add(section: section, at: 0)
         self.tableView.director.reloadData()
     }
 
     func appendAndReload() {
         let models: [Article] = (0..<20).map { Article(title: "Title: \(self.forwardIteration).\($0)") }
-        self.tableSection.add(models: models, at: nil)
+        let section = TableSection(headerTitle: "Header \(self.forwardIteration)", footerTitle: nil, models: models)
+        self.tableView.director.add(section: section, at: nil)
         self.tableView.director.reloadData()
     }
 
