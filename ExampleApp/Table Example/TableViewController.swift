@@ -8,6 +8,38 @@
 
 import UIKit
 
+class OffsetController {
+    let scrollView: UIScrollView
+
+    var oldContentHeight: CGFloat = 0.0
+    var oldContentOffsetY: CGFloat = 0.0
+
+    init(scrollView: UIScrollView) {
+        self.scrollView = scrollView
+    }
+
+    func saveOffset() {
+        self.oldContentHeight = self.scrollView.contentSize.height
+        self.oldContentOffsetY = self.scrollView.contentOffset.y
+    }
+
+    func restoreOffset() {
+
+        // It's necessary to launch layout updates before resetting the content offset.
+        // Otherwise system will keep the current offset and content will jump to the top cell.
+        self.scrollView.setNeedsLayout()
+        self.scrollView.layoutIfNeeded()
+
+        // When we calculate new offset we need take into account the adjusted content inset.
+        let contentOffsetYAdjustment = max(-scrollView.adjustedContentInset.top, self.oldContentOffsetY)
+
+        let newContentHeight = self.scrollView.contentSize.height
+        let newContentOffsetY = newContentHeight - self.oldContentHeight + contentOffsetYAdjustment
+
+        self.scrollView.contentOffset.y = newContentOffsetY
+    }
+}
+
 class TableViewController: UIViewController {
     enum PaginateDirection {
         case backward
@@ -16,7 +48,8 @@ class TableViewController: UIViewController {
 
 	@IBOutlet public var tableView: UITableView!
 
-    let articleCellSizesCalculator = ArticleCellSizesCalculator()
+    lazy var articleCellSizesCalculator = ArticleCellSizesCalculator()
+    lazy var offsetController = OffsetController(scrollView: tableView)
 
     var backwardIteration = 0
     var forwardIteration = 0
@@ -98,12 +131,11 @@ class TableViewController: UIViewController {
 
         switch direction {
         case .backward:
-            let oldContentHeight = self.tableView.contentSize.height
-            let oldContentOffsetY = self.tableView.contentOffset.y
+            self.offsetController.saveOffset()
 
             self.prependAndReload()
 
-            self.restoreOffset(oldContentHeight: oldContentHeight, oldContentOffsetY: oldContentOffsetY)
+            self.offsetController.restoreOffset()
 
         case .forward:
             self.appendAndReload()
@@ -136,23 +168,5 @@ class TableViewController: UIViewController {
         let section = TableSection(headerTitle: "Header \(self.forwardIteration)", footerTitle: nil, models: models)
         self.tableView.director.add(section: section, at: nil)
         self.tableView.director.reloadData()
-    }
-
-    // MARK: RestoreOffset
-
-    func restoreOffset(oldContentHeight: CGFloat, oldContentOffsetY: CGFloat) {
-
-        // It's necessary to launch layout updates before resetting the content offset.
-        // Otherwise system will keep the current offset and content will jump to the top cell.
-        self.tableView.setNeedsLayout()
-        self.tableView.layoutIfNeeded()
-
-        // When we calculate new offset we need take into account the adjusted content inset.
-        let contentOffsetYAdjustment = max(-tableView.adjustedContentInset.top, oldContentOffsetY)
-
-        let newContentHeight = self.tableView.contentSize.height
-        let newContentOffsetY = newContentHeight - oldContentHeight + contentOffsetYAdjustment
-
-        self.tableView.contentOffset.y = newContentOffsetY
     }
 }
