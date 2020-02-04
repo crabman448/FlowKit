@@ -96,6 +96,22 @@ open class CollectionSection: Equatable, ModelProtocol {
         guard let man = manager, let idx = man.sections.firstIndex(of: self) else { return nil }
 		return idx
 	}
+
+    /// Initializer to create a copy of a TableSection
+    ///
+    /// - Parameter section: TableSection
+    public required init(_ section: CollectionSection) {
+        self.modelId = section.modelId
+        self.models = section.models
+        self.onModelsDidSet = section.onModelsDidSet
+        self.sectionInsets = section.sectionInsets
+        self.minimumInterItemSpacing = section.minimumInterItemSpacing
+        self.minimumLineSpacing = section.minimumLineSpacing
+        self.header = section.header
+        self.footer = section.footer
+        self.temporaryRemovedModels = section.temporaryRemovedModels
+        self.manager = section.manager
+    }
 	
 	/// Initialize a new section with given objects as models.
 	///
@@ -246,6 +262,6 @@ open class CollectionSection: Equatable, ModelProtocol {
     // MARK: Copy
 
     public var copy: CollectionSection {
-        return CollectionSection(modelId: modelId, models: models, headerView: header, footerView: footer)
+        return type(of: self).init(self)
     }
 }
