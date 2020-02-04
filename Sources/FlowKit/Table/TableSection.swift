@@ -31,7 +31,7 @@ import Foundation
 import UIKit
 
 /// Represent a single section of the table
-open class TableSection: ModelProtocol {
+public class TableSection: ModelProtocol {
 
     /// Unique identifier of the section
     public let modelId: String

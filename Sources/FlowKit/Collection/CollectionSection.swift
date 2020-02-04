@@ -31,7 +31,7 @@ import Foundation
 import UIKit
 
 /// Represent a single section of the collection.
-open class CollectionSection: Equatable, ModelProtocol {
+public class CollectionSection: Equatable, ModelProtocol {
 
     /// Unique identifier of the section
     public let modelId: String
