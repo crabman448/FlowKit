@@ -255,6 +255,6 @@ public class TableSection: ModelProtocol {
     // MARK: Copy
 
     public var copy: TableSection {
-        return TableSection(self)
+        return type(of: self).init(self)
     }
 }
