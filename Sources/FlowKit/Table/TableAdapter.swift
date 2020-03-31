@@ -47,7 +47,7 @@ open class TableAdapter<M: ModelProtocol, C: UITableViewCell>: TableAdapterProto
     /// Return true if you want to allocate the cell via class name using classic
     /// `initWithFrame`/`initWithCoder`. If your cell UI is defined inside a nib file
     /// or inside a storyboard you must return `false`.
-    public var registerAsClass: Bool {
+    open var registerAsClass: Bool {
         return false
     }
 	
