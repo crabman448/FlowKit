@@ -94,8 +94,6 @@ public struct TableReloadAnimations: TableReloadAnimationProtocol {
 
 // Protocols
 
-extension UITableViewCell: CellProtocol { }
-
 public protocol TableAdapterProtocol : AbstractAdapterProtocol, Equatable { }
 
 internal protocol AbstractTableHeaderFooterItem  {

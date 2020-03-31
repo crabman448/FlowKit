@@ -9,6 +9,10 @@
 import UIKit
 
 class ArticleCellAdapter: TableAdapter<ArticleCellModel, ArticleCell> {
+    override var registerAsClass: Bool {
+        return true
+    }
+
     init() {
         super.init()
 

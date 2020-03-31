@@ -11,11 +11,23 @@ import UIKit
 class ArticleCell: UITableViewCell {
     let articleCellView = ArticleCellView()
 
-    // MARK: - Lifecycle
+    // MARK: - Init
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
 
+        setup()
+    }
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        setup()
+    }
+
+    // MARK: Setup
+
+    func setup() {
         self.contentView.constraint(subview: articleCellView, to: .superview)
     }
 

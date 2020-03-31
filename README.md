@@ -238,15 +238,15 @@ public class Contact: ModelProtocol {
 
 Both `UITableViewCell` and `UICollectionViewCell` and its subclasses are automatically conforms to `CellProtocol`.
 
-The only constraint is about `reuseIdentifier`: **cells must have`reuseIdentifier` (`Identifier` in Interface Builder) the name of the class itself.**.
+Variable `reuseIdentifier` of the cell returns the name of the cell.
 
-If you need you can override this behaviour by overrinding the  `reuseIdentifier: String` property of your cell and returing your own identifier.
+The only constraint is about `reuseIdentifier`: **cells must have`reuseIdentifier` (`Identifier` in Interface Builder) the name of the class itself.**.
 
 Cell can be loaded in three ways:
 
 - **Cells from Storyboard**: This is the default behaviour; you don't need to do anything, cells are registered automatically.
 - **Cells from XIB files**: Be sure your xib files have the same name of the class (ie. `ContactCell.xib`) and the cell as root item.
-- **Cells from `initWithFrame`**: Override `CellProtocol`'s `registerAsClass` to return `true`.
+- **Cells from `initWithFrame`**: Override `registerAsClass` in the CellAdapter to return `true`.
 
 This is a small example of the `ContactCell`:
 

@@ -213,10 +213,7 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource
 	
 	
 	/// Register an adapter.
-	/// An adapter is an object which manage a pair of `AnyHashable`, `CellProtocol` types which defines
-	/// a type of data inside the collection (all models of the given type are managed by given cell type).
-	/// This is used to ensure type safety of the data and its the core of the library itself.
-	/// Be sure to register all required adapters before using the collection itself.
+    /// Adapter manage a single model type and associate it to a visual representation (a cell).
 	///
 	/// - Parameter adapter: adapter to register
 	public func register(adapter: AbstractAdapterProtocol) {

@@ -31,14 +31,25 @@ import Foundation
 import UIKit
 
 /// Adapter manages a model type with its associated view representation (a particular cell type).
-open class TableAdapter<M: ModelProtocol, C: CellProtocol>: TableAdapterProtocol,TableAdaterProtocolFunctions {
+open class TableAdapter<M: ModelProtocol, C: UITableViewCell>: TableAdapterProtocol,TableAdaterProtocolFunctions {
 
-	/// TableAdapterProtocol conformances
 	public var modelType: Any.Type = M.self
 	public var cellType: Any.Type = C.self
-	public var cellReuseIdentifier: String { return C.reuseIdentifier }
-	public var cellClass: AnyClass { return C.self }
-	public var registerAsClass: Bool { return C.registerAsClass }
+
+	public var cellReuseIdentifier: String {
+        return C.reuseIdentifier
+    }
+
+	public var cellClass: AnyClass {
+        return C.self
+    }
+
+    /// Return true if you want to allocate the cell via class name using classic
+    /// `initWithFrame`/`initWithCoder`. If your cell UI is defined inside a nib file
+    /// or inside a storyboard you must return `false`.
+    public var registerAsClass: Bool {
+        return false
+    }
 	
 	public static func == (lhs: TableAdapter<M, C>, rhs: TableAdapter<M, C>) -> Bool {
 		return 	(String(describing: lhs.modelType) == String(describing: rhs.modelType)) &&
@@ -255,7 +266,7 @@ extension TableAdapter {
 
 		/// Instance a new context with given data.
 		/// Init of these objects are reserved.
-		internal init(model: ModelProtocol, cell: CellProtocol?, path: IndexPath, table: UITableView) {
+		internal init(model: ModelProtocol, cell: UITableViewCell?, path: IndexPath, table: UITableView) {
 			self.model = model as! M
 			self._cell = cell as? C
 			self.indexPath = path

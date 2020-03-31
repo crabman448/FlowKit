@@ -31,14 +31,10 @@ import Foundation
 import UIKit
 
 /// The adapter identify a pair of model and cell used to represent the data.
-open class CollectionAdapter<M: ModelProtocol, C: CellProtocol>: CollectionAdapterProtocol, CustomStringConvertible, AbstractAdapterProtocolFunctions {
+open class CollectionAdapter<M: ModelProtocol, C: UICollectionViewCell>: CollectionAdapterProtocol, CustomStringConvertible, AbstractAdapterProtocolFunctions {
 
 	public var modelType: Any.Type = M.self
 	public var cellType: Any.Type = C.self
-	
-	public var registerAsClass: Bool {
-		return C.registerAsClass
-	}
 
 	public var cellReuseIdentifier: String {
 		return C.reuseIdentifier
@@ -47,6 +43,13 @@ open class CollectionAdapter<M: ModelProtocol, C: CellProtocol>: CollectionAdapt
 	public var cellClass: AnyClass {
 		return C.self
 	}
+
+    /// Return true if you want to allocate the cell via class name using classic
+    /// `initWithFrame`/`initWithCoder`. If your cell UI is defined inside a nib file
+    /// or inside a storyboard you must return `false`.
+    public var registerAsClass: Bool {
+        return false
+    }
 	
 	/// Events for adapter
 	public var on = CollectionAdapter.Events<M,C>()
@@ -215,7 +218,7 @@ extension CollectionAdapter {
 		///   - cell: source generic cell
 		///   - path: cell's path
 		///   - collection: parent cell's collection instance
-		internal init(model: ModelProtocol, cell: CellProtocol?, path: IndexPath, collection: UICollectionView) {
+		internal init(model: ModelProtocol, cell: UICollectionViewCell?, path: IndexPath, collection: UICollectionView) {
 			self.model = model as! M
 			self._cell = cell as? C
 			self.indexPath = path
