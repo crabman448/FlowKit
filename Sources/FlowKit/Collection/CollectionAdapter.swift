@@ -157,6 +157,14 @@ open class CollectionAdapter<M: ModelProtocol, C: UICollectionViewCell>: Collect
 		case .shouldDeselect:
 			guard let callback = self.on.shouldDeselect else { return nil }
 			return callback(Context<M,C>(generic: context))
+
+        case .contextMenuConfiguration:
+            if #available(iOS 13, *) {
+                guard let callback = self.on.contextMenuConfiguration else { return nil }
+                return callback(Context<M,C>(generic: context))
+            } else {
+                debugPrint("Supported only for iOS 13 or higher")
+            }
 			
 		}
 		return nil

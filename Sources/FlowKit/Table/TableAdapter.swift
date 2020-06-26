@@ -230,7 +230,7 @@ open class TableAdapter<M: ModelProtocol, C: UITableViewCell>: TableAdapterProto
                 guard let callback = self.on.contextMenuConfiguration else { return nil }
                 return callback(Context<M,C>(generic: context))
             } else {
-                debugPrint("Supported only for iOS 11 or higher")
+                debugPrint("Supported only for iOS 13 or higher")
             }
 		}
 		return nil

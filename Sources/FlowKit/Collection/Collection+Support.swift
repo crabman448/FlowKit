@@ -165,6 +165,7 @@ internal enum CollectionAdapterEventKey: Int {
 	case prefetch
 	case cancelPrefetch
 	case shouldSpringLoad
+    case contextMenuConfiguration
 }
 
 internal enum CollectionSectionViewEventsKey: Int {
