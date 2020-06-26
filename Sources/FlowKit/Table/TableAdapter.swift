@@ -224,6 +224,14 @@ open class TableAdapter<M: ModelProtocol, C: UITableViewCell>: TableAdapterProto
 			} else {
 				debugPrint("Supported only for iOS 11 or higher")
 			}
+
+        case .contextMenuConfiguration:
+            if #available(iOS 13, *) {
+                guard let callback = self.on.contextMenuConfiguration else { return nil }
+                return callback(Context<M,C>(generic: context))
+            } else {
+                debugPrint("Supported only for iOS 11 or higher")
+            }
 		}
 		return nil
 	}

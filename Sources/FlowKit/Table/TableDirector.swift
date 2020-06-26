@@ -694,6 +694,14 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 		}
 	}
 
+    // MARK: - UIContextMenu
+
+    @available(iOS 13.0, *)
+    public func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        let (model,adapter) = self.context(forItemAt: indexPath)
+        return adapter.dispatch(.contextMenuConfiguration, context: InternalContext.init(model, indexPath, nil, tableView)) as? UIContextMenuConfiguration
+    }
+
     // MARK: - UIScrollViewDelegate Events
 	
 	public func scrollViewDidScroll(_ scrollView: UIScrollView) {

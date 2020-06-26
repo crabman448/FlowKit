@@ -166,4 +166,5 @@ internal enum TableAdapterEventsKey: Int {
 	case canFocus
 	case leadingSwipeActions
 	case trailingSwipeActions
+    case contextMenuConfiguration
 }

@@ -122,6 +122,9 @@ extension TableAdapter {
 		@available(iOS 11, *)
 		public lazy var trailingSwipeActions: ((EventContext) -> UISwipeActionsConfiguration?)? = nil
 
+        @available(iOS 13, *)
+        public lazy var contextMenuConfiguration: ((EventContext) -> UIContextMenuConfiguration?)? = nil
+
 	}
 	
 }
