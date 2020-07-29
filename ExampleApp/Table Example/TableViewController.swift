@@ -85,11 +85,11 @@ class TableViewController: UIViewController {
             self?.isScrollingToTop = false
         }
 
-        self.tableView.director.onScroll?.endScrollingAnimation = { [weak self] scrollView in
+        self.tableView.director.onScroll?.endScrollingAnimation = { scrollView in
             print("endScrollingAnimation")
         }
 
-        self.tableView.director.onScroll?.endDecelerating = { [weak self] scrollView in
+        self.tableView.director.onScroll?.endDecelerating = { scrollView in
             print("endDecelerating")
         }
 
