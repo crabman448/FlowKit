@@ -167,7 +167,7 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource
 	///
 	/// - Parameter after: 	if defined a block animation is performed considering changes applied to the model;
 	///						if `nil` reload is performed without animation.
-	public func reloadData(after task: (() -> (Void))? = nil, onEnd: (() -> (Void))? = nil) {
+	public func reloadData(after task: ((CollectionDirector) -> (Void))? = nil, onEnd: (() -> (Void))? = nil) {
 		guard let task = task else {
 
             // Calling reloadData to indicate new items availability
@@ -189,7 +189,7 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource
         let oldItemsInSections: [String: [ModelProtocol]] = oldSections.reduce(into: [:], { $0[$1.modelId] = $1.models })
 		
 		// Execute block for changes
-		task()
+		task(self)
 		
 		// Evaluate changes in sections
 		let sectionChanges = SectionChanges.fromCollectionSections(old: oldSections, new: self.sections)
