@@ -119,16 +119,14 @@ open class FlowCollectionDirector: CollectionDirector, UICollectionViewDelegateF
 	
 	open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		let (model,adapter) = self.context(forItemAt: indexPath)
+
+        let potentialItemSizeValue = adapter.dispatch(.itemSize, context: InternalContext(model, indexPath, nil, collectionView)) as? CGSize
+
 		switch self.itemSize {
-		case .default:
-			guard let size = adapter.dispatch(.itemSize, context: InternalContext(model, indexPath, nil, collectionView)) as? CGSize else {
-				return self.layout!.itemSize
-			}
-			return size
-		case .autoLayout(let est):
-			return est
-		case .fixed(let size):
-			return size
+		case .default, .autoLayout(_):
+            return potentialItemSizeValue ?? self.layout?.itemSize ?? CGSize.zero
+		case .fixed(let itemSizeValue):
+			return potentialItemSizeValue ?? itemSizeValue
 		}
 	}
 	

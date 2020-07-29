@@ -512,18 +512,15 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
     // MARK: Row height
 	
 	public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		if case .fixed(let h) = self.rowHeight {
-			return h
-		}
+        let (model, adapter) = self.context(forItemAt: indexPath)
+
+        let potentialRowHeightValue = adapter.dispatch(.rowHeight, context: InternalContext(model, indexPath, nil, tableView)) as? CGFloat
 		
 		switch self.rowHeight {
-		case .default:
-			let (model,adapter) = self.context(forItemAt: indexPath)
-            return (adapter.dispatch(.rowHeight, context: InternalContext(model, indexPath, nil, tableView)) as? CGFloat) ?? UITableView.automaticDimension
-		case .autoLayout(_):
-            return UITableView.automaticDimension
-		default:
-			return self.tableView!.rowHeight
+		case .default, .autoLayout(_):
+            return potentialRowHeightValue ?? UITableView.automaticDimension
+        case let .fixed(rowHeightValue):
+            return potentialRowHeightValue ?? rowHeightValue
 		}
 	}
 	
