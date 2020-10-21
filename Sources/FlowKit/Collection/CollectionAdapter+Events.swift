@@ -74,7 +74,6 @@ extension CollectionAdapter {
 		public var cancelPrefetch: ((_ items: [M], _ paths: [IndexPath], _ collection: UICollectionView) -> Void)? = nil
 		public var shouldSpringLoad: ((EventContext) -> Bool)? = nil
 
-        @available(iOS 13, *)
         public lazy var contextMenuConfiguration: ((EventContext) -> UIContextMenuConfiguration?)? = nil
 	}
 	

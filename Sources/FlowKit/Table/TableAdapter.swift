@@ -129,10 +129,6 @@ open class TableAdapter<M: ModelProtocol, C: UITableViewCell>: TableAdapterProto
 			guard let callback = self.on.shouldSpringLoad else { return nil }
 			return callback(Context<M,C>(generic: context))
 			
-		case .editActions:
-			guard let callback = self.on.editActions else { return nil }
-			return callback(Context<M,C>(generic: context))
-			
 		case .tapOnAccessory:
 			guard let callback = self.on.tapOnAccessory else { return nil }
 			callback(Context<M,C>(generic: context))
@@ -210,28 +206,16 @@ open class TableAdapter<M: ModelProtocol, C: UITableViewCell>: TableAdapterProto
 			return callback(Context<M,C>(generic: context))
 			
 		case .leadingSwipeActions:
-			if #available(iOS 11, *) {
-				guard let callback = self.on.leadingSwipeActions else { return nil }
-				return callback(Context<M,C>(generic: context))
-			} else {
-				debugPrint("Supported only for iOS 11 or higher")
-			}
+            guard let callback = self.on.leadingSwipeActions else { return nil }
+            return callback(Context<M,C>(generic: context))
 			
 		case .trailingSwipeActions:
-			if #available(iOS 11, *) {
-				guard let callback = self.on.trailingSwipeActions else { return nil }
-				return callback(Context<M,C>(generic: context))
-			} else {
-				debugPrint("Supported only for iOS 11 or higher")
-			}
+            guard let callback = self.on.trailingSwipeActions else { return nil }
+            return callback(Context<M,C>(generic: context))
 
         case .contextMenuConfiguration:
-            if #available(iOS 13, *) {
-                guard let callback = self.on.contextMenuConfiguration else { return nil }
-                return callback(Context<M,C>(generic: context))
-            } else {
-                debugPrint("Supported only for iOS 13 or higher")
-            }
+            guard let callback = self.on.contextMenuConfiguration else { return nil }
+            return callback(Context<M,C>(generic: context))
 		}
 		return nil
 	}

@@ -59,11 +59,10 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource
 	
 	/// Drag & Drop Event Manager
 	/// Its valid only if `dragDropEnabled` is `true`.
-	//public private(set) var dragDrop: DragAndDropManager? = nil
+	public private(set) var dragDrop: DragAndDropManager? = nil
 	
 	/// Enable or disable drag&drop on collection view.
 	/// You must configure the `dragDrop` manager if you enabled this feature.
-	/*@available(iOS 11.0, *)
 	public var dragDropEnabled: Bool {
 		set {
 			switch newValue {
@@ -72,27 +71,18 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource
 			}
 		}
 		get { return (self.dragDrop != nil) }
-	}*/
+	}
 	
 	/// Set it to `true` to enable cell prefetching. By default is set to `false`.
 	public var prefetchEnabled: Bool {
 		set {
-			if #available(iOS 10.0, *) {
-				switch newValue {
-				case true: self.collection!.prefetchDataSource = self
-				case false: self.collection!.prefetchDataSource = nil
-				}
-			} else {
-				debugPrint("Prefetch is available only from iOS 10")
-			}
+            switch newValue {
+            case true: self.collection!.prefetchDataSource = self
+            case false: self.collection!.prefetchDataSource = nil
+            }
 		}
 		get {
-			if #available(iOS 10.0, *) {
-				return (self.collection!.prefetchDataSource != nil)
-			} else {
-				debugPrint("Prefetch is available only from iOS 10")
-				return false
-			}
+            return (self.collection!.prefetchDataSource != nil)
 		}
 	}
 
@@ -480,28 +470,24 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource
 		let (model,adapter) = self.context(forItemAt: indexPath)
 		return ((adapter.dispatch(.canFocus, context: InternalContext.init(model, indexPath, nil, collectionView)) as? Bool) ?? true)
 	}
-	
-	@available(iOS 11.0, *)
+
 	public func collectionView(_ collectionView: UICollectionView, shouldSpringLoadItemAt indexPath: IndexPath, with context: UISpringLoadedInteractionContext) -> Bool {
 		let (model,adapter) = self.context(forItemAt: indexPath)
 		return ((adapter.dispatch(.shouldSpringLoad, context: InternalContext.init(model, indexPath, nil, collectionView)) as? Bool) ?? true)
 	}
 
-    @available(iOS 13.0, *)
     public func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         let (model,adapter) = self.context(forItemAt: indexPath)
         return adapter.dispatch(.contextMenuConfiguration, context: InternalContext.init(model, indexPath, nil, collectionView)) as? UIContextMenuConfiguration
     }
-	
-    @available(iOS 9.0, *)
+
 	public func collectionView(_ collectionView: UICollectionView, shouldUpdateFocusIn context: UICollectionViewFocusUpdateContext) -> Bool {
 		guard let update = self.on.shouldUpdateFocus?(context) else {
 			return true
 		}
 		return update
 	}
-	
-    @available(iOS 9.0, *)
+
 	public func collectionView(_ collectionView: UICollectionView, didUpdateFocusIn context: UICollectionViewFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
 		self.on.didUpdateFocus?(context,coordinator)
 	}

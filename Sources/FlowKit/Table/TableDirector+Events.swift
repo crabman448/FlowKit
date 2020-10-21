@@ -88,7 +88,6 @@ extension TableAdapter {
 		public var willDisplay: ((EventContext) -> Void)? = nil
 		public var shouldSpringLoad: ((EventContext) -> Bool)? = nil
 		
-		public var editActions: ((EventContext) -> [UITableViewRowAction]?)? = nil
 		public var tapOnAccessory: ((EventContext) -> Void)? = nil
 		
 		public var willSelect: ((EventContext) -> IndexPath?)? = nil
@@ -116,13 +115,9 @@ extension TableAdapter {
 		
 		public var canFocus: ((EventContext) -> Bool)? = nil
 
-		@available(iOS 11, *)
 		public lazy var leadingSwipeActions: ((EventContext) -> UISwipeActionsConfiguration?)? = nil
-
-		@available(iOS 11, *)
 		public lazy var trailingSwipeActions: ((EventContext) -> UISwipeActionsConfiguration?)? = nil
 
-        @available(iOS 13, *)
         public lazy var contextMenuConfiguration: ((EventContext) -> UIContextMenuConfiguration?)? = nil
 
 	}

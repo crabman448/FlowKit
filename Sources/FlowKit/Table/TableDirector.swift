@@ -90,28 +90,19 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	}
 	
 	/// Set it `true` to enable cell's prefetch. You must register `prefetch` and `cancelPrefetch`
-	/// events inside enabled sections.
-	public var prefetchEnabled: Bool {
-		set {
-			if #available(iOS 10.0, *) {
-				switch newValue {
-				case true: 	self.tableView!.prefetchDataSource = self
-				case false: self.tableView!.prefetchDataSource = nil
-				}
-			} else {
-				debugPrint("Prefetch is available only from iOS 10")
-			}
-		}
-		get {
-			if #available(iOS 10.0, *) {
-				return (self.tableView!.prefetchDataSource != nil)
-			} else {
-				debugPrint("Prefetch is available only from iOS 10")
-				return false
-			}
-		}
-	}
-	
+    /// events inside enabled sections.
+    public var prefetchEnabled: Bool {
+        set {
+            switch newValue {
+            case true: 	self.tableView!.prefetchDataSource = self
+            case false: self.tableView!.prefetchDataSource = nil
+            }
+        }
+        get {
+            return (self.tableView!.prefetchDataSource != nil)
+        }
+    }
+    
 	/// Initialize a new director for given table.
 	///
 	/// - Parameter table: table manager
@@ -178,18 +169,11 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 			}
 		}
 		
-		if #available(iOS 11.0, *) {
-			self.tableView?.performBatchUpdates({
-				executeDiffAndUpdate()
-			}, completion: { _ in
-				onEnd?()
-			})
-		} else {
-			self.tableView?.beginUpdates()
-			executeDiffAndUpdate()
-			self.tableView?.endUpdates()
-			DispatchQueue.main.asyncAfter(deadline: .now() + 0.25, execute: { onEnd?() })
-		}
+        self.tableView?.performBatchUpdates({
+            executeDiffAndUpdate()
+        }, completion: { _ in
+            onEnd?()
+        })
 	}
 	
 	/// Change the content of the table.
@@ -541,17 +525,11 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 		adapter.dispatch(.willDisplay, context: InternalContext.init(model, indexPath, cell, tableView))
 	}
 	
-	@available(iOS 11.0, *)
 	public func tableView(_ tableView: UITableView, shouldSpringLoadRowAt indexPath: IndexPath, with context: UISpringLoadedInteractionContext) -> Bool {
 		let (model,adapter) = self.context(forItemAt: indexPath)
 		return ((adapter.dispatch(.shouldSpringLoad, context: InternalContext(model, indexPath, nil, tableView)) as? Bool) ?? true)
 	}
-	
-	public func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-		let (model,adapter) = self.context(forItemAt: indexPath)
-		return adapter.dispatch(.editActions, context: InternalContext(model, indexPath, nil, tableView)) as? [UITableViewRowAction]
-	}
-	
+
 	public func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
 		let (model,adapter) = self.context(forItemAt: indexPath)
 		adapter.dispatch(.tapOnAccessory, context: InternalContext(model, indexPath, nil, tableView))
@@ -655,13 +633,11 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 		return ((adapter.dispatch(.canFocus, context: InternalContext(model, indexPath, nil, tableView)) as? Bool) ?? true)
 	}
 	
-	@available(iOS 11, *)
 	public func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 		let (model,adapter) = self.context(forItemAt: indexPath)
 		return adapter.dispatch(.leadingSwipeActions, context: InternalContext.init(model, indexPath, nil, tableView)) as? UISwipeActionsConfiguration
 	}
 	
-	@available(iOS 11.0, *)
 	public func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 		let (model,adapter) = self.context(forItemAt: indexPath)
 		return adapter.dispatch(.trailingSwipeActions, context: InternalContext.init(model, indexPath, nil, tableView)) as? UISwipeActionsConfiguration
@@ -693,7 +669,6 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 
     // MARK: - UIContextMenu
 
-    @available(iOS 13.0, *)
     public func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         let (model,adapter) = self.context(forItemAt: indexPath)
         return adapter.dispatch(.contextMenuConfiguration, context: InternalContext.init(model, indexPath, nil, tableView)) as? UIContextMenuConfiguration

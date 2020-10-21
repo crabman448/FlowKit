@@ -31,8 +31,6 @@ import Foundation
 import UIKit
 
 extension CollectionDirector {
-	
-	@available(iOS 11.0, *)
 	public final class DragAndDropManager: NSObject, UICollectionViewDragDelegate, UICollectionViewDropDelegate {
 		
 		/// Context of Drag/Drop operation
