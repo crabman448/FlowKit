@@ -31,9 +31,6 @@ import Foundation
 import UIKit
 
 open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSourcePrefetching {
-    
-    /// Managed collection view layout
-    public let layout: UICollectionViewLayout
 
 	/// Managed collection view
 	public let collection: UICollectionView
@@ -70,7 +67,6 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
 	///
 	/// - Parameter collection: instance of the collection to manage.
 	public init(_ collection: UICollectionView) {
-        self.layout = collection.collectionViewLayout
         self.collection = collection
 		self.reusableRegister = ReusableRegister(collection)
         
