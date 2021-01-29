@@ -30,25 +30,6 @@
 import Foundation
 import UIKit
 
-extension UITableView {
-	
-	private static let DIRECTOR_KEY = "flowkit.director"
-	
-	/// Return director associated with collection.
-	/// If not exist it will be created and assigned automatically.
-	public var director: TableDirector {
-		get {
-			return getAssociatedValue(key: UITableView.DIRECTOR_KEY,
-									  object: self,
-									  initialValue: TableDirector(self))
-		}
-		set {
-			set(associatedValue: newValue, key: UITableView.DIRECTOR_KEY, object: self)
-		}
-	}
-	
-}
-
 /// State of the section
 ///
 /// - none: don't change the state

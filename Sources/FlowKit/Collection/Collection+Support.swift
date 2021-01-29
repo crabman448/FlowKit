@@ -175,22 +175,3 @@ internal enum CollectionSectionViewEventsKey: Int {
 	case endDisplay
 	case willDisplay
 }
-
-extension UICollectionView {
-	
-	private static let DIRECTOR_KEY = "flowkit.director"
-	
-	/// Return director associated with collection.
-	/// If not exist it will be created and assigned automatically.
-	public var director: FlowCollectionDirector {
-		get {
-			return getAssociatedValue(key: UICollectionView.DIRECTOR_KEY,
-									  object: self,
-									  initialValue: FlowCollectionDirector(self))
-		}
-		set {
-			set(associatedValue: newValue, key: UICollectionView.DIRECTOR_KEY, object: self)
-		}
-	}
-	
-}
