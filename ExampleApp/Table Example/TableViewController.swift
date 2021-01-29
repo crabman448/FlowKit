@@ -47,6 +47,8 @@ class TableViewController: UIViewController {
     }
 
 	@IBOutlet public var tableView: UITableView!
+    
+    lazy var director = TableDirector(tableView)
 
     lazy var articleCellSizesCalculator = ArticleCellSizesCalculator()
     lazy var offsetController = OffsetController(scrollView: tableView)
@@ -63,11 +65,11 @@ class TableViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-        self.tableView.director.headerHeight = 24.0
+        self.director.headerHeight = 24.0
 
-		self.tableView.director.register(adapter: ArticleCellAdapter())
+		self.director.register(adapter: ArticleCellAdapter())
 
-        self.tableView.director.onScroll?.shouldScrollToTop = { [weak self] scrollView in
+        self.director.onScroll?.shouldScrollToTop = { [weak self] scrollView in
 
             print("shouldScrollToTop")
 
@@ -76,7 +78,7 @@ class TableViewController: UIViewController {
             return true
         }
 
-        self.tableView.director.onScroll?.didScrollToTop = { [weak self] scrollView in
+        self.director.onScroll?.didScrollToTop = { [weak self] scrollView in
 
             print("didScrollToTop")
 
@@ -85,15 +87,15 @@ class TableViewController: UIViewController {
             self?.isScrollingToTop = false
         }
 
-        self.tableView.director.onScroll?.endScrollingAnimation = { scrollView in
+        self.director.onScroll?.endScrollingAnimation = { scrollView in
             print("endScrollingAnimation")
         }
 
-        self.tableView.director.onScroll?.endDecelerating = { scrollView in
+        self.director.onScroll?.endDecelerating = { scrollView in
             print("endDecelerating")
         }
 
-        self.tableView.director.onScroll?.didScroll = { [weak self] scrollView in
+        self.director.onScroll?.didScroll = { [weak self] scrollView in
 
             print("didScroll")
 
@@ -155,8 +157,8 @@ class TableViewController: UIViewController {
             return ArticleCellModel(title: title, contentHeight: contentHeight)
         }
         let section = TableSection(headerTitle: "Header \(self.backwardIteration)", footerTitle: nil, models: models)
-        self.tableView.director.add(section: section, at: 0)
-        self.tableView.director.reloadData()
+        self.director.add(section: section, at: 0)
+        self.director.reloadData()
     }
 
     func appendAndReload() {
@@ -166,7 +168,7 @@ class TableViewController: UIViewController {
             return ArticleCellModel(title: title, contentHeight: contentHeight)
         }
         let section = TableSection(headerTitle: "Header \(self.forwardIteration)", footerTitle: nil, models: models)
-        self.tableView.director.add(section: section, at: nil)
-        self.tableView.director.reloadData()
+        self.director.add(section: section, at: nil)
+        self.director.reloadData()
     }
 }

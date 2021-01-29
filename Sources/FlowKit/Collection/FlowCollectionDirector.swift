@@ -32,7 +32,13 @@ import UIKit
 
 open class FlowCollectionDirector: CollectionDirector, UICollectionViewDelegateFlowLayout {
 	
-    public let layout: UICollectionViewFlowLayout
+    public var layout: UICollectionViewFlowLayout {
+        didSet {
+            collection.collectionViewLayout = layout
+        }
+    }
+    
+    private var layoutToken: NSKeyValueObservation?
     
     /// Define the cell size.
     ///
@@ -46,18 +52,11 @@ open class FlowCollectionDirector: CollectionDirector, UICollectionViewDelegateF
         case autoLayout(estimated: CGSize)
         case fixed(size: CGSize)
     }
-    
-    /// Internal representation of the cell size
-    private var _itemSize: ItemSize = .default
 
     /// Define the size of the items into the cell (valid with `UICollectionViewFlowLayout` layout).
-    public var itemSize: ItemSize {
-        set {
-            guard let layout = self.collection.collectionViewLayout as? UICollectionViewFlowLayout else {
-                return
-            }
-            self._itemSize = newValue
-            switch _itemSize {
+    public var itemSize: ItemSize = .default {
+        didSet {
+            switch itemSize {
             case .autoLayout(let estimateSize):
                 layout.estimatedItemSize = estimateSize
                 layout.itemSize = CGSize(width: 50.0, height: 50.0) // default
@@ -68,9 +67,6 @@ open class FlowCollectionDirector: CollectionDirector, UICollectionViewDelegateF
                 layout.estimatedItemSize = .zero
                 layout.itemSize = CGSize(width: 50.0, height: 50.0) // default
             }
-        }
-        get {
-            return _itemSize
         }
     }
     
@@ -137,6 +133,13 @@ open class FlowCollectionDirector: CollectionDirector, UICollectionViewDelegateF
         self.layout = layout
         
 		super.init(collection)
+        
+        self.layoutToken = collection.observe(\.collectionViewLayout, options: [.initial, .new]) { [weak self] object, _ in
+            guard let layout = object.collectionViewLayout as? UICollectionViewFlowLayout else {
+                fatalError("Expected UICollectionViewFlowLayout")
+            }
+            self?.layout = layout
+        }
 	}
 	
 	//MARK: UICollectionViewDelegateFlowLayout Events
