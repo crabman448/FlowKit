@@ -32,28 +32,70 @@ import UIKit
 
 open class FlowCollectionDirector: CollectionDirector, UICollectionViewDelegateFlowLayout {
 	
+    public let layout: UICollectionViewFlowLayout
+    
+    /// Define the cell size.
+    ///
+    /// - `default`: standard behaviour (no auto sizing, needs to implement `onGetItemSize` on adapters).
+    /// - estimated: uses autolayout to calculate the size of the cell. You can provide an
+    ///                 estimated size of the cell to speed up the calculation.
+    ///                 Implement preferredLayoutAttributesFitting(_:) method in your cell to evaluate the size.
+    /// - fixed: fixed size where each item has the same size
+    public enum ItemSize {
+        case `default`
+        case autoLayout(estimated: CGSize)
+        case fixed(size: CGSize)
+    }
+    
+    /// Internal representation of the cell size
+    private var _itemSize: ItemSize = .default
+
+    /// Define the size of the items into the cell (valid with `UICollectionViewFlowLayout` layout).
+    public var itemSize: ItemSize {
+        set {
+            guard let layout = self.collection.collectionViewLayout as? UICollectionViewFlowLayout else {
+                return
+            }
+            self._itemSize = newValue
+            switch _itemSize {
+            case .autoLayout(let estimateSize):
+                layout.estimatedItemSize = estimateSize
+                layout.itemSize = CGSize(width: 50.0, height: 50.0) // default
+            case .fixed(let fixedSize):
+                layout.estimatedItemSize = .zero
+                layout.itemSize = fixedSize
+            case .default:
+                layout.estimatedItemSize = .zero
+                layout.itemSize = CGSize(width: 50.0, height: 50.0) // default
+            }
+        }
+        get {
+            return _itemSize
+        }
+    }
+    
 	/// Margins to apply to content.
 	/// This is a global value, you can customize a per-section behaviour by implementing `sectionInsets` property into a section.
 	/// Initially is set to `.zero`.
 	public var sectionsInsets: UIEdgeInsets {
-		set { self.layout?.sectionInset = newValue }
-		get { return self.layout!.sectionInset }
+		set { self.layout.sectionInset = newValue }
+		get { return self.layout.sectionInset }
 	}
 	
 	/// Minimum spacing (in points) to use between items in the same row or column.
 	/// This is a global value, you can customize a per-section behaviour by implementing `minimumInteritemSpacing` property into a section.
 	/// Initially is set to `CGFloat.leastNormalMagnitude`.
 	public var minimumInteritemSpacing: CGFloat {
-		set { self.layout?.minimumInteritemSpacing = newValue }
-		get { return self.layout!.minimumInteritemSpacing }
+		set { self.layout.minimumInteritemSpacing = newValue }
+		get { return self.layout.minimumInteritemSpacing }
 	}
 	
 	/// The minimum spacing (in points) to use between rows or columns.
 	/// This is a global value, you can customize a per-section behaviour by implementing `minimumInteritemSpacing` property into a section.
 	/// Initially is set to `0`.
 	public var minimumLineSpacing: CGFloat {
-		set { self.layout?.minimumLineSpacing = newValue }
-		get { return self.layout!.minimumLineSpacing }
+		set { self.layout.minimumLineSpacing = newValue }
+		get { return self.layout.minimumLineSpacing }
 	}
 	
 	/// When this property is true, section header views scroll with content until they reach the top of the screen,
@@ -62,8 +104,8 @@ open class FlowCollectionDirector: CollectionDirector, UICollectionViewDelegateF
 	///
 	/// The default value of this property is `false`.
 	public var stickyHeaders: Bool {
-		set { self.layout?.sectionHeadersPinToVisibleBounds = newValue }
-		get { return (self.layout?.sectionHeadersPinToVisibleBounds ?? false) }
+		set { self.layout.sectionHeadersPinToVisibleBounds = newValue }
+		get { return (self.layout.sectionHeadersPinToVisibleBounds) }
 	}
 	
 	/// When this property is true, section footer views scroll with content until they reach the bottom of the screen,
@@ -72,23 +114,14 @@ open class FlowCollectionDirector: CollectionDirector, UICollectionViewDelegateF
 	///
 	/// The default value of this property is `false`.
 	public var stickyFooters: Bool {
-		set { self.layout?.sectionFootersPinToVisibleBounds = newValue }
-		get { return (self.layout?.sectionFootersPinToVisibleBounds ?? false) }
+		set { self.layout.sectionFootersPinToVisibleBounds = newValue }
+		get { return (self.layout.sectionFootersPinToVisibleBounds) }
 	}
-	
-	/// Return/set the `UICollectionViewFlowLayout` associated with the collection.
-	public var layout: UICollectionViewFlowLayout? {
-		get { return (self.collection?.collectionViewLayout as? UICollectionViewFlowLayout) }
-		set {
-			guard let c = newValue else { return }
-			self.collection?.collectionViewLayout = c
-		}
-	}
-	
+
 	/// Set the section reference starting point.
     public var sectionInsetReference: UICollectionViewFlowLayout.SectionInsetReference {
-		set { self.layout?.sectionInsetReference = newValue }
-		get { return self.layout!.sectionInsetReference }
+		set { self.layout.sectionInsetReference = newValue }
+		get { return self.layout.sectionInsetReference }
 	}
 	
 	/// Initialize a new flow collection manager.
@@ -96,20 +129,14 @@ open class FlowCollectionDirector: CollectionDirector, UICollectionViewDelegateF
 	///
 	/// - Parameters:
 	///   - collection: collection instance to manage.
-	///   - flowLayout: if not `nil` it will be set a `collectionViewLayout` of given collection.
-	public init(_ collection: UICollectionView, flowLayout: UICollectionViewLayout? = nil) {
-		let usedLayout = (flowLayout ?? collection.collectionViewLayout)
-		guard usedLayout is UICollectionViewFlowLayout else {
-			fatalError("FlowCollectionManager require a UICollectionViewLayout layout.")
-		}
-		if let newLayout = flowLayout {
-			collection.collectionViewLayout = newLayout
-		}
+    public override init(_ collection: UICollectionView) {
+        guard let layout = collection.collectionViewLayout as? UICollectionViewFlowLayout else {
+            fatalError("Expected UICollectionViewFlowLayout")
+        }
+        
+        self.layout = layout
+        
 		super.init(collection)
-
-		self.layout?.sectionInset = .zero
-		self.layout?.minimumInteritemSpacing = CGFloat.leastNormalMagnitude
-		self.layout?.minimumLineSpacing = 0
 	}
 	
 	//MARK: UICollectionViewDelegateFlowLayout Events
@@ -121,7 +148,7 @@ open class FlowCollectionDirector: CollectionDirector, UICollectionViewDelegateF
 
 		switch self.itemSize {
 		case .default, .autoLayout(_):
-            return potentialItemSizeValue ?? self.layout?.itemSize ?? CGSize.zero
+            return potentialItemSizeValue ?? self.layout.itemSize
 		case .fixed(let itemSizeValue):
 			return potentialItemSizeValue ?? itemSizeValue
 		}

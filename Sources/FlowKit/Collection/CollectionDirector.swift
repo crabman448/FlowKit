@@ -30,59 +30,30 @@
 import Foundation
 import UIKit
 
-open class CollectionDirector: NSObject,
-UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSourcePrefetching {
-	
-	/// Define the cell size.
-	///
-	/// - `default`: standard behaviour (no auto sizing, needs to implement `onGetItemSize` on adapters).
-	/// - estimated: uses autolayout to calculate the size of the cell. You can provide an
-	///				 estimated size of the cell to speed up the calculation.
-	///				 Implement preferredLayoutAttributesFitting(_:) method in your cell to evaluate the size.
-	/// - fixed: fixed size where each item has the same size
-	public enum ItemSize {
-		case `default`
-		case autoLayout(estimated: CGSize)
-		case fixed(size: CGSize)
-	}
-	
-	//MARK: PUBLIC PROPERTIES
-	
+open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSourcePrefetching {
+    
+    /// Managed collection view layout
+    public let layout: UICollectionViewLayout
+
 	/// Managed collection view
-	public private(set) weak var collection: UICollectionView?
+	public let collection: UICollectionView
 	
+    /// Registered cell, header/footer identifiers for given collection view.
+    public let reusableRegister: ReusableRegister
+
 	/// Registered adapters for this collection manager
 	public private(set) var adapters: [String: AbstractAdapterProtocol] = [:]
-	
-	/// Registered cell, header/footer identifiers for given collection view.
-	public private(set) var reusableRegister: ReusableRegister
-	
-	/// Drag & Drop Event Manager
-	/// Its valid only if `dragDropEnabled` is `true`.
-	public private(set) var dragDrop: DragAndDropManager? = nil
-	
-	/// Enable or disable drag&drop on collection view.
-	/// You must configure the `dragDrop` manager if you enabled this feature.
-	public var dragDropEnabled: Bool {
-		set {
-			switch newValue {
-			case true: 	self.dragDrop = DragAndDropManager(manager: self)
-			case false: self.dragDrop = nil
-			}
-		}
-		get { return (self.dragDrop != nil) }
-	}
-	
+
 	/// Set it to `true` to enable cell prefetching. By default is set to `false`.
 	public var prefetchEnabled: Bool {
 		set {
             switch newValue {
-            case true: self.collection!.prefetchDataSource = self
-            case false: self.collection!.prefetchDataSource = nil
+            case true: self.collection.prefetchDataSource = self
+            case false: self.collection.prefetchDataSource = nil
             }
 		}
 		get {
-            return (self.collection!.prefetchDataSource != nil)
+            return (self.collection.prefetchDataSource != nil)
 		}
 	}
 
@@ -95,44 +66,18 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource
 	/// Events for UIScrollViewDelegate
 	public var onScroll: ScrollViewEvents? = ScrollViewEvents()
 	
-	/// Internal representation of the cell size
-	private var _itemSize: ItemSize = .default
-
-	/// Define the size of the items into the cell (valid with `UICollectionViewFlowLayout` layout).
-	public var itemSize: ItemSize {
-		set {
-			guard let layout = self.collection?.collectionViewLayout as? UICollectionViewFlowLayout else {
-				return
-			}
-			self._itemSize = newValue
-			switch _itemSize {
-			case .autoLayout(let estimateSize):
-				layout.estimatedItemSize = estimateSize
-				layout.itemSize = CGSize(width: 50.0, height: 50.0) // default
-			case .fixed(let fixedSize):
-				layout.estimatedItemSize = .zero
-				layout.itemSize = fixedSize
-			case .default:
-				layout.estimatedItemSize = .zero
-				layout.itemSize = CGSize(width: 50.0, height: 50.0) // default
-			}
-		}
-		get {
-			return _itemSize
-		}
-	}
-	
 	/// Initialize a new collection manager with given collection instance.
 	///
 	/// - Parameter collection: instance of the collection to manage.
 	public init(_ collection: UICollectionView) {
+        self.layout = collection.collectionViewLayout
+        self.collection = collection
 		self.reusableRegister = ReusableRegister(collection)
+        
 		super.init()
-		self.collection = collection
-		self.collection?.dataSource = self
-		self.collection?.delegate = self
-		//self.collection?.dragDelegate = self.dragDrop
-		//self.collection?.dropDelegate = self.dragDrop
+        
+		self.collection.dataSource = self
+		self.collection.delegate = self
 	}
 	
 	//MARK: Public Methods
@@ -161,11 +106,7 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource
 		guard let task = task else {
 
             // Calling reloadData to indicate new items availability
-			self.collection?.reloadData()
-
-            // Forcing the collection to layout its subviews
-            // Due to that cells are forced to be loaded
-//            self.collection?.layoutIfNeeded()
+			self.collection.reloadData()
 
             DispatchQueue.main.async {
                 onEnd?()
@@ -184,7 +125,7 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource
 		// Evaluate changes in sections
 		let sectionChanges = SectionChanges.fromCollectionSections(old: oldSections, new: self.sections)
 
-		self.collection?.performBatchUpdates({
+		self.collection.performBatchUpdates({
 			sectionChanges.applyChanges(to: self.collection)
 			
 			// For any remaining active section evaluate changes inside

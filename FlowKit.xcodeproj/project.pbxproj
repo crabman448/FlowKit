@@ -67,6 +67,8 @@
 		7603301223E2022900F176F9 /* ArticleCellSizesCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7603301123E2022900F176F9 /* ArticleCellSizesCalculator.swift */; };
 		760500C824339DA600E8327A /* CellProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 760500C724339DA600E8327A /* CellProtocol.swift */; };
 		760500CA24339F8400E8327A /* CellProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 760500C724339DA600E8327A /* CellProtocol.swift */; };
+		7626943825C4501500B4681A /* CompositionalCollectionDirector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7626943725C4501500B4681A /* CompositionalCollectionDirector.swift */; };
+		7626943925C4501500B4681A /* CompositionalCollectionDirector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7626943725C4501500B4681A /* CompositionalCollectionDirector.swift */; };
 		8933C7901EB5B82D000D00A4 /* FlowKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8933C7891EB5B82A000D00A4 /* FlowKitTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -126,6 +128,7 @@
 		7603300F23E200CC00F176F9 /* CGRect+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGRect+Extension.swift"; sourceTree = "<group>"; };
 		7603301123E2022900F176F9 /* ArticleCellSizesCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleCellSizesCalculator.swift; sourceTree = "<group>"; };
 		760500C724339DA600E8327A /* CellProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellProtocol.swift; sourceTree = "<group>"; };
+		7626943725C4501500B4681A /* CompositionalCollectionDirector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositionalCollectionDirector.swift; sourceTree = "<group>"; };
 		8933C7891EB5B82A000D00A4 /* FlowKitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlowKitTests.swift; sourceTree = "<group>"; };
 		AD2FAA261CD0B6D800659CF4 /* FlowKit.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = FlowKit.plist; sourceTree = "<group>"; };
 		AD2FAA281CD0B6E100659CF4 /* FlowKitTests.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = FlowKitTests.plist; sourceTree = "<group>"; };
@@ -262,6 +265,7 @@
 			children = (
 				64F7CAD0208B566D00676831 /* CollectionDirector.swift */,
 				64F7CACC208B566D00676831 /* FlowCollectionDirector.swift */,
+				7626943725C4501500B4681A /* CompositionalCollectionDirector.swift */,
 				64F7CACA208B566D00676831 /* CollectionAdapter.swift */,
 				64F7CAC9208B566D00676831 /* CollectionSection.swift */,
 				64F7CACE208B566D00676831 /* CollectionSectionView.swift */,
@@ -503,6 +507,7 @@
 				64F7CAE2208B566D00676831 /* CollectionDirector.swift in Sources */,
 				64F7CAEA208B566D00676831 /* TableDirector+Events.swift in Sources */,
 				64F7CAE3208B566D00676831 /* Commons.swift in Sources */,
+				7626943825C4501500B4681A /* CompositionalCollectionDirector.swift in Sources */,
 				64F7CADE208B566D00676831 /* FlowCollectionDirector.swift in Sources */,
 				64F7CAE1208B566D00676831 /* Collection+Support.swift in Sources */,
 				64F7CAE0208B566D00676831 /* CollectionSectionView.swift in Sources */,
@@ -531,6 +536,7 @@
 				642448C7208B792C0005C395 /* CollectionExampleController.swift in Sources */,
 				7603301223E2022900F176F9 /* ArticleCellSizesCalculator.swift in Sources */,
 				642448D8208B7A130005C395 /* TableDirector+Events.swift in Sources */,
+				7626943925C4501500B4681A /* CompositionalCollectionDirector.swift in Sources */,
 				642448FD208CC73C0005C395 /* CollectionHeader.swift in Sources */,
 				642448C3208B792C0005C395 /* AppDelegate.swift in Sources */,
 				642448EF208B81A00005C395 /* TableSectionView.swift in Sources */,
