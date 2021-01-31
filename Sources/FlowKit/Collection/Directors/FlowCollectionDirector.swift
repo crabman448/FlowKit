@@ -32,7 +32,7 @@ import UIKit
 
 open class FlowCollectionDirector: CollectionDirector, UICollectionViewDelegateFlowLayout {
 	
-    var layout: UICollectionViewFlowLayout? {
+    public var layout: UICollectionViewFlowLayout? {
         return collection.collectionViewLayout as? UICollectionViewFlowLayout
     }
     
