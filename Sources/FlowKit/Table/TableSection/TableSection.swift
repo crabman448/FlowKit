@@ -53,7 +53,7 @@ public class TableSection: ModelProtocol {
 	public var footerTitle: String?
 	
 	/// View of the header
-	public var headerView: TableSectionViewProtocol? {
+	public var headerView: ITableSectionView? {
 		willSet {
 			self.headerView?.section = nil
 		}
@@ -63,7 +63,7 @@ public class TableSection: ModelProtocol {
 	}
 	
 	/// View of the footer
-	public var footerView: TableSectionViewProtocol? {
+	public var footerView: ITableSectionView? {
 		willSet {
 			self.footerView?.section = nil
 		}
@@ -112,7 +112,7 @@ public class TableSection: ModelProtocol {
 	///   - headerView: header view
 	///   - footerView: footer view
 	///   - models: models to add (`nil` means empty array)
-	public convenience init(modelId: String = UUID().uuidString, headerView: TableSectionViewProtocol?, footerView: TableSectionViewProtocol?, models: [ModelProtocol]? = nil) {
+	public convenience init(modelId: String = UUID().uuidString, headerView: ITableSectionView?, footerView: ITableSectionView?, models: [ModelProtocol]? = nil) {
         self.init(modelId: modelId, models: models)
 
 		self.headerView = headerView

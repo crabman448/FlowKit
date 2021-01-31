@@ -30,7 +30,7 @@
 import Foundation
 import UIKit
 
-open class TableSectionView<T: HeaderFooterProtocol>: TableSectionViewProtocol, AbstractTableSectionView, CustomStringConvertible {
+open class TableSectionView<T: HeaderFooterProtocol>: ITableSectionView, ITableSectionViewInternal, CustomStringConvertible {
     
     public struct Events<T> {
         public var dequeue: ((Context<T>) -> Void)? = nil

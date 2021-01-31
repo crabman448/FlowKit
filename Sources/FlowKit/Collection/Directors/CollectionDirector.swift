@@ -456,7 +456,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
             let identifier = self.reusableRegister.registerHeaderFooter(header, type: kind, at: indexPath)
             let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath)
 
-            let headerItem = header as? AbstractCollectionSectionView
+            let headerItem = header as? ICollectionSectionViewInternal
             headerItem?.dispatch(.dequeue, type: .header, view: view, section: indexPath.section, collection: collectionView)
 
             return view
@@ -467,7 +467,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
             let identifier = self.reusableRegister.registerHeaderFooter(footer, type: kind, at: indexPath)
             let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath)
 
-            let footerItem = footer as? AbstractCollectionSectionView
+            let footerItem = footer as? ICollectionSectionViewInternal
             footerItem?.dispatch(.dequeue, type: .footer, view: view, section: indexPath.section, collection: collectionView)
 
             return view
@@ -481,11 +481,11 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
 		
 		switch elementKind {
         case UICollectionView.elementKindSectionHeader:
-			let header = reusableRegister.footer(at: indexPath) as? AbstractCollectionSectionView
+			let header = reusableRegister.footer(at: indexPath) as? ICollectionSectionViewInternal
 			header?.dispatch(.willDisplay, type: .header, view: view, section: indexPath.section, collection: collectionView)
 			self.on.willDisplayHeader?( (view,indexPath,collectionView) )
         case UICollectionView.elementKindSectionFooter:
-			let footer = reusableRegister.footer(at: indexPath) as? AbstractCollectionSectionView
+			let footer = reusableRegister.footer(at: indexPath) as? ICollectionSectionViewInternal
 			footer?.dispatch(.willDisplay, type: .footer, view: view, section: indexPath.section, collection: collectionView)
 			self.on.willDisplayFooter?( (view,indexPath,collectionView) )
 		default:
@@ -498,10 +498,10 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
 		
 		switch elementKind {
         case UICollectionView.elementKindSectionHeader:
-            let header = reusableRegister.header(at: indexPath) as? AbstractCollectionSectionView
+            let header = reusableRegister.header(at: indexPath) as? ICollectionSectionViewInternal
 			header?.dispatch(.endDisplay, type: .header, view: view, section: indexPath.section, collection: collectionView)
         case UICollectionView.elementKindSectionFooter:
-            let footer = reusableRegister.footer(at: indexPath) as? AbstractCollectionSectionView
+            let footer = reusableRegister.footer(at: indexPath) as? ICollectionSectionViewInternal
 			footer?.dispatch(.endDisplay, type: .footer, view: view, section: indexPath.section, collection: collectionView)
 		default:
 			break
@@ -605,10 +605,10 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
 		public private(set) var cellIDs: Set<String> = []
 		
 		/// Registered headers by IndexPath
-        public private(set) var headers: [IndexPath: CollectionSectionViewProtocol] = [:]
+        public private(set) var headers: [IndexPath: ICollectionSectionView] = [:]
 		
 		/// Registered footers by IndexPath
-		public private(set) var footers: [IndexPath: CollectionSectionViewProtocol] = [:]
+		public private(set) var footers: [IndexPath: ICollectionSectionView] = [:]
 		
 		/// Initialize a new register manager for given collection.
 		///
@@ -646,7 +646,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
 		///   - type: is it header or footer
 		/// - Returns: registered identifier
 		@discardableResult
-        internal func registerHeaderFooter(_ headerFooter: CollectionSectionViewProtocol, type: String, at indexPath: IndexPath) -> String {
+        internal func registerHeaderFooter(_ headerFooter: ICollectionSectionView, type: String, at indexPath: IndexPath) -> String {
 			let identifier = headerFooter.reuseIdentifier
             if 	(type == UICollectionView.elementKindSectionHeader && self.headers.contains(where: { $0.key == indexPath })) ||
                 (type == UICollectionView.elementKindSectionFooter && self.footers.contains(where: { $0.key == indexPath })) {
@@ -682,11 +682,11 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
             }
         }
 
-        func header(at indexPath: IndexPath) -> CollectionSectionViewProtocol? {
+        func header(at indexPath: IndexPath) -> ICollectionSectionView? {
             return headers[indexPath]
         }
 
-        func footer(at indexPath: IndexPath) -> CollectionSectionViewProtocol? {
+        func footer(at indexPath: IndexPath) -> ICollectionSectionView? {
             return footers[indexPath]
         }
 	}

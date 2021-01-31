@@ -1,5 +1,5 @@
 //
-//  CollectionSectionViewProtocol.swift
+//  ICollectionSectionView.swift
 //  FlowKit
 //
 //  Created by Taras on 31/01/2021.
@@ -8,6 +8,6 @@
 
 import Foundation
 
-public protocol CollectionSectionViewProtocol: AbstractSectionViewProtocol {
+public protocol ICollectionSectionView: AbstractSectionViewProtocol {
     var section: CollectionSection? { get set }
 }

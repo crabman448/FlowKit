@@ -30,7 +30,7 @@
 import Foundation
 import UIKit
 
-open class CollectionSectionView<T: HeaderFooterProtocol>: CollectionSectionViewProtocol, AbstractCollectionSectionView, CustomStringConvertible {
+open class CollectionSectionView<T: HeaderFooterProtocol>: ICollectionSectionView, ICollectionSectionViewInternal, CustomStringConvertible {
     
     public struct Event<T> {
         public typealias EventContext = Context<T>

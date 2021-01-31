@@ -1,5 +1,5 @@
 //
-//  AbstractCollectionSectionView.swift
+//  ICollectionSectionViewInternal.swift
 //  FlowKit
 //
 //  Created by Taras on 31/01/2021.
@@ -8,9 +8,7 @@
 
 import UIKit
 
-internal protocol AbstractCollectionSectionView {
-    
+protocol ICollectionSectionViewInternal {
     @discardableResult
     func dispatch(_ event: CollectionSectionViewEventsKey, type: SectionType,  view: UICollectionReusableView?, section: Int, collection: UICollectionView) -> Any?
-    
 }

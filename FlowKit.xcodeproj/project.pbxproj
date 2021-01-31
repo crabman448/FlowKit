@@ -71,12 +71,12 @@
 		7619A54325C6C32E00580C15 /* CollectionSectionViewEventsKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A54125C6C32E00580C15 /* CollectionSectionViewEventsKey.swift */; };
 		7619A54C25C6C37300580C15 /* CollectionAdapterProtocolFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A54B25C6C37300580C15 /* CollectionAdapterProtocolFunctions.swift */; };
 		7619A54D25C6C37300580C15 /* CollectionAdapterProtocolFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A54B25C6C37300580C15 /* CollectionAdapterProtocolFunctions.swift */; };
-		7619A55225C6C3C700580C15 /* CollectionSectionViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A55125C6C3C700580C15 /* CollectionSectionViewProtocol.swift */; };
-		7619A55325C6C3C700580C15 /* CollectionSectionViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A55125C6C3C700580C15 /* CollectionSectionViewProtocol.swift */; };
+		7619A55225C6C3C700580C15 /* ICollectionSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A55125C6C3C700580C15 /* ICollectionSectionView.swift */; };
+		7619A55325C6C3C700580C15 /* ICollectionSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A55125C6C3C700580C15 /* ICollectionSectionView.swift */; };
 		7619A56425C6C5A900580C15 /* AbstractSectionViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A56325C6C5A900580C15 /* AbstractSectionViewProtocol.swift */; };
 		7619A56525C6C5A900580C15 /* AbstractSectionViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A56325C6C5A900580C15 /* AbstractSectionViewProtocol.swift */; };
-		7619A56A25C6C5E400580C15 /* AbstractCollectionSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A56925C6C5E400580C15 /* AbstractCollectionSectionView.swift */; };
-		7619A56B25C6C5E400580C15 /* AbstractCollectionSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A56925C6C5E400580C15 /* AbstractCollectionSectionView.swift */; };
+		7619A56A25C6C5E400580C15 /* ICollectionSectionViewInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A56925C6C5E400580C15 /* ICollectionSectionViewInternal.swift */; };
+		7619A56B25C6C5E400580C15 /* ICollectionSectionViewInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A56925C6C5E400580C15 /* ICollectionSectionViewInternal.swift */; };
 		7619A57F25C6C6A200580C15 /* CollectionAdapterEventKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A57E25C6C6A200580C15 /* CollectionAdapterEventKey.swift */; };
 		7619A58025C6C6A200580C15 /* CollectionAdapterEventKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A57E25C6C6A200580C15 /* CollectionAdapterEventKey.swift */; };
 		7619A59A25C6C88900580C15 /* TableAdapterEventsKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A59925C6C88900580C15 /* TableAdapterEventsKey.swift */; };
@@ -87,12 +87,12 @@
 		7619A5A725C6C8FD00580C15 /* TableReloadAnimations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A5A525C6C8FD00580C15 /* TableReloadAnimations.swift */; };
 		7619A5AC25C6C96000580C15 /* TableSectionViewEventsKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A5AB25C6C96000580C15 /* TableSectionViewEventsKey.swift */; };
 		7619A5AD25C6C96000580C15 /* TableSectionViewEventsKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A5AB25C6C96000580C15 /* TableSectionViewEventsKey.swift */; };
-		7619A5B525C6CA3200580C15 /* TableSectionViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A5B425C6CA3200580C15 /* TableSectionViewProtocol.swift */; };
-		7619A5B625C6CA3200580C15 /* TableSectionViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A5B425C6CA3200580C15 /* TableSectionViewProtocol.swift */; };
+		7619A5B525C6CA3200580C15 /* ITableSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A5B425C6CA3200580C15 /* ITableSectionView.swift */; };
+		7619A5B625C6CA3200580C15 /* ITableSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A5B425C6CA3200580C15 /* ITableSectionView.swift */; };
 		7619A5BB25C6CAB800580C15 /* TableAdaterProtocolFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A5BA25C6CAB800580C15 /* TableAdaterProtocolFunctions.swift */; };
 		7619A5BC25C6CAB800580C15 /* TableAdaterProtocolFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A5BA25C6CAB800580C15 /* TableAdaterProtocolFunctions.swift */; };
-		7619A5C425C6CB1A00580C15 /* AbstractTableSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A5C325C6CB1A00580C15 /* AbstractTableSectionView.swift */; };
-		7619A5C525C6CB1A00580C15 /* AbstractTableSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A5C325C6CB1A00580C15 /* AbstractTableSectionView.swift */; };
+		7619A5C425C6CB1A00580C15 /* ITableSectionViewInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A5C325C6CB1A00580C15 /* ITableSectionViewInternal.swift */; };
+		7619A5C525C6CB1A00580C15 /* ITableSectionViewInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A5C325C6CB1A00580C15 /* ITableSectionViewInternal.swift */; };
 		7626943825C4501500B4681A /* CompositionalCollectionDirector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7626943725C4501500B4681A /* CompositionalCollectionDirector.swift */; };
 		7626943925C4501500B4681A /* CompositionalCollectionDirector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7626943725C4501500B4681A /* CompositionalCollectionDirector.swift */; };
 		8933C7901EB5B82D000D00A4 /* FlowKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8933C7891EB5B82A000D00A4 /* FlowKitTests.swift */; };
@@ -156,17 +156,17 @@
 		7619A53025C6C25800580C15 /* AbstractAdapterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbstractAdapterProtocol.swift; sourceTree = "<group>"; };
 		7619A54125C6C32E00580C15 /* CollectionSectionViewEventsKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionSectionViewEventsKey.swift; sourceTree = "<group>"; };
 		7619A54B25C6C37300580C15 /* CollectionAdapterProtocolFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionAdapterProtocolFunctions.swift; sourceTree = "<group>"; };
-		7619A55125C6C3C700580C15 /* CollectionSectionViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionSectionViewProtocol.swift; sourceTree = "<group>"; };
+		7619A55125C6C3C700580C15 /* ICollectionSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ICollectionSectionView.swift; sourceTree = "<group>"; };
 		7619A56325C6C5A900580C15 /* AbstractSectionViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbstractSectionViewProtocol.swift; sourceTree = "<group>"; };
-		7619A56925C6C5E400580C15 /* AbstractCollectionSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbstractCollectionSectionView.swift; sourceTree = "<group>"; };
+		7619A56925C6C5E400580C15 /* ICollectionSectionViewInternal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ICollectionSectionViewInternal.swift; sourceTree = "<group>"; };
 		7619A57E25C6C6A200580C15 /* CollectionAdapterEventKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionAdapterEventKey.swift; sourceTree = "<group>"; };
 		7619A59925C6C88900580C15 /* TableAdapterEventsKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableAdapterEventsKey.swift; sourceTree = "<group>"; };
 		7619A59F25C6C8D500580C15 /* TableSelectionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableSelectionState.swift; sourceTree = "<group>"; };
 		7619A5A525C6C8FD00580C15 /* TableReloadAnimations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableReloadAnimations.swift; sourceTree = "<group>"; };
 		7619A5AB25C6C96000580C15 /* TableSectionViewEventsKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableSectionViewEventsKey.swift; sourceTree = "<group>"; };
-		7619A5B425C6CA3200580C15 /* TableSectionViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableSectionViewProtocol.swift; sourceTree = "<group>"; };
+		7619A5B425C6CA3200580C15 /* ITableSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ITableSectionView.swift; sourceTree = "<group>"; };
 		7619A5BA25C6CAB800580C15 /* TableAdaterProtocolFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableAdaterProtocolFunctions.swift; sourceTree = "<group>"; };
-		7619A5C325C6CB1A00580C15 /* AbstractTableSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbstractTableSectionView.swift; sourceTree = "<group>"; };
+		7619A5C325C6CB1A00580C15 /* ITableSectionViewInternal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ITableSectionViewInternal.swift; sourceTree = "<group>"; };
 		7626943725C4501500B4681A /* CompositionalCollectionDirector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositionalCollectionDirector.swift; sourceTree = "<group>"; };
 		8933C7891EB5B82A000D00A4 /* FlowKitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlowKitTests.swift; sourceTree = "<group>"; };
 		AD2FAA261CD0B6D800659CF4 /* FlowKit.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = FlowKit.plist; sourceTree = "<group>"; };
@@ -390,10 +390,7 @@
 			isa = PBXGroup;
 			children = (
 				64F7CAC9208B566D00676831 /* CollectionSection.swift */,
-				64F7CACE208B566D00676831 /* CollectionSectionView.swift */,
-				7619A54125C6C32E00580C15 /* CollectionSectionViewEventsKey.swift */,
-				7619A55125C6C3C700580C15 /* CollectionSectionViewProtocol.swift */,
-				7619A56925C6C5E400580C15 /* AbstractCollectionSectionView.swift */,
+				769DEFF525C6CE6300063DD2 /* CollectionSectionView */,
 			);
 			path = CollectionSection;
 			sourceTree = "<group>";
@@ -420,10 +417,7 @@
 			isa = PBXGroup;
 			children = (
 				64F7CAD7208B566D00676831 /* TableSection.swift */,
-				642448ED208B81A00005C395 /* TableSectionView.swift */,
-				7619A5AB25C6C96000580C15 /* TableSectionViewEventsKey.swift */,
-				7619A5B425C6CA3200580C15 /* TableSectionViewProtocol.swift */,
-				7619A5C325C6CB1A00580C15 /* AbstractTableSectionView.swift */,
+				769DEFF125C6CE3C00063DD2 /* TableSectionView */,
 			);
 			path = TableSection;
 			sourceTree = "<group>";
@@ -442,6 +436,28 @@
 				7619A56325C6C5A900580C15 /* AbstractSectionViewProtocol.swift */,
 			);
 			path = Section;
+			sourceTree = "<group>";
+		};
+		769DEFF125C6CE3C00063DD2 /* TableSectionView */ = {
+			isa = PBXGroup;
+			children = (
+				642448ED208B81A00005C395 /* TableSectionView.swift */,
+				7619A5AB25C6C96000580C15 /* TableSectionViewEventsKey.swift */,
+				7619A5B425C6CA3200580C15 /* ITableSectionView.swift */,
+				7619A5C325C6CB1A00580C15 /* ITableSectionViewInternal.swift */,
+			);
+			path = TableSectionView;
+			sourceTree = "<group>";
+		};
+		769DEFF525C6CE6300063DD2 /* CollectionSectionView */ = {
+			isa = PBXGroup;
+			children = (
+				64F7CACE208B566D00676831 /* CollectionSectionView.swift */,
+				7619A54125C6C32E00580C15 /* CollectionSectionViewEventsKey.swift */,
+				7619A55125C6C3C700580C15 /* ICollectionSectionView.swift */,
+				7619A56925C6C5E400580C15 /* ICollectionSectionViewInternal.swift */,
+			);
+			path = CollectionSectionView;
 			sourceTree = "<group>";
 		};
 		8933C7811EB5B7E0000D00A4 /* Sources */ = {
@@ -634,18 +650,18 @@
 				64F7CADC208B566D00676831 /* CollectionAdapter.swift in Sources */,
 				64F7CAE4208B566D00676831 /* DeepDiff.swift in Sources */,
 				7619A5A625C6C8FD00580C15 /* TableReloadAnimations.swift in Sources */,
-				7619A5C425C6CB1A00580C15 /* AbstractTableSectionView.swift in Sources */,
+				7619A5C425C6CB1A00580C15 /* ITableSectionViewInternal.swift in Sources */,
 				64F7CAE9208B566D00676831 /* TableDirector.swift in Sources */,
 				7619A52225C6C22900580C15 /* ScrollViewEvents.swift in Sources */,
 				642448EE208B81A00005C395 /* TableSectionView.swift in Sources */,
-				7619A5B525C6CA3200580C15 /* TableSectionViewProtocol.swift in Sources */,
+				7619A5B525C6CA3200580C15 /* ITableSectionView.swift in Sources */,
 				64F7CADD208B566D00676831 /* CollectionDragDropManager.swift in Sources */,
 				7619A52825C6C23D00580C15 /* SectionType.swift in Sources */,
 				760500C824339DA600E8327A /* CellProtocol.swift in Sources */,
 				64F7CAE2208B566D00676831 /* CollectionDirector.swift in Sources */,
 				7619A56425C6C5A900580C15 /* AbstractSectionViewProtocol.swift in Sources */,
 				7619A5A025C6C8D500580C15 /* TableSelectionState.swift in Sources */,
-				7619A56A25C6C5E400580C15 /* AbstractCollectionSectionView.swift in Sources */,
+				7619A56A25C6C5E400580C15 /* ICollectionSectionViewInternal.swift in Sources */,
 				7619A53125C6C25800580C15 /* AbstractAdapterProtocol.swift in Sources */,
 				7619A54C25C6C37300580C15 /* CollectionAdapterProtocolFunctions.swift in Sources */,
 				7619A57F25C6C6A200580C15 /* CollectionAdapterEventKey.swift in Sources */,
@@ -657,7 +673,7 @@
 				64F7CAE0208B566D00676831 /* CollectionSectionView.swift in Sources */,
 				7619A5AC25C6C96000580C15 /* TableSectionViewEventsKey.swift in Sources */,
 				7619A5BB25C6CAB800580C15 /* TableAdaterProtocolFunctions.swift in Sources */,
-				7619A55225C6C3C700580C15 /* CollectionSectionViewProtocol.swift in Sources */,
+				7619A55225C6C3C700580C15 /* ICollectionSectionView.swift in Sources */,
 				7619A50B25C6C0E500580C15 /* ModelProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -676,8 +692,8 @@
 			files = (
 				642448DD208B7A130005C395 /* FlowCollectionDirector.swift in Sources */,
 				642448DF208B7A130005C395 /* CollectionSectionView.swift in Sources */,
-				7619A5C525C6CB1A00580C15 /* AbstractTableSectionView.swift in Sources */,
-				7619A56B25C6C5E400580C15 /* AbstractCollectionSectionView.swift in Sources */,
+				7619A5C525C6CB1A00580C15 /* ITableSectionViewInternal.swift in Sources */,
+				7619A56B25C6C5E400580C15 /* ICollectionSectionViewInternal.swift in Sources */,
 				7619A59B25C6C88900580C15 /* TableAdapterEventsKey.swift in Sources */,
 				642448E3208B7A130005C395 /* DeepDiff+Helpers.swift in Sources */,
 				7619A5BC25C6CAB800580C15 /* TableAdaterProtocolFunctions.swift in Sources */,
@@ -699,7 +715,7 @@
 				7603300E23E200AC00F176F9 /* ArticleCellView.swift in Sources */,
 				642448D4208B7A130005C395 /* TableDirector.swift in Sources */,
 				642448D5208B7A130005C395 /* TableAdapter.swift in Sources */,
-				7619A5B625C6CA3200580C15 /* TableSectionViewProtocol.swift in Sources */,
+				7619A5B625C6CA3200580C15 /* ITableSectionView.swift in Sources */,
 				7603300523E1E73100F176F9 /* ArticleCellModel.swift in Sources */,
 				642448EC208B80E00005C395 /* TableExampleHeaderView.swift in Sources */,
 				642448DC208B7A130005C395 /* CollectionDragDropManager.swift in Sources */,
@@ -714,7 +730,7 @@
 				7619A54D25C6C37300580C15 /* CollectionAdapterProtocolFunctions.swift in Sources */,
 				7603300723E1E73100F176F9 /* ArticleCell.swift in Sources */,
 				7619A53225C6C25800580C15 /* AbstractAdapterProtocol.swift in Sources */,
-				7619A55325C6C3C700580C15 /* CollectionSectionViewProtocol.swift in Sources */,
+				7619A55325C6C3C700580C15 /* ICollectionSectionView.swift in Sources */,
 				642448E2208B7A130005C395 /* DeepDiff.swift in Sources */,
 				642448DB208B7A130005C395 /* CollectionSection.swift in Sources */,
 				7619A56525C6C5A900580C15 /* AbstractSectionViewProtocol.swift in Sources */,

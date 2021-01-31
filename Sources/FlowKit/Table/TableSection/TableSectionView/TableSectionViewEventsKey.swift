@@ -8,7 +8,7 @@
 
 import Foundation
 
-internal enum TableSectionViewEventsKey: Int {
+enum TableSectionViewEventsKey: Int {
     case dequeue
     case height
     case estimatedHeight

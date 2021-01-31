@@ -1,5 +1,5 @@
 //
-//  TableSectionViewProtocol.swift
+//  ITableSectionView.swift
 //  FlowKit
 //
 //  Created by Taras on 31/01/2021.
@@ -8,6 +8,6 @@
 
 import Foundation
 
-public protocol TableSectionViewProtocol: AbstractSectionViewProtocol {
+public protocol ITableSectionView: AbstractSectionViewProtocol {
     var section: TableSection? { get set }
 }

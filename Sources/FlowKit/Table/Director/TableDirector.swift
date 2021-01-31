@@ -399,14 +399,14 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	public func tableView(_ tableView: UITableView, viewForHeaderInSection sectionIdx: Int) -> UIView? {
 		guard let header = sections[sectionIdx].headerView else { return nil }
 		let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: self.registerView(header))
-		let _ = (header as? AbstractTableSectionView)?.dispatch(.dequeue, type: .header, view: view, section: sectionIdx, table: tableView)
+		let _ = (header as? ITableSectionViewInternal)?.dispatch(.dequeue, type: .header, view: view, section: sectionIdx, table: tableView)
 		return view
 	}
 	
 	public func tableView(_ tableView: UITableView, viewForFooterInSection sectionIdx: Int) -> UIView? {
 		guard let footer = sections[sectionIdx].footerView else { return nil }
 		let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: self.registerView(footer))
-		let _ = (footer as? AbstractTableSectionView)?.dispatch(.dequeue, type: .footer, view: view, section: sectionIdx, table: tableView)
+		let _ = (footer as? ITableSectionViewInternal)?.dispatch(.dequeue, type: .footer, view: view, section: sectionIdx, table: tableView)
 		return view
 	}
 	
@@ -419,7 +419,7 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	}
 	
 	public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-		let item = (self.sections[section].headerView as? AbstractTableSectionView)
+		let item = (self.sections[section].headerView as? ITableSectionViewInternal)
 		guard let height = item?.dispatch(.height, type: .header, view: nil, section: section, table: tableView) as? CGFloat else {
             return (self.headerHeight ?? UITableView.automaticDimension)
 		}
@@ -427,7 +427,7 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	}
 	
 	public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-		let item = (self.sections[section].footerView as? AbstractTableSectionView)
+		let item = (self.sections[section].footerView as? ITableSectionViewInternal)
 		guard let height = item?.dispatch(.height, type: .footer, view: nil, section: section, table: tableView) as? CGFloat else {
             return (self.footerHeight ?? UITableView.automaticDimension)
 		}
@@ -435,7 +435,7 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	}
 	
 	public func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-		let item = (self.sections[section].headerView as? AbstractTableSectionView)
+		let item = (self.sections[section].headerView as? ITableSectionViewInternal)
 		guard let estHeight = item?.dispatch(.estimatedHeight, type: .header, view: nil, section: section, table: tableView) as? CGFloat else {
 			guard let height = item?.dispatch(.height, type: .header, view: nil, section: section, table: tableView) as? CGFloat else {
                 return (self.headerHeight ?? UITableView.automaticDimension)
@@ -446,7 +446,7 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	}
 	
 	public func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
-		let item = (self.sections[section].footerView as? AbstractTableSectionView)
+		let item = (self.sections[section].footerView as? ITableSectionViewInternal)
 		guard let height = item?.dispatch(.estimatedHeight,type: .footer, view: nil, section: section, table: tableView) as? CGFloat else {
 			guard let height = item?.dispatch(.height, type: .footer, view: nil, section: section, table: tableView) as? CGFloat else {
                 return (self.footerHeight ?? UITableView.automaticDimension)
@@ -457,27 +457,27 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	}
 	
 	public func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-		let item = (self.sections[section].headerView as? AbstractTableSectionView)
+		let item = (self.sections[section].headerView as? ITableSectionViewInternal)
 		let _ = item?.dispatch(.willDisplay, type: .header, view: view, section: section, table: tableView)
 		self.on.willDisplayHeader?( (view,section,tableView) )
 	}
 	
 	public func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
-		let item = (self.sections[section].footerView as? AbstractTableSectionView)
+		let item = (self.sections[section].footerView as? ITableSectionViewInternal)
 		let _ = item?.dispatch(.willDisplay, type: .footer, view: view, section: section, table: tableView)
 		self.on.willDisplayFooter?( (view,section,tableView) )
 	}
 	
 	public func tableView(_ tableView: UITableView, didEndDisplayingHeaderView view: UIView, forSection section: Int) {
 		guard section < self.sections.count else { return }
-		let item = (self.sections[section].headerView as? AbstractTableSectionView)
+		let item = (self.sections[section].headerView as? ITableSectionViewInternal)
 		let _ = item?.dispatch(.endDisplay, type: .header, view: view, section: section, table: tableView)
 		self.on.endDisplayHeader?( (view,section,tableView) )
 	}
 	
 	public func tableView(_ tableView: UITableView, didEndDisplayingFooterView view: UIView, forSection section: Int) {
 		guard section < self.sections.count else { return }
-		let item = (self.sections[section].footerView as? AbstractTableSectionView)
+		let item = (self.sections[section].footerView as? ITableSectionViewInternal)
 		let _ = item?.dispatch(.endDisplay, type: .footer, view: view, section: section, table: tableView)
 		self.on.endDisplayFooter?( (view,section,tableView) )
 	}
@@ -777,7 +777,7 @@ public extension TableDirector {
 	///
 	/// - Parameter view: abstract view to register.
 	/// - Returns: `true` if view is registered, `false` otherwise. If view is already registered it returns `false`.
-	internal func registerView(_ view: TableSectionViewProtocol) -> String {
+	internal func registerView(_ view: ITableSectionView) -> String {
 		let identifier = view.reuseIdentifier
 		guard !self.headersFootersIDs.contains(identifier) else { return identifier}
 		
