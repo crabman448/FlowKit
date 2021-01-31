@@ -30,8 +30,65 @@
 import Foundation
 import UIKit
 
+public protocol TableAdapterProtocol : AbstractAdapterProtocol, Equatable {}
+
 /// Adapter manages a model type with its associated view representation (a particular cell type).
-open class TableAdapter<M: ModelProtocol, C: UITableViewCell>: TableAdapterProtocol,TableAdaterProtocolFunctions {
+open class TableAdapter<M: ModelProtocol, C: UITableViewCell>: TableAdapterProtocol, TableAdaterProtocolFunctions {
+
+    public struct Events<M,C> {
+        public typealias EventContext = Context<M,C>
+        
+        public var dequeue : ((EventContext) -> (Void))? = nil
+        
+        public var canEdit: ((EventContext) -> Bool)? = nil
+        public var commitEdit: ((_ ctx: EventContext, _ commit: UITableViewCell.EditingStyle) -> Void)? = nil
+        
+        public var canMoveRow: ((EventContext) -> Bool)? = nil
+        public var moveRow: ((_ ctx: EventContext, _ dest: IndexPath) -> Void)? = nil
+        
+        public var prefetch: ((_ models: [M], _ paths: [IndexPath]) -> Void)? = nil
+        public var cancelPrefetch: ((_ models: [M], _ paths: [IndexPath]) -> Void)? = nil
+        
+        public var rowHeight: ((EventContext) -> CGFloat)? = nil
+        public var rowHeightEstimated: ((EventContext) -> CGFloat)? = nil
+        
+        public var indentLevel: ((EventContext) -> Int)? = nil
+        public var willDisplay: ((EventContext) -> Void)? = nil
+        public var shouldSpringLoad: ((EventContext) -> Bool)? = nil
+        
+        public var tapOnAccessory: ((EventContext) -> Void)? = nil
+        
+        public var willSelect: ((EventContext) -> IndexPath?)? = nil
+        public var tap: ((EventContext) -> TableSelectionState)? = nil
+        public var willDeselect: ((EventContext) -> IndexPath?)? = nil
+        public var didDeselect: ((EventContext) -> IndexPath?)? = nil
+        
+        public var willBeginEdit: ((EventContext) -> Void)? = nil
+        public var didEndEdit: ((EventContext) -> Void)? = nil
+        public var editStyle: ((EventContext) -> UITableViewCell.EditingStyle)? = nil
+        public var deleteConfirmTitle: ((EventContext) -> String?)? = nil
+        public var editShouldIndent: ((EventContext) -> Bool)? = nil
+        
+        public var moveAdjustDestination: ((_ ctx: EventContext, _ proposed: IndexPath) -> IndexPath?)? = nil
+        
+        public var endDisplay: ((_ cell: C, _ path: IndexPath) -> Void)? = nil
+        
+        public var shouldShowMenu: ((EventContext) -> Bool)? = nil
+        public var canPerformMenuAction: ((_ ctx: EventContext, _ sel: Selector, _ sender: Any?) -> Bool)? = nil
+        public var performMenuAction: ((_ ctx: EventContext, _ sel: Selector, _ sender: Any?) -> Void)? = nil
+        
+        public var shouldHighlight: ((EventContext) -> Bool)? = nil
+        public var didHighlight: ((EventContext) -> Void)? = nil
+        public var didUnhighlight: ((EventContext) -> Void)? = nil
+        
+        public var canFocus: ((EventContext) -> Bool)? = nil
+
+        public lazy var leadingSwipeActions: ((EventContext) -> UISwipeActionsConfiguration?)? = nil
+        public lazy var trailingSwipeActions: ((EventContext) -> UISwipeActionsConfiguration?)? = nil
+
+        public lazy var contextMenuConfiguration: ((EventContext) -> UIContextMenuConfiguration?)? = nil
+
+    }
 
 	public var modelType: Any.Type = M.self
 	public var cellType: Any.Type = C.self

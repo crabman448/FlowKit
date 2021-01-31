@@ -30,7 +30,18 @@
 import Foundation
 import UIKit
 
-open class CollectionSectionView<T: HeaderFooterProtocol>: CollectionSectionProtocol,AbstractCollectionHeaderFooterItem, CustomStringConvertible {	
+open class CollectionSectionView<T: HeaderFooterProtocol>: CollectionSectionViewProtocol, AbstractCollectionSectionView, CustomStringConvertible {
+    
+    public struct Event<T> {
+        public typealias EventContext = Context<T>
+        
+        public var dequeue: ((EventContext) -> Void)? = nil
+        public var referenceSize: ((EventContext) -> CGSize)? = nil
+        public var didDisplay: ((EventContext) -> Void)? = nil
+        public var endDisplay: ((EventContext) -> Void)? = nil
+        public var willDisplay: ((EventContext) -> Void)? = nil
+
+    }
 	
 	// Protocol default implementation
 	public var viewClass: AnyClass { return T.self }

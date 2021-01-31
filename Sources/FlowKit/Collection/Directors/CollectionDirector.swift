@@ -32,6 +32,23 @@ import UIKit
 
 open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSourcePrefetching {
 
+    public struct Events {
+        typealias HeaderFooterEvent = (view: UICollectionReusableView, path: IndexPath, table: UICollectionView)
+
+        var layoutDidChange: ((_ old: UICollectionViewLayout, _ new: UICollectionViewLayout) -> UICollectionViewTransitionLayout?)? = nil
+        var targetOffset: ((_ proposedContentOffset: CGPoint) -> CGPoint)? = nil
+        var moveItemPath: ((_ originalIndexPath: IndexPath, _ proposedIndexPath: IndexPath) -> IndexPath)? = nil
+
+        var shouldUpdateFocus: ((_ context: UICollectionViewFocusUpdateContext) -> Bool)?
+        var didUpdateFocus: ((_ context: UICollectionViewFocusUpdateContext, _ coordinator: UIFocusAnimationCoordinator) -> Void)?
+        
+        var willDisplayHeader : ((HeaderFooterEvent) -> Void)? = nil
+        var willDisplayFooter : ((HeaderFooterEvent) -> Void)? = nil
+        
+        var endDisplayHeader : ((HeaderFooterEvent) -> Void)? = nil
+        var endDisplayFooter : ((HeaderFooterEvent) -> Void)? = nil
+    }
+
 	/// Managed collection view
 	public let collection: UICollectionView
 	
@@ -269,21 +286,21 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
 	///
 	/// - Parameter index: index path of the item.
 	/// - Returns: context
-	internal func context(forItemAt index: IndexPath) -> (ModelProtocol,AbstractAdapterProtocolFunctions) {
+	internal func context(forItemAt index: IndexPath) -> (ModelProtocol,CollectionAdapterProtocolFunctions) {
 		let item: ModelProtocol = self.sections[index.section].models[index.row]
 		let modelId = String(describing: type(of: item.self))
 		guard let adapter = self.adapters[modelId] else {
 			fatalError("Failed to found an adapter for \(modelId)")
 		}
-		return (item,adapter as! AbstractAdapterProtocolFunctions)
+		return (item,adapter as! CollectionAdapterProtocolFunctions)
 	}
 
-	internal func context(forModel model: ModelProtocol) -> AbstractAdapterProtocolFunctions {
+	internal func context(forModel model: ModelProtocol) -> CollectionAdapterProtocolFunctions {
 		let modelId = String(describing: type(of: item.self))
 		guard let adapter = self.adapters[modelId] else {
 			fatalError("Failed to found an adapter for \(modelId)")
 		}
-		return (adapter as! AbstractAdapterProtocolFunctions)
+		return (adapter as! CollectionAdapterProtocolFunctions)
 	}
 	
 	internal func adapters(forIndexPath paths: [IndexPath]) -> [PrefetchModelsGroup] {
@@ -294,7 +311,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
 			
 			var context: PrefetchModelsGroup? = list[modelId]
 			if context == nil {
-				context = PrefetchModelsGroup(adapter: self.adapters[modelId] as! AbstractAdapterProtocolFunctions)
+				context = PrefetchModelsGroup(adapter: self.adapters[modelId] as! CollectionAdapterProtocolFunctions)
 				list[modelId] = context
 			}
 			context!.models.append(model)
@@ -328,7 +345,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
 	
 	public func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
 		self.adapters.forEach {
-			($0.value as! AbstractAdapterProtocolFunctions).dispatch(.endDisplay, context: InternalContext.init(nil, indexPath, cell, collectionView))
+			($0.value as! CollectionAdapterProtocolFunctions).dispatch(.endDisplay, context: InternalContext.init(nil, indexPath, cell, collectionView))
 		}
 	}
 	
@@ -439,7 +456,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
             let identifier = self.reusableRegister.registerHeaderFooter(header, type: kind, at: indexPath)
             let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath)
 
-            let headerItem = header as? AbstractCollectionHeaderFooterItem
+            let headerItem = header as? AbstractCollectionSectionView
             headerItem?.dispatch(.dequeue, type: .header, view: view, section: indexPath.section, collection: collectionView)
 
             return view
@@ -450,7 +467,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
             let identifier = self.reusableRegister.registerHeaderFooter(footer, type: kind, at: indexPath)
             let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath)
 
-            let footerItem = footer as? AbstractCollectionHeaderFooterItem
+            let footerItem = footer as? AbstractCollectionSectionView
             footerItem?.dispatch(.dequeue, type: .footer, view: view, section: indexPath.section, collection: collectionView)
 
             return view
@@ -464,11 +481,11 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
 		
 		switch elementKind {
         case UICollectionView.elementKindSectionHeader:
-			let header = reusableRegister.footer(at: indexPath) as? AbstractCollectionHeaderFooterItem
+			let header = reusableRegister.footer(at: indexPath) as? AbstractCollectionSectionView
 			header?.dispatch(.willDisplay, type: .header, view: view, section: indexPath.section, collection: collectionView)
 			self.on.willDisplayHeader?( (view,indexPath,collectionView) )
         case UICollectionView.elementKindSectionFooter:
-			let footer = reusableRegister.footer(at: indexPath) as? AbstractCollectionHeaderFooterItem
+			let footer = reusableRegister.footer(at: indexPath) as? AbstractCollectionSectionView
 			footer?.dispatch(.willDisplay, type: .footer, view: view, section: indexPath.section, collection: collectionView)
 			self.on.willDisplayFooter?( (view,indexPath,collectionView) )
 		default:
@@ -481,10 +498,10 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
 		
 		switch elementKind {
         case UICollectionView.elementKindSectionHeader:
-            let header = reusableRegister.header(at: indexPath) as? AbstractCollectionHeaderFooterItem
+            let header = reusableRegister.header(at: indexPath) as? AbstractCollectionSectionView
 			header?.dispatch(.endDisplay, type: .header, view: view, section: indexPath.section, collection: collectionView)
         case UICollectionView.elementKindSectionFooter:
-            let footer = reusableRegister.footer(at: indexPath) as? AbstractCollectionHeaderFooterItem
+            let footer = reusableRegister.footer(at: indexPath) as? AbstractCollectionSectionView
 			footer?.dispatch(.endDisplay, type: .footer, view: view, section: indexPath.section, collection: collectionView)
 		default:
 			break
@@ -496,11 +513,11 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
 	//MARK: Prefetching
 	
 	internal class PrefetchModelsGroup {
-		let adapter: 	AbstractAdapterProtocolFunctions
+		let adapter: 	CollectionAdapterProtocolFunctions
 		var models: 	[ModelProtocol] = []
 		var indexPaths: [IndexPath] = []
 		
-		public init(adapter: AbstractAdapterProtocolFunctions) {
+		public init(adapter: CollectionAdapterProtocolFunctions) {
 			self.adapter = adapter
 		}
 	}
@@ -588,10 +605,10 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
 		public private(set) var cellIDs: Set<String> = []
 		
 		/// Registered headers by IndexPath
-        public private(set) var headers: [IndexPath: CollectionSectionProtocol] = [:]
+        public private(set) var headers: [IndexPath: CollectionSectionViewProtocol] = [:]
 		
 		/// Registered footers by IndexPath
-		public private(set) var footers: [IndexPath: CollectionSectionProtocol] = [:]
+		public private(set) var footers: [IndexPath: CollectionSectionViewProtocol] = [:]
 		
 		/// Initialize a new register manager for given collection.
 		///
@@ -629,7 +646,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
 		///   - type: is it header or footer
 		/// - Returns: registered identifier
 		@discardableResult
-        internal func registerHeaderFooter(_ headerFooter: CollectionSectionProtocol, type: String, at indexPath: IndexPath) -> String {
+        internal func registerHeaderFooter(_ headerFooter: CollectionSectionViewProtocol, type: String, at indexPath: IndexPath) -> String {
 			let identifier = headerFooter.reuseIdentifier
             if 	(type == UICollectionView.elementKindSectionHeader && self.headers.contains(where: { $0.key == indexPath })) ||
                 (type == UICollectionView.elementKindSectionFooter && self.footers.contains(where: { $0.key == indexPath })) {
@@ -665,11 +682,11 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
             }
         }
 
-        func header(at indexPath: IndexPath) -> CollectionSectionProtocol? {
+        func header(at indexPath: IndexPath) -> CollectionSectionViewProtocol? {
             return headers[indexPath]
         }
 
-        func footer(at indexPath: IndexPath) -> CollectionSectionProtocol? {
+        func footer(at indexPath: IndexPath) -> CollectionSectionViewProtocol? {
             return footers[indexPath]
         }
 	}

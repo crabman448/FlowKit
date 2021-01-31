@@ -30,7 +30,18 @@
 import Foundation
 import UIKit
 
-open class TableSectionView<T: HeaderFooterProtocol>: TableHeaderFooterProtocol, AbstractTableHeaderFooterItem, CustomStringConvertible {
+open class TableSectionView<T: HeaderFooterProtocol>: TableSectionViewProtocol, AbstractTableSectionView, CustomStringConvertible {
+    
+    public struct Events<T> {
+        public var dequeue: ((Context<T>) -> Void)? = nil
+        public var height: ((Context<T>) -> CGFloat)? = nil
+        public var estimatedHeight: ((Context<T>) -> CGFloat)? = nil
+        public var willDisplay: ((Context<T>) -> Void)? = nil
+        public var endDisplay: ((Context<T>) -> Void)? = nil
+        public var didDisplay: ((Context<T>) -> Void)? = nil
+
+        public init() {}
+    }
 	
 	public var viewClass: AnyClass { return T.self }
 	public var reuseIdentifier: String { return T.reuseIdentifier }

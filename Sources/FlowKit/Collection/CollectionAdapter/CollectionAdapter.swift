@@ -30,8 +30,37 @@
 import Foundation
 import UIKit
 
+public protocol CollectionAdapterProtocol : AbstractAdapterProtocol, Equatable {}
+
 /// The adapter identify a pair of model and cell used to represent the data.
-open class CollectionAdapter<M: ModelProtocol, C: UICollectionViewCell>: CollectionAdapterProtocol, CustomStringConvertible, AbstractAdapterProtocolFunctions {
+open class CollectionAdapter<M: ModelProtocol, C: UICollectionViewCell>: CollectionAdapterProtocol, CustomStringConvertible, CollectionAdapterProtocolFunctions {
+    
+    public struct Events<M,C> {
+        public typealias EventContext = Context<M,C>
+        
+        public var dequeue: ((EventContext) -> Void)? = nil
+        public var shouldSelect: ((EventContext) -> Bool)? = nil
+        public var shouldDeselect: ((EventContext) -> Bool)? = nil
+        public var didSelect: ((EventContext) -> Void)? = nil
+        public var didDeselect: ((EventContext) -> Void)? = nil
+        public var didHighlight: ((EventContext) -> Void)? = nil
+        public var didUnhighlight: ((EventContext) -> Void)? = nil
+        public var shouldHighlight: ((EventContext) -> Bool)? = nil
+        public var willDisplay: ((_ cell: C, _ path: IndexPath) -> Void)? = nil
+        public var endDisplay: ((_ cell: C, _ path: IndexPath) -> Void)? = nil
+        public var shouldShowEditMenu: ((EventContext) -> Bool)? = nil
+        public var canPerformEditAction: ((EventContext) -> Bool)? = nil
+        public var performEditAction: ((_ ctx: EventContext, _ selector: Selector, _ sender: Any?) -> Void)? = nil
+        public var canFocus: ((EventContext) -> Bool)? = nil
+        public var itemSize: ((EventContext) -> CGSize)? = nil
+        //var generateDragPreview: ((EventContext) -> UIDragPreviewParameters?)? = nil
+        //var generateDropPreview: ((EventContext) -> UIDragPreviewParameters?)? = nil
+        public var prefetch: ((_ items: [M], _ paths: [IndexPath], _ collection: UICollectionView) -> Void)? = nil
+        public var cancelPrefetch: ((_ items: [M], _ paths: [IndexPath], _ collection: UICollectionView) -> Void)? = nil
+        public var shouldSpringLoad: ((EventContext) -> Bool)? = nil
+
+        public lazy var contextMenuConfiguration: ((EventContext) -> UIContextMenuConfiguration?)? = nil
+    }
 
 	public var modelType: Any.Type = M.self
 	public var cellType: Any.Type = C.self
@@ -180,61 +209,61 @@ open class CollectionAdapter<M: ModelProtocol, C: UICollectionViewCell>: Collect
 }
 
 extension CollectionAdapter {
-	
-	/// Context of the adapter.
-	public struct Context<M,C> {
-		
-		/// Index path of represented context's cell instance
-		public let indexPath: IndexPath
+    
+    /// Context of the adapter.
+    public struct Context<M,C> {
+        
+        /// Index path of represented context's cell instance
+        public let indexPath: IndexPath
 
-		/// Represented model instance
-		public let model: M
+        /// Represented model instance
+        public let model: M
 
-		/// Managed source collection
-		public private(set) weak var collection: UICollectionView?
+        /// Managed source collection
+        public private(set) weak var collection: UICollectionView?
 
-		/// Managed source collection's bounds size
-		public var collectionSize: CGSize? {
-			guard let c = collection else { return nil }
-			return c.bounds.size
-		}
-		
-		/// Internal cell representation. For some events it may be nil.
-		/// You can use public's `cell` property to attempt to get a valid instance of the cell
-		/// (if source events allows it).
-		private let _cell: C?
-		
-		/// Represented cell instance.
-		/// Depending from the source event where the context is generated it maybe nil.
-		/// When not `nil` it's stricly typed to its parent adapter cell's definition.
-		public var cell: C? {
-			guard let c = _cell else {
-				return collection?.cellForItem(at: self.indexPath) as? C
-			}
-			return c
-		}
-		
-		/// Initialize a new context from a source event.
-		/// Instances of the Context are generated automatically and received from events; you don't need to allocate on your own.
-		///
-		/// - Parameters:
-		///   - model: source generic model
-		///   - cell: source generic cell
-		///   - path: cell's path
-		///   - collection: parent cell's collection instance
-		internal init(model: ModelProtocol, cell: UICollectionViewCell?, path: IndexPath, collection: UICollectionView) {
-			self.model = model as! M
-			self._cell = cell as? C
-			self.indexPath = path
-			self.collection = collection
-		}
-		
-		internal init(generic: InternalContext) {
-			self.model = (generic.model as! M)
-			self._cell = (generic.cell as? C)
-			self.indexPath = generic.path!
-			self.collection = (generic.container as! UICollectionView)
-		}
-	}
-	
+        /// Managed source collection's bounds size
+        public var collectionSize: CGSize? {
+            guard let c = collection else { return nil }
+            return c.bounds.size
+        }
+        
+        /// Internal cell representation. For some events it may be nil.
+        /// You can use public's `cell` property to attempt to get a valid instance of the cell
+        /// (if source events allows it).
+        private let _cell: C?
+        
+        /// Represented cell instance.
+        /// Depending from the source event where the context is generated it maybe nil.
+        /// When not `nil` it's stricly typed to its parent adapter cell's definition.
+        public var cell: C? {
+            guard let c = _cell else {
+                return collection?.cellForItem(at: self.indexPath) as? C
+            }
+            return c
+        }
+        
+        /// Initialize a new context from a source event.
+        /// Instances of the Context are generated automatically and received from events; you don't need to allocate on your own.
+        ///
+        /// - Parameters:
+        ///   - model: source generic model
+        ///   - cell: source generic cell
+        ///   - path: cell's path
+        ///   - collection: parent cell's collection instance
+        internal init(model: ModelProtocol, cell: UICollectionViewCell?, path: IndexPath, collection: UICollectionView) {
+            self.model = model as! M
+            self._cell = cell as? C
+            self.indexPath = path
+            self.collection = collection
+        }
+        
+        internal init(generic: InternalContext) {
+            self.model = (generic.model as! M)
+            self._cell = (generic.cell as? C)
+            self.indexPath = generic.path!
+            self.collection = (generic.container as! UICollectionView)
+        }
+    }
+    
 }

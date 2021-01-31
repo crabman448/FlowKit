@@ -179,7 +179,7 @@ open class FlowCollectionDirector: CollectionDirector, UICollectionViewDelegateF
 	}
 	
 	open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-		let header = (sections[section].header as? AbstractCollectionHeaderFooterItem)
+		let header = (sections[section].header as? AbstractCollectionSectionView)
 		guard let size = header?.dispatch(.referenceSize, type: .header, view: nil, section: section, collection: collectionView) as? CGSize else {
 			return .zero
 		}
@@ -187,7 +187,7 @@ open class FlowCollectionDirector: CollectionDirector, UICollectionViewDelegateF
 	}
 	
 	open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-		let footer = (sections[section].footer as? AbstractCollectionHeaderFooterItem)
+		let footer = (sections[section].footer as? AbstractCollectionSectionView)
 		guard let size = footer?.dispatch(.referenceSize, type: .footer, view: nil, section: section, collection: collectionView) as? CGSize else {
 			return .zero
 		}

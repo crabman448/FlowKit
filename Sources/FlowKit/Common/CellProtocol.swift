@@ -8,10 +8,6 @@
 
 import UIKit
 
-extension UICollectionViewCell: CellProtocol { }
-
-extension UITableViewCell: CellProtocol { }
-
 protocol CellProtocol: class {
     static var reuseIdentifier: String { get }
 }
@@ -22,3 +18,7 @@ extension CellProtocol {
         return String(describing: self)
     }
 }
+
+extension UICollectionViewCell: CellProtocol { }
+
+extension UITableViewCell: CellProtocol { }

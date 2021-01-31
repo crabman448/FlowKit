@@ -63,7 +63,7 @@ public class CollectionSection: Equatable, ModelProtocol {
 	
 	/// Header of the sections; instantiate a new object of `CollectionSectionView<UIReusableView>`.
 	/// NOTE: It's valid only for flow layout.
-	open var header: CollectionSectionProtocol? = nil {
+	open var header: CollectionSectionViewProtocol? = nil {
 		willSet {
 			self.header?.section = nil
 		}
@@ -74,7 +74,7 @@ public class CollectionSection: Equatable, ModelProtocol {
 	
 	/// Footer of the sections; instantiate a new object of `CollectionSectionView<UIReusableView>`.
 	/// NOTE: It's valid only for flow layout.
-	open var footer: CollectionSectionProtocol? = nil {
+	open var footer: CollectionSectionViewProtocol? = nil {
 		willSet {
 			self.footer?.section = nil
 		}
@@ -119,7 +119,7 @@ public class CollectionSection: Equatable, ModelProtocol {
 	///   - models: models, `nil` create an empty set
 	///   - headerView: optional custom header
 	///   - footerView: optional custom footer
-	public init(modelId: String = UUID().uuidString, models: [ModelProtocol]?, headerView: CollectionSectionProtocol? = nil, footerView: CollectionSectionProtocol? = nil) {
+	public init(modelId: String = UUID().uuidString, models: [ModelProtocol]?, headerView: CollectionSectionViewProtocol? = nil, footerView: CollectionSectionViewProtocol? = nil) {
         self.modelId = modelId
 		self.models = (models ?? [])
 		self.header = headerView
