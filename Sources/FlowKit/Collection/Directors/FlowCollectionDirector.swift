@@ -32,13 +32,9 @@ import UIKit
 
 open class FlowCollectionDirector: CollectionDirector, UICollectionViewDelegateFlowLayout {
 	
-    public var layout: UICollectionViewFlowLayout {
-        didSet {
-            collection.collectionViewLayout = layout
-        }
+    var layout: UICollectionViewFlowLayout? {
+        return collection.collectionViewLayout as? UICollectionViewFlowLayout
     }
-    
-    private var layoutToken: NSKeyValueObservation?
     
     /// Define the cell size.
     ///
@@ -58,89 +54,17 @@ open class FlowCollectionDirector: CollectionDirector, UICollectionViewDelegateF
         didSet {
             switch itemSize {
             case .autoLayout(let estimateSize):
-                layout.estimatedItemSize = estimateSize
-                layout.itemSize = CGSize(width: 50.0, height: 50.0) // default
+                layout?.estimatedItemSize = estimateSize
+                layout?.itemSize = CGSize(width: 50.0, height: 50.0) // default
             case .fixed(let fixedSize):
-                layout.estimatedItemSize = .zero
-                layout.itemSize = fixedSize
+                layout?.estimatedItemSize = .zero
+                layout?.itemSize = fixedSize
             case .default:
-                layout.estimatedItemSize = .zero
-                layout.itemSize = CGSize(width: 50.0, height: 50.0) // default
+                layout?.estimatedItemSize = .zero
+                layout?.itemSize = CGSize(width: 50.0, height: 50.0) // default
             }
         }
     }
-    
-	/// Margins to apply to content.
-	/// This is a global value, you can customize a per-section behaviour by implementing `sectionInsets` property into a section.
-	/// Initially is set to `.zero`.
-	public var sectionsInsets: UIEdgeInsets {
-		set { self.layout.sectionInset = newValue }
-		get { return self.layout.sectionInset }
-	}
-	
-	/// Minimum spacing (in points) to use between items in the same row or column.
-	/// This is a global value, you can customize a per-section behaviour by implementing `minimumInteritemSpacing` property into a section.
-	/// Initially is set to `CGFloat.leastNormalMagnitude`.
-	public var minimumInteritemSpacing: CGFloat {
-		set { self.layout.minimumInteritemSpacing = newValue }
-		get { return self.layout.minimumInteritemSpacing }
-	}
-	
-	/// The minimum spacing (in points) to use between rows or columns.
-	/// This is a global value, you can customize a per-section behaviour by implementing `minimumInteritemSpacing` property into a section.
-	/// Initially is set to `0`.
-	public var minimumLineSpacing: CGFloat {
-		set { self.layout.minimumLineSpacing = newValue }
-		get { return self.layout.minimumLineSpacing }
-	}
-	
-	/// When this property is true, section header views scroll with content until they reach the top of the screen,
-	/// at which point they are pinned to the upper bounds of the collection view.
-	/// Each new header view that scrolls to the top of the screen pushes the previously pinned header view offscreen.
-	///
-	/// The default value of this property is `false`.
-	public var stickyHeaders: Bool {
-		set { self.layout.sectionHeadersPinToVisibleBounds = newValue }
-		get { return (self.layout.sectionHeadersPinToVisibleBounds) }
-	}
-	
-	/// When this property is true, section footer views scroll with content until they reach the bottom of the screen,
-	/// at which point they are pinned to the lower bounds of the collection view.
-	/// Each new footer view that scrolls to the bottom of the screen pushes the previously pinned footer view offscreen.
-	///
-	/// The default value of this property is `false`.
-	public var stickyFooters: Bool {
-		set { self.layout.sectionFootersPinToVisibleBounds = newValue }
-		get { return (self.layout.sectionFootersPinToVisibleBounds) }
-	}
-
-	/// Set the section reference starting point.
-    public var sectionInsetReference: UICollectionViewFlowLayout.SectionInsetReference {
-		set { self.layout.sectionInsetReference = newValue }
-		get { return self.layout.sectionInsetReference }
-	}
-	
-	/// Initialize a new flow collection manager.
-	/// Note: Layout of the collection must be a UICollectionViewFlowLayout or subclass.
-	///
-	/// - Parameters:
-	///   - collection: collection instance to manage.
-    public override init(_ collection: UICollectionView) {
-        guard let layout = collection.collectionViewLayout as? UICollectionViewFlowLayout else {
-            fatalError("Expected UICollectionViewFlowLayout")
-        }
-        
-        self.layout = layout
-        
-		super.init(collection)
-        
-        self.layoutToken = collection.observe(\.collectionViewLayout, options: [.initial, .new]) { [weak self] object, _ in
-            guard let layout = object.collectionViewLayout as? UICollectionViewFlowLayout else {
-                fatalError("Expected UICollectionViewFlowLayout")
-            }
-            self?.layout = layout
-        }
-	}
 	
 	//MARK: UICollectionViewDelegateFlowLayout Events
 	
@@ -151,7 +75,7 @@ open class FlowCollectionDirector: CollectionDirector, UICollectionViewDelegateF
 
 		switch self.itemSize {
 		case .default, .autoLayout(_):
-            return potentialItemSizeValue ?? self.layout.itemSize
+            return potentialItemSizeValue ?? self.layout?.itemSize ?? .zero
 		case .fixed(let itemSizeValue):
 			return potentialItemSizeValue ?? itemSizeValue
 		}
@@ -159,21 +83,21 @@ open class FlowCollectionDirector: CollectionDirector, UICollectionViewDelegateF
 	
 	open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
 		guard let value = self.sections[section].sectionInsets?() else {
-			return self.sectionsInsets
+            return self.layout?.sectionInset ?? .zero
 		}
 		return value
 	}
 	
 	open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
 		guard let value = self.sections[section].minimumInterItemSpacing?() else {
-			return self.minimumInteritemSpacing
+            return self.layout?.minimumInteritemSpacing ?? .zero
 		}
 		return value
 	}
 	
 	open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
 		guard let value = self.sections[section].minimumLineSpacing?() else {
-			return self.minimumLineSpacing
+            return self.layout?.minimumLineSpacing ?? .zero
 		}
 		return value
 	}
