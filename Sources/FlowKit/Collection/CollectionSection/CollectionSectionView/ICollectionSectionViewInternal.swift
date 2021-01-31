@@ -10,5 +10,5 @@ import UIKit
 
 protocol ICollectionSectionViewInternal {
     @discardableResult
-    func dispatch(_ event: CollectionSectionViewEventsKey, type: SectionType,  view: UICollectionReusableView?, section: Int, collection: UICollectionView) -> Any?
+    func dispatch(_ event: CollectionSectionViewEventsKey, type: SectionViewType,  view: UICollectionReusableView?, section: Int, collection: UICollectionView) -> Any?
 }

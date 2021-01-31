@@ -30,10 +30,8 @@
 import Foundation
 import UIKit
 
-public protocol TableAdapterProtocol : AbstractAdapterProtocol, Equatable {}
-
 /// Adapter manages a model type with its associated view representation (a particular cell type).
-open class TableAdapter<M: ModelProtocol, C: UITableViewCell>: TableAdapterProtocol, TableAdaterProtocolFunctions {
+open class TableAdapter<M: ModelProtocol, C: UITableViewCell>: ITableAdapter, ITableAdapterInternal {
 
     public struct Events<M,C> {
         public typealias EventContext = Context<M,C>
@@ -124,7 +122,7 @@ open class TableAdapter<M: ModelProtocol, C: UITableViewCell>: TableAdapterProto
 		configuration?(self)
 	}
 	
-	//MARK: TableAdaterProtocolFunctions Protocol
+	//MARK: ITableAdapterInternal Protocol
 	
 	func _instanceCell(in table: UITableView, at indexPath: IndexPath?) -> UITableViewCell {
 		guard let indexPath = indexPath else {

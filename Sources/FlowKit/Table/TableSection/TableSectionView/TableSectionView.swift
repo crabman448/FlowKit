@@ -54,7 +54,7 @@ open class TableSectionView<T: HeaderFooterProtocol>: ITableSectionView, ITableS
 	/// Context of the event sent to section's view.
 	public struct Context<T> {
 		
-		public private(set) var type: SectionType
+		public private(set) var type: SectionViewType
 		
 		/// Parent collection
 		public private(set) weak var table: UITableView?
@@ -71,7 +71,7 @@ open class TableSectionView<T: HeaderFooterProtocol>: ITableSectionView, ITableS
 		}
 		
 		/// Initialize a new context (private).
-		public init(type: SectionType, view: UIView?, at section: Int, of table: UITableView) {
+		public init(type: SectionViewType, view: UIView?, at section: Int, of table: UITableView) {
 			self.type = type
 			self.table = table
 			self.view = view as? T
@@ -97,7 +97,7 @@ open class TableSectionView<T: HeaderFooterProtocol>: ITableSectionView, ITableS
 
 	//MARK: INTERNAL METHODS
 	@discardableResult
-	func dispatch(_ event: TableSectionViewEventsKey, type: SectionType, view: UIView?, section: Int, table: UITableView) -> Any? {
+	func dispatch(_ event: TableSectionViewEventsKey, type: SectionViewType, view: UIView?, section: Int, table: UITableView) -> Any? {
 		switch event {
 		case .dequeue:
 			guard let callback = self.on.dequeue else { return nil }

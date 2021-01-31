@@ -1,5 +1,5 @@
 //
-//  CollectionAdapterProtocolFunctions.swift
+//  ICollectionAdapterInternal.swift
 //  FlowKit
 //
 //  Created by Taras on 31/01/2021.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-internal protocol CollectionAdapterProtocolFunctions {
+protocol ICollectionAdapterInternal {
 
     @discardableResult
     func dispatch(_ event: CollectionAdapterEventKey, context: InternalContext) -> Any?

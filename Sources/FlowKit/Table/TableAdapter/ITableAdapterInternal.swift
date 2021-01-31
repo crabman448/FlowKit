@@ -1,5 +1,5 @@
 //
-//  TableAdaterProtocolFunctions.swift
+//  ITableAdapterInternal.swift
 //  FlowKit
 //
 //  Created by Taras on 31/01/2021.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol TableAdaterProtocolFunctions {
+protocol ITableAdapterInternal {
     
     @discardableResult
     func dispatch(_ event: TableAdapterEventsKey,  context: InternalContext) -> Any?

@@ -319,13 +319,13 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	///
 	/// - Parameter index: index of target item.
 	/// - Returns: model and adapter
-	internal func context(forItemAt index: IndexPath) -> (ModelProtocol, TableAdaterProtocolFunctions) {
+	internal func context(forItemAt index: IndexPath) -> (ModelProtocol, ITableAdapterInternal) {
 		let item: ModelProtocol = self.sections[index.section].models[index.row]
 		let modelId = String(describing: type(of: item.self))
 		guard let adapter = self.adapters[modelId] else {
 			fatalError("Failed to found an adapter for model: \(modelId)")
 		}
-		return (item,adapter as! TableAdaterProtocolFunctions)
+		return (item,adapter as! ITableAdapterInternal)
 	}
 	
 	/// Return the adapter associated with type of model.
@@ -333,12 +333,12 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	///
 	/// - Parameter model: model to read.
 	/// - Returns: adapter.
-	internal func context(forModel model: AnyHashable) -> TableAdaterProtocolFunctions {
+	internal func context(forModel model: AnyHashable) -> ITableAdapterInternal {
 		let modelId = String(describing: type(of: model.self))
 		guard let adapter = self.adapters[modelId] else {
 			fatalError("Failed to found an adapter for \(modelId)")
 		}
-		return (adapter as! TableAdaterProtocolFunctions)
+		return (adapter as! ITableAdapterInternal)
 	}
 	
 	/// Return the list of adapters used to manage objects at given paths.
@@ -355,7 +355,7 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 			
 			var context: PrefetchModelsGroup? = list[modelId]
 			if context == nil {
-				context = PrefetchModelsGroup(adapter: self.adapters[modelId] as! TableAdaterProtocolFunctions)
+				context = PrefetchModelsGroup(adapter: self.adapters[modelId] as! ITableAdapterInternal)
 				list[modelId] = context
 			}
 			context!.models.append(model)
@@ -368,11 +368,11 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	/// PrefetchModelsGroup groups models instances with given adapters.
 	/// Instances of these objects are returned by `adapters(forIndexPaths)` function.
 	internal class PrefetchModelsGroup {
-		let adapter: 	TableAdaterProtocolFunctions
+		let adapter: 	ITableAdapterInternal
 		var models: 	[ModelProtocol] = []
 		var indexPaths: [IndexPath] = []
 		
-		public init(adapter: TableAdaterProtocolFunctions) {
+		public init(adapter: ITableAdapterInternal) {
 			self.adapter = adapter
 		}
 	}
@@ -607,7 +607,7 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	
 	public func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
 		self.adapters.forEach {
-			($0.value as! TableAdaterProtocolFunctions).dispatch(.endDisplay, context: InternalContext(nil, indexPath, cell, tableView))
+			($0.value as! ITableAdapterInternal).dispatch(.endDisplay, context: InternalContext(nil, indexPath, cell, tableView))
 		}
 	}
 	

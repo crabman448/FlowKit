@@ -286,21 +286,21 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
 	///
 	/// - Parameter index: index path of the item.
 	/// - Returns: context
-	internal func context(forItemAt index: IndexPath) -> (ModelProtocol,CollectionAdapterProtocolFunctions) {
+	internal func context(forItemAt index: IndexPath) -> (ModelProtocol,ICollectionAdapterInternal) {
 		let item: ModelProtocol = self.sections[index.section].models[index.row]
 		let modelId = String(describing: type(of: item.self))
 		guard let adapter = self.adapters[modelId] else {
 			fatalError("Failed to found an adapter for \(modelId)")
 		}
-		return (item,adapter as! CollectionAdapterProtocolFunctions)
+		return (item,adapter as! ICollectionAdapterInternal)
 	}
 
-	internal func context(forModel model: ModelProtocol) -> CollectionAdapterProtocolFunctions {
+	internal func context(forModel model: ModelProtocol) -> ICollectionAdapterInternal {
 		let modelId = String(describing: type(of: item.self))
 		guard let adapter = self.adapters[modelId] else {
 			fatalError("Failed to found an adapter for \(modelId)")
 		}
-		return (adapter as! CollectionAdapterProtocolFunctions)
+		return (adapter as! ICollectionAdapterInternal)
 	}
 	
 	internal func adapters(forIndexPath paths: [IndexPath]) -> [PrefetchModelsGroup] {
@@ -311,7 +311,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
 			
 			var context: PrefetchModelsGroup? = list[modelId]
 			if context == nil {
-				context = PrefetchModelsGroup(adapter: self.adapters[modelId] as! CollectionAdapterProtocolFunctions)
+				context = PrefetchModelsGroup(adapter: self.adapters[modelId] as! ICollectionAdapterInternal)
 				list[modelId] = context
 			}
 			context!.models.append(model)
@@ -345,7 +345,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
 	
 	public func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
 		self.adapters.forEach {
-			($0.value as! CollectionAdapterProtocolFunctions).dispatch(.endDisplay, context: InternalContext.init(nil, indexPath, cell, collectionView))
+			($0.value as! ICollectionAdapterInternal).dispatch(.endDisplay, context: InternalContext.init(nil, indexPath, cell, collectionView))
 		}
 	}
 	
@@ -513,11 +513,11 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
 	//MARK: Prefetching
 	
 	internal class PrefetchModelsGroup {
-		let adapter: 	CollectionAdapterProtocolFunctions
+		let adapter: 	ICollectionAdapterInternal
 		var models: 	[ModelProtocol] = []
 		var indexPaths: [IndexPath] = []
 		
-		public init(adapter: CollectionAdapterProtocolFunctions) {
+		public init(adapter: ICollectionAdapterInternal) {
 			self.adapter = adapter
 		}
 	}

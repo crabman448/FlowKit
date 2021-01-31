@@ -30,10 +30,8 @@
 import Foundation
 import UIKit
 
-public protocol CollectionAdapterProtocol : AbstractAdapterProtocol, Equatable {}
-
 /// The adapter identify a pair of model and cell used to represent the data.
-open class CollectionAdapter<M: ModelProtocol, C: UICollectionViewCell>: CollectionAdapterProtocol, CustomStringConvertible, CollectionAdapterProtocolFunctions {
+open class CollectionAdapter<M: ModelProtocol, C: UICollectionViewCell>: ICollectionAdapter, CustomStringConvertible, ICollectionAdapterInternal {
     
     public struct Events<M,C> {
         public typealias EventContext = Context<M,C>

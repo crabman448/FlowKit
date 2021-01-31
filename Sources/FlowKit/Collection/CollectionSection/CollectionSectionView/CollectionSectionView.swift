@@ -58,7 +58,7 @@ open class CollectionSectionView<T: HeaderFooterProtocol>: ICollectionSectionVie
 	public struct Context<T> {
 		
 		/// Type of item (footer or header)
-		public private(set) var type: SectionType
+		public private(set) var type: SectionViewType
 		
 		/// Parent collection
 		public private(set) weak var collection: UICollectionView?
@@ -75,7 +75,7 @@ open class CollectionSectionView<T: HeaderFooterProtocol>: ICollectionSectionVie
 		}
 		
 		/// Initialize a new context (private).
-		public init(type: SectionType, view: UIView?, at section: Int, of collection: UICollectionView) {
+		public init(type: SectionViewType, view: UIView?, at section: Int, of collection: UICollectionView) {
 			self.type = type
 			self.collection = collection
 			self.view = view as? T
@@ -86,7 +86,7 @@ open class CollectionSectionView<T: HeaderFooterProtocol>: ICollectionSectionVie
 	/// Events for section
 	public var on = Event<T>()
 	
-	//MARK: INIT
+	//MARK: Init
 	
 	/// Initialize a new section view.
 	///
@@ -95,9 +95,10 @@ open class CollectionSectionView<T: HeaderFooterProtocol>: ICollectionSectionVie
 		configuration?(self)
 	}
 	
-	//MARK: INTERNAL METHODS
+	//MARK: ICollectionSectionViewInternal
+
 	@discardableResult
-	func dispatch(_ event: CollectionSectionViewEventsKey, type: SectionType, view: UICollectionReusableView?, section: Int, collection: UICollectionView) -> Any? {
+	func dispatch(_ event: CollectionSectionViewEventsKey, type: SectionViewType, view: UICollectionReusableView?, section: Int, collection: UICollectionView) -> Any? {
 		switch event {
 		case .dequeue:
 			guard let callback = self.on.dequeue else { return nil }

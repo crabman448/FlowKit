@@ -1,5 +1,5 @@
 //
-//  SectionType.swift
+//  ITableAdapter.swift
 //  FlowKit
 //
 //  Created by Taras on 31/01/2021.
@@ -8,7 +8,4 @@
 
 import Foundation
 
-public enum SectionType {
-    case header
-    case footer
-}
+public protocol ITableAdapter : AbstractAdapterProtocol, Equatable {}

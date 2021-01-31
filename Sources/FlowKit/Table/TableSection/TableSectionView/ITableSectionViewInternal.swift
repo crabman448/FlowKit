@@ -10,5 +10,5 @@ import UIKit
 
 protocol ITableSectionViewInternal  {
     @discardableResult
-    func dispatch(_ event: TableSectionViewEventsKey, type: SectionType, view: UIView?, section: Int, table: UITableView) -> Any?
+    func dispatch(_ event: TableSectionViewEventsKey, type: SectionViewType, view: UIView?, section: Int, table: UITableView) -> Any?
 }
