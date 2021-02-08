@@ -101,19 +101,29 @@ open class CollectionSectionView<T: HeaderFooterProtocol>: ICollectionSectionVie
 	func dispatch(_ event: CollectionSectionViewEventsKey, type: SectionViewType, view: UICollectionReusableView?, section: Int, collection: UICollectionView) -> Any? {
 		switch event {
 		case .dequeue:
-			guard let callback = self.on.dequeue else { return nil }
+			guard let callback = self.on.dequeue else {
+            return nil
+        }
 			callback(Context(type: type, view: view, at: section, of: collection))
 		case .didDisplay:
-			guard let callback = self.on.didDisplay else { return nil }
+			guard let callback = self.on.didDisplay else {
+            return nil
+        }
 			callback(Context(type: type, view: view, at: section, of: collection))
 		case .endDisplay:
-			guard let callback = self.on.endDisplay else { return nil }
+			guard let callback = self.on.endDisplay else {
+            return nil
+        }
 			callback(Context(type: type, view: view, at: section, of: collection))
 		case .willDisplay:
-			guard let callback = self.on.willDisplay else { return nil }
+			guard let callback = self.on.willDisplay else {
+            return nil
+        }
 			callback(Context(type: type, view: view, at: section, of: collection))
 		case .referenceSize:
-			guard let callback = self.on.referenceSize else { return nil }
+			guard let callback = self.on.referenceSize else {
+            return nil
+        }
 			return callback(Context(type: type, view: view, at: section, of: collection))
 		}
 		return nil

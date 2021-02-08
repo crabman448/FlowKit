@@ -106,87 +106,129 @@ open class CollectionAdapter<M: ModelProtocol, C: UICollectionViewCell>: ICollec
 		switch event {
 			
 		case .dequeue:
-			guard let callback = self.on.dequeue else { return nil }
+			guard let callback = self.on.dequeue else {
+            return nil
+        }
 			callback(Context<M,C>(generic: context))
 			
 		case .shouldSelect:
-			guard let callback = self.on.shouldSelect else { return nil }
+			guard let callback = self.on.shouldSelect else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context))
 			
 		case .didSelect:
-			guard let callback = self.on.didSelect else { return nil }
+			guard let callback = self.on.didSelect else {
+            return nil
+        }
 			callback(Context<M,C>(generic: context))
 			
 		case .didDeselect:
-			guard let callback = self.on.didDeselect else { return nil }
+			guard let callback = self.on.didDeselect else {
+            return nil
+        }
 			callback(Context<M,C>(generic: context))
 			
 		case .didHighlight:
-			guard let callback = self.on.didHighlight else { return nil }
+			guard let callback = self.on.didHighlight else {
+            return nil
+        }
 			callback(Context<M,C>(generic: context))
 			
 		case .didUnhighlight:
-			guard let callback = self.on.didUnhighlight else { return nil }
+			guard let callback = self.on.didUnhighlight else {
+            return nil
+        }
 			callback(Context<M,C>(generic: context))
 			
 		case .shouldHighlight:
-			guard let callback = self.on.shouldHighlight else { return nil }
+			guard let callback = self.on.shouldHighlight else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context))
 			
 		case .willDisplay:
-			guard let callback = self.on.willDisplay else { return nil }
+			guard let callback = self.on.willDisplay else {
+            return nil
+        }
 			callback((context.cell as! C), context.path!)
 			
 		case .endDisplay:
-			guard let callback = self.on.endDisplay else { return nil }
+			guard let callback = self.on.endDisplay else {
+            return nil
+        }
 			callback((context.cell as! C), context.path!)
 			
 		case .shouldShowEditMenu:
-			guard let callback = self.on.shouldShowEditMenu else { return nil }
+			guard let callback = self.on.shouldShowEditMenu else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context))
 
 		case .canPerformEditAction:
-			guard let callback = self.on.canPerformEditAction else { return nil }
+			guard let callback = self.on.canPerformEditAction else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context))
 			
 		case .performEditAction:
-			guard let callback = self.on.performEditAction else { return nil }
+			guard let callback = self.on.performEditAction else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context), (context.param1 as! Selector), context.param2)
 			
 		case .canFocus:
-			guard let callback = self.on.canFocus else { return nil }
+			guard let callback = self.on.canFocus else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context))
 			
 		case .itemSize:
-			guard let callback = self.on.itemSize else { return nil }
+			guard let callback = self.on.itemSize else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context))
 			
 	/*	case .generateDragPreview:
-			guard let callback = self.on.generateDragPreview else { return nil }
+			guard let callback = self.on.generateDragPreview else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context))
 			
 		case .generateDropPreview:
-			guard let callback = self.on.generateDropPreview else { return nil }
+			guard let callback = self.on.generateDropPreview else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context))
 		*/
 		case .prefetch:
-			guard let callback = self.on.prefetch else { return nil }
+			guard let callback = self.on.prefetch else {
+            return nil
+        }
 			callback((context.models as! [M]), context.paths!, (context.container as! UICollectionView))
 			
 		case .cancelPrefetch:
-			guard let callback = self.on.cancelPrefetch else { return nil }
+			guard let callback = self.on.cancelPrefetch else {
+            return nil
+        }
 			callback((context.models as! [M]), context.paths!, (context.container as! UICollectionView))
 			
 		case .shouldSpringLoad:
-			guard let callback = self.on.shouldSpringLoad else { return nil }
+			guard let callback = self.on.shouldSpringLoad else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context))
 			
 		case .shouldDeselect:
-			guard let callback = self.on.shouldDeselect else { return nil }
+			guard let callback = self.on.shouldDeselect else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context))
 
         case .contextMenuConfiguration:
-            guard let callback = self.on.contextMenuConfiguration else { return nil }
+            guard let callback = self.on.contextMenuConfiguration else {
+            return nil
+        }
             return callback(Context<M,C>(generic: context))
 			
 		}
@@ -222,7 +264,9 @@ extension CollectionAdapter {
 
         /// Managed source collection's bounds size
         public var collectionSize: CGSize? {
-            guard let c = collection else { return nil }
+            guard let c = collection else {
+            return nil
+        }
             return c.bounds.size
         }
         

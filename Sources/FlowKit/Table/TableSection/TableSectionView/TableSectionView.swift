@@ -100,22 +100,34 @@ open class TableSectionView<T: HeaderFooterProtocol>: ITableSectionView, ITableS
 	func dispatch(_ event: TableSectionViewEventsKey, type: SectionViewType, view: UIView?, section: Int, table: UITableView) -> Any? {
 		switch event {
 		case .dequeue:
-			guard let callback = self.on.dequeue else { return nil }
+			guard let callback = self.on.dequeue else {
+            return nil
+        }
 			callback(Context<T>(type: type, view: view, at: section, of: table))
 		case .height:
-			guard let callback = self.on.height else { return nil }
+			guard let callback = self.on.height else {
+            return nil
+        }
 			return callback(Context<T>(type: type, view: view, at: section, of: table))
 		case .willDisplay:
-			guard let callback = self.on.willDisplay else { return nil }
+			guard let callback = self.on.willDisplay else {
+            return nil
+        }
 			return callback(Context<T>(type: type, view: view, at: section, of: table))
 		case .didDisplay:
-			guard let callback = self.on.didDisplay else { return nil }
+			guard let callback = self.on.didDisplay else {
+            return nil
+        }
 			return callback(Context<T>(type: type, view: view, at: section, of: table))
 		case .endDisplay:
-			guard let callback = self.on.endDisplay else { return nil }
+			guard let callback = self.on.endDisplay else {
+            return nil
+        }
 			return callback(Context<T>(type: type, view: view, at: section, of: table))
 		case .estimatedHeight:
-			guard let callback = self.on.estimatedHeight else { return nil }
+			guard let callback = self.on.estimatedHeight else {
+            return nil
+        }
 			return callback(Context<T>(type: type, view: view, at: section, of: table))
 		}
 		return nil

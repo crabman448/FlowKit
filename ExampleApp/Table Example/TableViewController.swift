@@ -99,7 +99,9 @@ class TableViewController: UIViewController {
 
             print("didScroll")
 
-            guard let this = self, !this.isScrollingToTop else { return }
+            guard let this = self, !this.isScrollingToTop else {
+                return
+            }
 
             let pagnationShiftValue: CGFloat = 200
 

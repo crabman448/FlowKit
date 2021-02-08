@@ -238,7 +238,9 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	/// - Parameter index: index, if invalid produces `nil` result.
 	/// - Returns: section instance if index is valid, `nil` otherwise.
 	public func section(at index: Int) -> TableSection? {
-		guard index < self.sections.count else { return nil }
+		guard index < self.sections.count else {
+            return nil
+        }
 		return self.sections[index]
 	}
 	
@@ -273,7 +275,9 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	/// - Returns: removed section, if index is valid, `nil` otherwise.
 	@discardableResult
 	public func remove(section index: Int) -> TableSection? {
-		guard index < self.sections.count else { return nil }
+		guard index < self.sections.count else {
+            return nil
+        }
 		return self.sections.remove(at: index)
 	}
 	
@@ -298,7 +302,9 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	///   - sourceIndex: source index
 	///   - destIndex: destination index
 	public func move(swappingAt sourceIndex: Int, with destIndex: Int) {
-		guard sourceIndex < self.sections.count, destIndex < self.sections.count else { return }
+		guard sourceIndex < self.sections.count, destIndex < self.sections.count else {
+            return
+        }
 		swap(&self.sections[sourceIndex], &self.sections[destIndex])
 	}
 	
@@ -308,7 +314,9 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	///   - sourceIndex: source index
 	///   - destIndex: destination index
 	public func move(from sourceIndex: Int, to destIndex: Int) {
-		guard sourceIndex < self.sections.count, destIndex < self.sections.count else { return }
+		guard sourceIndex < self.sections.count, destIndex < self.sections.count else {
+            return
+        }
 		let removed = self.sections.remove(at: sourceIndex)
 		self.sections.insert(removed, at: destIndex)
 	}
@@ -397,14 +405,18 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	// MARK: Header & Footer
 	
 	public func tableView(_ tableView: UITableView, viewForHeaderInSection sectionIdx: Int) -> UIView? {
-		guard let header = sections[sectionIdx].headerView else { return nil }
+		guard let header = sections[sectionIdx].headerView else {
+            return nil
+        }
 		let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: self.registerView(header))
 		let _ = (header as? ITableSectionViewInternal)?.dispatch(.dequeue, type: .header, view: view, section: sectionIdx, table: tableView)
 		return view
 	}
 	
 	public func tableView(_ tableView: UITableView, viewForFooterInSection sectionIdx: Int) -> UIView? {
-		guard let footer = sections[sectionIdx].footerView else { return nil }
+		guard let footer = sections[sectionIdx].footerView else {
+            return nil
+        }
 		let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: self.registerView(footer))
 		let _ = (footer as? ITableSectionViewInternal)?.dispatch(.dequeue, type: .footer, view: view, section: sectionIdx, table: tableView)
 		return view
@@ -469,14 +481,18 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	}
 	
 	public func tableView(_ tableView: UITableView, didEndDisplayingHeaderView view: UIView, forSection section: Int) {
-		guard section < self.sections.count else { return }
+		guard section < self.sections.count else {
+            return
+        }
 		let item = (self.sections[section].headerView as? ITableSectionViewInternal)
 		let _ = item?.dispatch(.endDisplay, type: .header, view: view, section: section, table: tableView)
 		self.on.endDisplayHeader?( (view,section,tableView) )
 	}
 	
 	public func tableView(_ tableView: UITableView, didEndDisplayingFooterView view: UIView, forSection section: Int) {
-		guard section < self.sections.count else { return }
+		guard section < self.sections.count else {
+            return
+        }
 		let item = (self.sections[section].footerView as? ITableSectionViewInternal)
 		let _ = item?.dispatch(.endDisplay, type: .footer, view: view, section: section, table: tableView)
 		self.on.endDisplayFooter?( (view,section,tableView) )
@@ -580,7 +596,9 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	}
 	
 	public func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
-		guard let index = indexPath else { return }
+		guard let index = indexPath else {
+            return
+        }
 		let (model,adapter) = self.context(forItemAt: index)
 		adapter.dispatch(.didEndEdit, context: InternalContext(model, indexPath!, nil, tableView))
 	}
@@ -779,7 +797,9 @@ public extension TableDirector {
 	/// - Returns: `true` if view is registered, `false` otherwise. If view is already registered it returns `false`.
 	internal func registerView(_ view: ITableSectionView) -> String {
 		let identifier = view.reuseIdentifier
-		guard !self.headersFootersIDs.contains(identifier) else { return identifier}
+		guard !self.headersFootersIDs.contains(identifier) else {
+            return identifier
+        }
 		
 		let bundle = Bundle(for: view.viewClass)
 		if let _ = bundle.path(forResource: identifier, ofType: "nib") {

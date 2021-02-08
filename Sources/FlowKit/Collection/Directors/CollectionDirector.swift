@@ -102,12 +102,18 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
 	///   - safe: `true` to return nil if path is invalid, `false` to perform an unchecked retrive.
 	/// - Returns: model
 	public func item(at indexPath: IndexPath, safe: Bool = true) -> ModelProtocol? {
-		guard safe else { return self.sections[indexPath.section].models[indexPath.item] }
+		guard safe else {
+            return self.sections[indexPath.section].models[indexPath.item]
+        }
 		
-		guard indexPath.section < self.sections.count else { return nil }
+		guard indexPath.section < self.sections.count else {
+            return nil
+        }
 		let section = self.sections[indexPath.section]
 		
-		guard indexPath.item < section.models.count else { return nil }
+		guard indexPath.item < section.models.count else {
+            return nil
+        }
 		return section.models[indexPath.item]
 	}
 	
@@ -236,7 +242,9 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
 	/// - Returns: removed section
 	@discardableResult
 	public func remove(section index: Int) -> CollectionSection? {
-		guard index < self.sections.count else { return nil }
+		guard index < self.sections.count else {
+            return nil
+        }
 		return self.sections.remove(at: index)
 	}
 	
@@ -261,7 +269,9 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
 	/// - Parameter index: index, if invalid produces `nil` result.
 	/// - Returns: section instance if index is valid, `nil` otherwise.
 	public func section(at index: Int) -> CollectionSection? {
-		guard index < self.sections.count else { return nil }
+		guard index < self.sections.count else {
+            return nil
+        }
 		return self.sections[index]
 	}
 	
@@ -451,7 +461,9 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
 
         switch kind {
         case UICollectionView.elementKindSectionHeader:
-            guard let header = section.header else { return UICollectionReusableView() }
+            guard let header = section.header else {
+                return UICollectionReusableView()
+            }
 
             let identifier = self.reusableRegister.registerHeaderFooter(header, type: kind, at: indexPath)
             let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath)
@@ -462,7 +474,9 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
             return view
 
         case UICollectionView.elementKindSectionFooter:
-            guard let footer = section.footer else { return UICollectionReusableView() }
+            guard let footer = section.footer else {
+                return UICollectionReusableView()
+            }
 
             let identifier = self.reusableRegister.registerHeaderFooter(footer, type: kind, at: indexPath)
             let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath)

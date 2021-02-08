@@ -93,7 +93,9 @@ public class CollectionSection: Equatable, ModelProtocol {
 	/// Index of the section in manager.
 	/// If section is not part of a manager it returns `nil`.
 	private var index: Int? {
-        guard let man = manager, let idx = man.sections.firstIndex(of: self) else { return nil }
+        guard let man = manager, let idx = man.sections.firstIndex(of: self) else {
+            return nil
+        }
 		return idx
 	}
 
@@ -146,7 +148,9 @@ public class CollectionSection: Equatable, ModelProtocol {
 	/// - Returns: old instance, `nil` if provided `index` is invalid.
 	@discardableResult
 	public func set(model: ModelProtocol, at index: Int) -> ModelProtocol? {
-		guard index >= 0, index < self.models.count else { return nil }
+		guard index >= 0, index < self.models.count else {
+            return nil
+        }
 		let oldModel = self.models[index]
 		self.models[index] = model
 		return oldModel
@@ -208,7 +212,9 @@ public class CollectionSection: Equatable, ModelProtocol {
 	/// - Returns: removed model, `nil` if index is invalid.
 	@discardableResult
 	public func remove(at index: Int) -> ModelProtocol? {
-		guard index < self.models.count else { return nil }
+		guard index < self.models.count else {
+            return nil
+        }
 		return self.models.remove(at: index)
 	}
 	
@@ -244,7 +250,9 @@ public class CollectionSection: Equatable, ModelProtocol {
 	///   - sourceIndex: source index
 	///   - destIndex: destination index
 	public func move(swappingAt sourceIndex: Int, with destIndex: Int) {
-		guard sourceIndex < self.models.count, destIndex < self.models.count else { return }
+		guard sourceIndex < self.models.count, destIndex < self.models.count else {
+            return
+        }
         self.models.swapAt(sourceIndex, destIndex)
 	}
 	
@@ -254,7 +262,9 @@ public class CollectionSection: Equatable, ModelProtocol {
 	///   - sourceIndex: source index
 	///   - destIndex: destination index
 	public func move(from sourceIndex: Int, to destIndex: Int) {
-		guard sourceIndex < self.models.count, destIndex < self.models.count else { return }
+		guard sourceIndex < self.models.count, destIndex < self.models.count else {
+            return
+        }
 		let removed = self.models.remove(at: sourceIndex)
 		self.models.insert(removed, at: destIndex)
 	}

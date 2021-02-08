@@ -9,45 +9,45 @@
 import UIKit
 
 public struct Number: ModelProtocol {
-	public var modelId: String {
-		return String(value)
-	}
-	
-	let value: Int
-	
-	init(_ value: Int) {
-		self.value = value
-	}
+    public var modelId: String {
+        return String(value)
+    }
+    
+    let value: Int
+    
+    init(_ value: Int) {
+        self.value = value
+    }
 }
 
 public struct Letter: ModelProtocol {
-	public var modelId: String {
-		return self.value
-	}
-	
-	let value: String
-	
-	init(_ value: String) {
-		self.value = value
-	}
+    public var modelId: String {
+        return self.value
+    }
+    
+    let value: String
+    
+    init(_ value: String) {
+        self.value = value
+    }
 }
 
 class CollectionExampleController: UIViewController {
-	
-	@IBOutlet var collectionView: UICollectionView!
-
-	lazy var director = FlowCollectionDirector(collectionView)
-	
-	override func viewDidLoad() {
-		super.viewDidLoad()
-
+    
+    @IBOutlet var collectionView: UICollectionView!
+    
+    lazy var director = FlowCollectionDirector(collectionView)
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
         setupDirector()
         reload(displayHeader: true)
-	}
-
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.reset()
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
@@ -55,7 +55,7 @@ class CollectionExampleController: UIViewController {
             }
         }
     }
-
+    
     func setupDirector() {
         let letterAdapter = CollectionAdapter<Letter,LetterCell>()
         letterAdapter.on.dequeue = { ctx in
@@ -68,7 +68,7 @@ class CollectionExampleController: UIViewController {
             return CGSize.init(width: ctx.collectionSize!.width / 3.0, height: 100)
         }
         director.register(adapter: letterAdapter)
-
+        
         let numberAdapter = CollectionAdapter<Number,NumberCell>()
         numberAdapter.on.dequeue = { ctx in
             ctx.cell?.label?.text = "#\(ctx.model)"
@@ -84,14 +84,14 @@ class CollectionExampleController: UIViewController {
         }
         director.register(adapter: numberAdapter)
     }
-
+    
     func reload(displayHeader: Bool) {
         var list: [ModelProtocol] = (0..<70).map { return Number($0) }
         list.append(contentsOf: [Letter("A"),Letter("B"),Letter("C"),Letter("D"),Letter("E"),Letter("F")])
         list.shuffle()
-
+        
         let section: CollectionSection
-
+        
         if displayHeader {
             let header = CollectionSectionView<CollectionHeader>()
             header.on.dequeue = { context in
@@ -108,12 +108,12 @@ class CollectionExampleController: UIViewController {
         } else {
             section = CollectionSection(models: list)
         }
-
+        
         director.removeAll()
         director.add(section)
         director.reloadData()
     }
-
+    
     func reset() {
         director.removeAll()
         director.reloadData()
@@ -121,26 +121,27 @@ class CollectionExampleController: UIViewController {
 }
 
 public class NumberCell: UICollectionViewCell {
-	@IBOutlet public var label: UILabel?
-	@IBOutlet public var back: UIView?
+    @IBOutlet public var label: UILabel?
+    @IBOutlet public var back: UIView?
 }
 
-
 public class LetterCell: UICollectionViewCell {
-	@IBOutlet public var label: UILabel?
+    @IBOutlet public var label: UILabel?
 }
 
 extension MutableCollection {
-	/// Shuffles the contents of this collection.
-	mutating func shuffle() {
-		let c = count
-		guard c > 1 else { return }
-		
-		for (firstUnshuffled, unshuffledCount) in zip(indices, stride(from: c, to: 1, by: -1)) {
-			// Change `Int` in the next line to `IndexDistance` in < Swift 4.1
-			let d: Int = numericCast(arc4random_uniform(numericCast(unshuffledCount)))
-			let i = index(firstUnshuffled, offsetBy: d)
-			swapAt(firstUnshuffled, i)
-		}
-	}
+    /// Shuffles the contents of this collection.
+    mutating func shuffle() {
+        let c = count
+        guard c > 1 else {
+            return
+        }
+        
+        for (firstUnshuffled, unshuffledCount) in zip(indices, stride(from: c, to: 1, by: -1)) {
+            // Change `Int` in the next line to `IndexDistance` in < Swift 4.1
+            let d: Int = numericCast(arc4random_uniform(numericCast(unshuffledCount)))
+            let i = index(firstUnshuffled, offsetBy: d)
+            swapAt(firstUnshuffled, i)
+        }
+    }
 }

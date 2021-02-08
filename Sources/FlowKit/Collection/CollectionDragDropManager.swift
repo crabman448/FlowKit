@@ -204,12 +204,16 @@ public final class DragAndDropManager: NSObject, UICollectionViewDragDelegate, U
     }
     
     public func collectionView(_ collectionView: UICollectionView, dragSessionWillBegin session: UIDragSession) {
-        guard let event = self.onWillBeginDragSession else { return }
+        guard let event = self.onWillBeginDragSession else {
+            return
+        }
         event(session)
     }
     
     public func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: UIDragSession) {
-        guard let event = self.onDidEndDragSession else { return }
+        guard let event = self.onDidEndDragSession else {
+            return
+        }
         event(session)
     }
     
@@ -219,12 +223,16 @@ public final class DragAndDropManager: NSObject, UICollectionViewDragDelegate, U
      }*/
     
     public func collectionView(_ collectionView: UICollectionView, dragSessionIsRestrictedToDraggingApplication session: UIDragSession) -> Bool {
-        guard let event = self.onDragSessionRestrictedToApp else { return true }
+        guard let event = self.onDragSessionRestrictedToApp else {
+            return true
+        }
         return event(session)
     }
     
     public func collectionView(_ collectionView: UICollectionView, dragSessionAllowsMoveOperation session: UIDragSession) -> Bool {
-        guard let event = self.onDragSessionAllowsMoveOperation else { return true }
+        guard let event = self.onDragSessionAllowsMoveOperation else {
+            return true
+        }
         return event(session)
     }
     
@@ -235,7 +243,9 @@ public final class DragAndDropManager: NSObject, UICollectionViewDragDelegate, U
     }
     
     public func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
-        guard let event = self.onAcceptDropDession else { return true }
+        guard let event = self.onAcceptDropDession else {
+            return true
+        }
         return event(session)
     }
     

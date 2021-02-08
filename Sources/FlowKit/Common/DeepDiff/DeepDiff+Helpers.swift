@@ -69,7 +69,9 @@ internal struct SectionChanges {
 	}
 	
 	func applyChanges(to table: UITableView?, withAnimations animations: TableReloadAnimationProtocol) {
-		guard let table = table, self.hasChanges else { return }
+		guard let table = table, self.hasChanges else {
+            return
+        }
 		table.deleteSections(self.deletes, with: animations.animationForSection(action: .delete))
 		table.insertSections(self.inserts, with: animations.animationForSection(action: .insert))
 		self.moves.forEach {
@@ -79,7 +81,9 @@ internal struct SectionChanges {
 	}
 	
 	func applyChanges(to collection: UICollectionView?) {
-		guard let collection = collection, self.hasChanges else { return }
+		guard let collection = collection, self.hasChanges else {
+            return
+        }
 		collection.deleteSections(self.deletes)
 		collection.insertSections(self.inserts)
 		self.moves.forEach {
@@ -130,7 +134,9 @@ internal struct SectionItemsChanges {
 	}
 	
 	func applyChanges(of collection: UICollectionView?) {
-		guard let c = collection else { return }
+		guard let c = collection else {
+            return
+        }
 		
 		c.deleteItems(at: self.deletes)
 		c.insertItems(at: self.inserts)
@@ -141,7 +147,9 @@ internal struct SectionItemsChanges {
 	}
 	
 	func applyChanges(ofTable table: UITableView?, withAnimations animations: TableReloadAnimationProtocol) {
-		guard let table = table else { return }
+		guard let table = table else {
+            return
+        }
 		
 		table.deleteRows(at: self.deletes, with: animations.animationForRow(action: .delete))
 		table.insertRows(at: self.inserts, with: animations.animationForRow(action: .insert))

@@ -137,139 +137,207 @@ open class TableAdapter<M: ModelProtocol, C: UITableViewCell>: ITableAdapter, IT
 		switch event {
 			
 		case .dequeue:
-			guard let callback = self.on.dequeue else { return nil }
+			guard let callback = self.on.dequeue else {
+            return nil
+        }
 			callback(Context<M,C>(generic: context))
 		
 		case .canEdit:
-			guard let callback = self.on.canEdit else { return nil }
+			guard let callback = self.on.canEdit else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context))
 			
 		case .commitEdit:
-			guard let callback = self.on.commitEdit else { return nil }
+			guard let callback = self.on.commitEdit else {
+            return nil
+        }
             return callback(Context<M,C>(generic: context), (context.param1 as! UITableViewCell.EditingStyle))
 			
 		case .canMoveRow:
-			guard let callback = self.on.canMoveRow else { return nil }
+			guard let callback = self.on.canMoveRow else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context))
 			
 		case .moveRow:
-			guard let callback = self.on.moveRow else { return nil }
+			guard let callback = self.on.moveRow else {
+            return nil
+        }
 			callback(Context<M,C>(generic: context), (context.param1 as! IndexPath))
 			
 		case .prefetch:
-			guard let callback = self.on.prefetch else { return nil }
+			guard let callback = self.on.prefetch else {
+            return nil
+        }
 			callback( (context.models as! [M]), context.paths!)
 			
 		case .cancelPrefetch:
-			guard let callback = self.on.cancelPrefetch else { return nil }
+			guard let callback = self.on.cancelPrefetch else {
+            return nil
+        }
 			callback( (context.models as! [M]), context.paths!)
 			
 		case .rowHeight:
-			guard let callback = self.on.rowHeight else { return nil }
+			guard let callback = self.on.rowHeight else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context))
 			
 		case .rowHeightEstimated:
-			guard let callback = self.on.rowHeightEstimated else { return nil }
+			guard let callback = self.on.rowHeightEstimated else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context))
 			
 		case .indentLevel:
-			guard let callback = self.on.indentLevel else { return nil }
+			guard let callback = self.on.indentLevel else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context))
 			
 		case .willDisplay:
-			guard let callback = self.on.willDisplay else { return nil }
+			guard let callback = self.on.willDisplay else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context))
 			
 		case .shouldSpringLoad:
-			guard let callback = self.on.shouldSpringLoad else { return nil }
+			guard let callback = self.on.shouldSpringLoad else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context))
 			
 		case .tapOnAccessory:
-			guard let callback = self.on.tapOnAccessory else { return nil }
+			guard let callback = self.on.tapOnAccessory else {
+            return nil
+        }
 			callback(Context<M,C>(generic: context))
 			
 		case .willSelect:
-			guard let callback = self.on.willSelect else { return nil }
+			guard let callback = self.on.willSelect else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context))
 			
 		case .tap:
-			guard let callback = self.on.tap else { return nil }
+			guard let callback = self.on.tap else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context))
 			
 		case .willDeselect:
-			guard let callback = self.on.willDeselect else { return nil }
+			guard let callback = self.on.willDeselect else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context))
 			
 		case .didDeselect:
-			guard let callback = self.on.didDeselect else { return nil }
+			guard let callback = self.on.didDeselect else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context))
 			
 		case .willBeginEdit:
-			guard let callback = self.on.willBeginEdit else { return nil }
+			guard let callback = self.on.willBeginEdit else {
+            return nil
+        }
 			callback(Context<M,C>(generic: context))
 			
 		case .didEndEdit:
-			guard let callback = self.on.didEndEdit else { return nil }
+			guard let callback = self.on.didEndEdit else {
+            return nil
+        }
 			callback(Context<M,C>(generic: context))
 			
 		case .editStyle:
-			guard let callback = self.on.editStyle else { return nil }
+			guard let callback = self.on.editStyle else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context))
 			
 		case .deleteConfirmTitle:
-			guard let callback = self.on.deleteConfirmTitle else { return nil }
+			guard let callback = self.on.deleteConfirmTitle else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context))
 			
 		case .editShouldIndent:
-			guard let callback = self.on.editShouldIndent else { return nil }
+			guard let callback = self.on.editShouldIndent else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context))
 			
 		case .moveAdjustDestination:
-			guard let callback = self.on.moveAdjustDestination else { return nil }
+			guard let callback = self.on.moveAdjustDestination else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context), (context.param1 as! IndexPath))
 			
 		case .endDisplay:
-			guard let callback = self.on.endDisplay else { return nil }
+			guard let callback = self.on.endDisplay else {
+            return nil
+        }
 			callback((context.cell as! C), context.path!)
 			
 		case .shouldShowMenu:
-			guard let callback = self.on.shouldShowMenu else { return nil }
+			guard let callback = self.on.shouldShowMenu else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context))
 			
 		case .canPerformMenuAction:
-			guard let callback = self.on.canPerformMenuAction else { return nil }
+			guard let callback = self.on.canPerformMenuAction else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context), (context.param1 as! Selector), context.param2)
 			
 		case .performMenuAction:
-			guard let callback = self.on.performMenuAction else { return nil }
+			guard let callback = self.on.performMenuAction else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context), (context.param1 as! Selector), context.param2)
 			
 		case .shouldHighlight:
-			guard let callback = self.on.shouldHighlight else { return nil }
+			guard let callback = self.on.shouldHighlight else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context))
 			
 		case .didHighlight:
-			guard let callback = self.on.didHighlight else { return nil }
+			guard let callback = self.on.didHighlight else {
+            return nil
+        }
 			callback(Context<M,C>(generic: context))
 			
 		case .didUnhighlight:
-			guard let callback = self.on.didUnhighlight else { return nil }
+			guard let callback = self.on.didUnhighlight else {
+            return nil
+        }
 			callback(Context<M,C>(generic: context))
 			
 		case .canFocus:
-			guard let callback = self.on.canFocus else { return nil }
+			guard let callback = self.on.canFocus else {
+            return nil
+        }
 			return callback(Context<M,C>(generic: context))
 			
 		case .leadingSwipeActions:
-            guard let callback = self.on.leadingSwipeActions else { return nil }
+            guard let callback = self.on.leadingSwipeActions else {
+            return nil
+        }
             return callback(Context<M,C>(generic: context))
 			
 		case .trailingSwipeActions:
-            guard let callback = self.on.trailingSwipeActions else { return nil }
+            guard let callback = self.on.trailingSwipeActions else {
+            return nil
+        }
             return callback(Context<M,C>(generic: context))
 
         case .contextMenuConfiguration:
-            guard let callback = self.on.contextMenuConfiguration else { return nil }
+            guard let callback = self.on.contextMenuConfiguration else {
+            return nil
+        }
             return callback(Context<M,C>(generic: context))
 		}
 		return nil
