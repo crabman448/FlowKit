@@ -271,7 +271,7 @@ public class CollectionSection: Equatable, ModelProtocol {
 
     // MARK: Copy
 
-    public var copy: CollectionSection {
+    var copy: CollectionSection {
         return type(of: self).init(self)
     }
 }
