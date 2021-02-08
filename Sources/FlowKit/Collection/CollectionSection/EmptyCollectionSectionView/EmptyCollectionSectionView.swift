@@ -8,4 +8,7 @@
 
 import UIKit
 
-final class EmptyCollectionSectionView: UICollectionReusableView {}
+final class EmptyCollectionSectionView: UICollectionReusableView {
+    static let headerId: String = "EmptyCollectionSectionView.Header"
+    static let footerId: String = "EmptyCollectionSectionView.Footer"
+}
