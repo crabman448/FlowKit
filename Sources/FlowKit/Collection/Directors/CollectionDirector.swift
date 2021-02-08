@@ -91,9 +91,6 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
         
 		self.collection.dataSource = self
 		self.collection.delegate = self
-        
-        self.collection.register(EmptyCollectionSectionView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: EmptyCollectionSectionView.headerId)
-        self.collection.register(EmptyCollectionSectionView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: EmptyCollectionSectionView.footerId)
 	}
 	
 	//MARK: Public Methods
@@ -464,37 +461,29 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
 
         switch kind {
         case UICollectionView.elementKindSectionHeader:
-            if let header = section.headerView {
-                let identifier = self.reusableRegister.registerHeaderFooter(header, type: kind, at: indexPath)
-                let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath)
-
-                let headerItem = header as? ICollectionSectionViewInternal
-                headerItem?.dispatch(.dequeue, type: .header, view: view, section: indexPath.section, collection: collectionView)
-
-                return view
-            } else {
-                return collectionView.dequeueReusableSupplementaryView(
-                    ofKind: kind,
-                    withReuseIdentifier: EmptyCollectionSectionView.headerId,
-                    for: indexPath
-                )
+            guard let header = section.headerView else {
+                return UICollectionReusableView()
             }
+
+            let identifier = self.reusableRegister.registerHeaderFooter(header, type: kind, at: indexPath)
+            let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath)
+
+            let headerItem = header as? ICollectionSectionViewInternal
+            headerItem?.dispatch(.dequeue, type: .header, view: view, section: indexPath.section, collection: collectionView)
+
+            return view
         case UICollectionView.elementKindSectionFooter:
-            if let footer = section.footerView {
-                let identifier = self.reusableRegister.registerHeaderFooter(footer, type: kind, at: indexPath)
-                let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath)
-
-                let footerItem = footer as? ICollectionSectionViewInternal
-                footerItem?.dispatch(.dequeue, type: .footer, view: view, section: indexPath.section, collection: collectionView)
-
-                return view
-            } else {
-                return collectionView.dequeueReusableSupplementaryView(
-                    ofKind: kind,
-                    withReuseIdentifier: EmptyCollectionSectionView.footerId,
-                    for: indexPath
-                )
+            guard let footer = section.footerView else {
+                return UICollectionReusableView()
             }
+
+            let identifier = self.reusableRegister.registerHeaderFooter(footer, type: kind, at: indexPath)
+            let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath)
+            
+            let footerItem = footer as? ICollectionSectionViewInternal
+            footerItem?.dispatch(.dequeue, type: .footer, view: view, section: indexPath.section, collection: collectionView)
+            
+            return view
         default:
             return UICollectionReusableView()
         }
