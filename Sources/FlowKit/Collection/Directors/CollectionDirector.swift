@@ -91,6 +91,9 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
         
 		self.collection.dataSource = self
 		self.collection.delegate = self
+        
+        self.collection.register(EmptyCollectionSectionView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "EmptyCollectionSectionView.Header")
+        self.collection.register(EmptyCollectionSectionView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "EmptyCollectionSectionView.Footer")
 	}
 	
 	//MARK: Public Methods
@@ -462,7 +465,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
         switch kind {
         case UICollectionView.elementKindSectionHeader:
             guard let header = section.header else {
-                return UICollectionReusableView()
+                return EmptyCollectionSectionView()
             }
 
             let identifier = self.reusableRegister.registerHeaderFooter(header, type: kind, at: indexPath)
@@ -475,7 +478,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
 
         case UICollectionView.elementKindSectionFooter:
             guard let footer = section.footer else {
-                return UICollectionReusableView()
+                return EmptyCollectionSectionView()
             }
 
             let identifier = self.reusableRegister.registerHeaderFooter(footer, type: kind, at: indexPath)
@@ -487,7 +490,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
             return view
 
         default:
-            return UICollectionReusableView()
+            return EmptyCollectionSectionView()
         }
     }
 	

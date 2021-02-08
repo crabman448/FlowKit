@@ -93,6 +93,8 @@
 		7619A5BC25C6CAB800580C15 /* ITableAdapterInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A5BA25C6CAB800580C15 /* ITableAdapterInternal.swift */; };
 		7619A5C425C6CB1A00580C15 /* ITableSectionViewInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A5C325C6CB1A00580C15 /* ITableSectionViewInternal.swift */; };
 		7619A5C525C6CB1A00580C15 /* ITableSectionViewInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7619A5C325C6CB1A00580C15 /* ITableSectionViewInternal.swift */; };
+		767C546025D19DF500470A4E /* EmptyCollectionSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767C545F25D19DF500470A4E /* EmptyCollectionSectionView.swift */; };
+		767C546725D19ED000470A4E /* EmptyCollectionSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767C545F25D19DF500470A4E /* EmptyCollectionSectionView.swift */; };
 		769DF00625C6CF7500063DD2 /* ITableAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 769DF00525C6CF7500063DD2 /* ITableAdapter.swift */; };
 		769DF00725C6CF7500063DD2 /* ITableAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 769DF00525C6CF7500063DD2 /* ITableAdapter.swift */; };
 		769DF01225C6CFB600063DD2 /* ICollectionAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 769DF01125C6CFB600063DD2 /* ICollectionAdapter.swift */; };
@@ -169,6 +171,7 @@
 		7619A5B425C6CA3200580C15 /* ITableSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ITableSectionView.swift; sourceTree = "<group>"; };
 		7619A5BA25C6CAB800580C15 /* ITableAdapterInternal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ITableAdapterInternal.swift; sourceTree = "<group>"; };
 		7619A5C325C6CB1A00580C15 /* ITableSectionViewInternal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ITableSectionViewInternal.swift; sourceTree = "<group>"; };
+		767C545F25D19DF500470A4E /* EmptyCollectionSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyCollectionSectionView.swift; sourceTree = "<group>"; };
 		769DF00525C6CF7500063DD2 /* ITableAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ITableAdapter.swift; sourceTree = "<group>"; };
 		769DF01125C6CFB600063DD2 /* ICollectionAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ICollectionAdapter.swift; sourceTree = "<group>"; };
 		8933C7891EB5B82A000D00A4 /* FlowKitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlowKitTests.swift; sourceTree = "<group>"; };
@@ -391,6 +394,7 @@
 		7619A53D25C6C32500580C15 /* CollectionSection */ = {
 			isa = PBXGroup;
 			children = (
+				767C545E25D19DCF00470A4E /* EmptyCollectionSectionView */,
 				64F7CAC9208B566D00676831 /* CollectionSection.swift */,
 				769DEFF525C6CE6300063DD2 /* CollectionSectionView */,
 			);
@@ -440,6 +444,14 @@
 				7619A52725C6C23D00580C15 /* SectionViewType.swift */,
 			);
 			path = Section;
+			sourceTree = "<group>";
+		};
+		767C545E25D19DCF00470A4E /* EmptyCollectionSectionView */ = {
+			isa = PBXGroup;
+			children = (
+				767C545F25D19DF500470A4E /* EmptyCollectionSectionView.swift */,
+			);
+			path = EmptyCollectionSectionView;
 			sourceTree = "<group>";
 		};
 		769DEFF125C6CE3C00063DD2 /* TableSectionView */ = {
@@ -646,6 +658,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				767C546025D19DF500470A4E /* EmptyCollectionSectionView.swift in Sources */,
 				769DF01225C6CFB600063DD2 /* ICollectionAdapter.swift in Sources */,
 				64F7CAE7208B566D00676831 /* TableSection.swift in Sources */,
 				64F7CAE5208B566D00676831 /* DeepDiff+Helpers.swift in Sources */,
@@ -707,6 +720,7 @@
 				769DF01325C6CFB600063DD2 /* ICollectionAdapter.swift in Sources */,
 				642448C7208B792C0005C395 /* CollectionExampleController.swift in Sources */,
 				769DF00725C6CF7500063DD2 /* ITableAdapter.swift in Sources */,
+				767C546725D19ED000470A4E /* EmptyCollectionSectionView.swift in Sources */,
 				7603301223E2022900F176F9 /* ArticleCellSizesCalculator.swift in Sources */,
 				7619A58025C6C6A200580C15 /* CollectionAdapterEventKey.swift in Sources */,
 				642448FD208CC73C0005C395 /* CollectionHeader.swift in Sources */,
