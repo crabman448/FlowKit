@@ -464,7 +464,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
 
         switch kind {
         case UICollectionView.elementKindSectionHeader:
-            guard let header = section.header else {
+            guard let header = section.headerView else {
                 return EmptyCollectionSectionView()
             }
 
@@ -477,7 +477,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
             return view
 
         case UICollectionView.elementKindSectionFooter:
-            guard let footer = section.footer else {
+            guard let footer = section.footerView else {
                 return EmptyCollectionSectionView()
             }
 

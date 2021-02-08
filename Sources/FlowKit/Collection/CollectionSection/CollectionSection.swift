@@ -63,23 +63,23 @@ public class CollectionSection: Equatable, ModelProtocol {
 	
 	/// Header of the sections; instantiate a new object of `CollectionSectionView<UIReusableView>`.
 	/// NOTE: It's valid only for flow layout.
-	open var header: ICollectionSectionView? = nil {
+	open var headerView: ICollectionSectionView? = nil {
 		willSet {
-			self.header?.section = nil
+			self.headerView?.section = nil
 		}
 		didSet {
-			self.header?.section = self
+			self.headerView?.section = self
 		}
 	}
 	
 	/// Footer of the sections; instantiate a new object of `CollectionSectionView<UIReusableView>`.
 	/// NOTE: It's valid only for flow layout.
-	open var footer: ICollectionSectionView? = nil {
+	open var footerView: ICollectionSectionView? = nil {
 		willSet {
-			self.footer?.section = nil
+			self.footerView?.section = nil
 		}
 		didSet {
-			self.footer?.section = self
+			self.footerView?.section = self
 		}
 	}
 	
@@ -109,8 +109,8 @@ public class CollectionSection: Equatable, ModelProtocol {
         self.sectionInsets = section.sectionInsets
         self.minimumInterItemSpacing = section.minimumInterItemSpacing
         self.minimumLineSpacing = section.minimumLineSpacing
-        self.header = section.header
-        self.footer = section.footer
+        self.headerView = section.headerView
+        self.footerView = section.footerView
         self.temporaryRemovedModels = section.temporaryRemovedModels
         self.manager = section.manager
     }
@@ -124,8 +124,8 @@ public class CollectionSection: Equatable, ModelProtocol {
 	public init(modelId: String = UUID().uuidString, models: [ModelProtocol]?, headerView: ICollectionSectionView? = nil, footerView: ICollectionSectionView? = nil) {
         self.modelId = modelId
 		self.models = (models ?? [])
-		self.header = headerView
-		self.footer = footerView
+		self.headerView = headerView
+		self.footerView = footerView
 	}
 	
 	/// Equatable support.

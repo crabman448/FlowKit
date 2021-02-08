@@ -103,16 +103,16 @@ open class FlowCollectionDirector: CollectionDirector, UICollectionViewDelegateF
 	}
 	
 	open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-		let header = (sections[section].header as? ICollectionSectionViewInternal)
-		guard let size = header?.dispatch(.referenceSize, type: .header, view: nil, section: section, collection: collectionView) as? CGSize else {
+		let headerView = (sections[section].headerView as? ICollectionSectionViewInternal)
+		guard let size = headerView?.dispatch(.referenceSize, type: .header, view: nil, section: section, collection: collectionView) as? CGSize else {
 			return .zero
 		}
 		return size
 	}
 	
 	open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-		let footer = (sections[section].footer as? ICollectionSectionViewInternal)
-		guard let size = footer?.dispatch(.referenceSize, type: .footer, view: nil, section: section, collection: collectionView) as? CGSize else {
+		let footerView = (sections[section].footerView as? ICollectionSectionViewInternal)
+		guard let size = footerView?.dispatch(.referenceSize, type: .footer, view: nil, section: section, collection: collectionView) as? CGSize else {
 			return .zero
 		}
 		return size
