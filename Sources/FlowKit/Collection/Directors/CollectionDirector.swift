@@ -523,8 +523,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
 		default:
 			break
 		}
-        on.endDisplayFooter?( (view, indexPath, collectionView) )
-        reusableRegister.unregisterHeaderFooter(type: elementKind, at: indexPath)
+        on.endDisplayFooter?((view, indexPath, collectionView))
 	}
 	
 	//MARK: Prefetching
@@ -664,11 +663,14 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
 		/// - Returns: registered identifier
 		@discardableResult
         internal func registerHeaderFooter(_ headerFooter: ICollectionSectionView, type: String, at indexPath: IndexPath) -> String {
-			let identifier = headerFooter.reuseIdentifier
-            if 	(type == UICollectionView.elementKindSectionHeader && self.headers.contains(where: { $0.key == indexPath })) ||
-                (type == UICollectionView.elementKindSectionFooter && self.footers.contains(where: { $0.key == indexPath })) {
-				return identifier
-			}
+			let reuseIdentifier = headerFooter.reuseIdentifier
+            
+            let headerShouldRegister = type == UICollectionView.elementKindSectionHeader && !headers.contains(where: { $0.key == indexPath })
+            let footerShouldRegister = type == UICollectionView.elementKindSectionFooter && !footers.contains(where: { $0.key == indexPath })
+            
+            guard headerShouldRegister || footerShouldRegister else {
+                return reuseIdentifier
+            }
 
             if type == UICollectionView.elementKindSectionHeader {
                 headers[indexPath] = headerFooter
@@ -678,26 +680,22 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
                 footers[indexPath] = headerFooter
             }
 			
-			let bundle = Bundle(for: headerFooter.viewClass)
-			if let _ = bundle.path(forResource: identifier, ofType: "nib") {
-				let nib = UINib(nibName: identifier, bundle: bundle)
-				collection?.register(nib, forSupplementaryViewOfKind: type, withReuseIdentifier: identifier)
-			} else if headerFooter.registerAsClass {
-				collection?.register(headerFooter.viewClass, forSupplementaryViewOfKind: type, withReuseIdentifier: identifier)
-			}
+            if headerFooter.registerAsClass {
+                collection?.register(
+                    headerFooter.viewClass,
+                    forSupplementaryViewOfKind: type,
+                    withReuseIdentifier: reuseIdentifier
+                )
+            } else {
+                collection?.register(
+                    UINib(nibName: reuseIdentifier, bundle: Bundle(for: headerFooter.viewClass)),
+                    forSupplementaryViewOfKind: type,
+                    withReuseIdentifier: reuseIdentifier
+                )
+            }
 
-			return identifier
+			return reuseIdentifier
 		}
-
-        func unregisterHeaderFooter(type: String, at indexPath: IndexPath) {
-            if type == UICollectionView.elementKindSectionHeader {
-                headers.removeValue(forKey: indexPath)
-            }
-
-            if type == UICollectionView.elementKindSectionFooter {
-                footers.removeValue(forKey: indexPath)
-            }
-        }
 
         func header(at indexPath: IndexPath) -> ICollectionSectionView? {
             return headers[indexPath]
