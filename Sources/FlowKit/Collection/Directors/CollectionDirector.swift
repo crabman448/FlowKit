@@ -390,6 +390,20 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
         }
     }
     
+    //MARK: DataSource: Reordering Items
+
+    //    TODO
+    //
+    //    public func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {}
+    //    public func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {}
+    
+    //MARK: DataSource: Configuring an Index
+    
+    //    TODO
+    //
+    //    public func indexTitles(for collectionView: UICollectionView) -> [String]? {}
+    //    public func collectionView(_ collectionView: UICollectionView, indexPathForIndexTitle title: String, at index: Int) -> IndexPath {}
+    
     //MARK: Delegate: Managing the Selected Cells
     
     public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
@@ -412,7 +426,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
         adapter.dispatch(.didDeselect, context: InternalContext.init(model, indexPath, nil, collectionView))
     }
     
-    //    To Implement
+    //    TODO
     //
     //    public func collectionView(_ collectionView: UICollectionView, shouldBeginMultipleSelectionInteractionAt indexPath: IndexPath) -> Bool {}
     //    public func collectionView(_ collectionView: UICollectionView, didBeginMultipleSelectionInteractionAt indexPath: IndexPath) {}
@@ -510,7 +524,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
         return adapter.dispatch(.contextMenuConfiguration, context: InternalContext.init(model, indexPath, nil, collectionView)) as? UIContextMenuConfiguration
     }
     
-    //    To Implement
+    //    TODO
     //
     //    public func collectionView(_ collectionView: UICollectionView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {}
     //    public func collectionView(_ collectionView: UICollectionView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {}
@@ -525,7 +539,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
         return ((adapter.dispatch(.canFocus, context: InternalContext.init(model, indexPath, nil, collectionView)) as? Bool) ?? true)
     }
     
-    //    To Implement
+    //    TODO
     //
     //    public func indexPathForPreferredFocusedView(in collectionView: UICollectionView) -> IndexPath? {}
     
@@ -542,7 +556,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
     
     //MARK: Delegate: Editing Items
     
-    //    To Implement
+    //    TODO
     //
     //    public func collectionView(_ collectionView: UICollectionView, canEditItemAt indexPath: IndexPath) -> Bool {}
     
