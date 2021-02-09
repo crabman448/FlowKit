@@ -121,43 +121,50 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
 	///
 	/// - Parameter after: 	if defined a block animation is performed considering changes applied to the model;
 	///						if `nil` reload is performed without animation.
-	public func reloadData(after task: ((CollectionDirector) -> (Void))? = nil, onEnd: (() -> (Void))? = nil) {
+	public func reloadData(
+        after task: ((CollectionDirector) -> (Void))? = nil,
+        onEnd: (() -> (Void))? = nil
+    ) {
 		guard let task = task else {
 
             // Calling reloadData to indicate new items availability
 			self.collection.reloadData()
 
-            DispatchQueue.main.async {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25, execute: {
                 onEnd?()
-            }
+            })
 
 			return
 		}
 		
 		// Keep a reference to removed items in order to perform diff and animation
-        let oldSections: [CollectionSection] = self.sections.map { $0.copy }
+        let oldSections: [CollectionSection] = self.sections
         let oldItemsInSections: [String: [ModelProtocol]] = oldSections.reduce(into: [:], { $0[$1.modelId] = $1.models })
 		
-		// Execute block for changes
+		// Execute task
 		task(self)
-		
-		// Evaluate changes in sections
-		let sectionChanges = SectionChanges.fromCollectionSections(old: oldSections, new: self.sections)
 
 		self.collection.performBatchUpdates({
+            // Apply changes for sections
+            let sectionChanges = SectionChanges.fromCollectionSections(old: oldSections, new: self.sections)
 			sectionChanges.applyChanges(to: self.collection)
 			
-			// For any remaining active section evaluate changes inside
-			self.sections.enumerated().forEach { (idx,newSection) in
-				if let oldSectionItems = oldItemsInSections[newSection.modelId] {
-					let diffData = diff(old: oldSectionItems, new: newSection.models)
-					let itemChanges = SectionItemsChanges.create(fromChanges: diffData, section: idx)
-					itemChanges.applyChanges(of: collection)
-				}
-			}
+            // Apply changes for items inside sections
+            for (newSectionIndex, newSection) in self.sections.enumerated() {
+                if let oldItemsInSection = oldItemsInSections[newSection.modelId] {
+                    let newItemsInSection = newSection.models
+
+                    let itemsDiff = diff(old: oldItemsInSection, new: newItemsInSection)
+                    let itemsChanges = SectionItemsChanges.create(fromChanges: itemsDiff, section: newSectionIndex)
+                    itemsChanges.applyChanges(of: self.collection)
+                } else {
+                    let indexPaths = (0..<newSection.models.count).map { IndexPath(item: $0, section: newSectionIndex) }
+                    self.collection.insertItems(at: indexPaths)
+                }
+            }
 			
-		}, completion: { end in
-			if end { onEnd?() }
+		}, completion: { _ in
+            onEnd?()
 		})
 	}
 	

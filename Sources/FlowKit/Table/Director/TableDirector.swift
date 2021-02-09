@@ -151,39 +151,47 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	///			  diffing is performed and a reload is made with using table's animation configuration (`TableReloadAnimations`). If `nil` is
 	///			  returned the `TableReloadAnimations.default()` automatic animation is made.
 	///   - onEnd: optional callback called at the end of the reload.
-	public func reloadData(after task: ((TableDirector) -> (TableReloadAnimationProtocol?))? = nil, onEnd: (() -> (Void))? = nil) {
+	public func reloadData(
+        after task: ((TableDirector) -> (TableReloadAnimationProtocol))? = nil,
+        onEnd: (() -> (Void))? = nil
+    ) {
 		guard let task = task else {
+
+            // Calling reloadData to indicate new items availability
 			self.tableView?.reloadData()
-			DispatchQueue.main.asyncAfter(deadline: .now() + 0.25, execute: { onEnd?() })
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25, execute: {
+                onEnd?()
+            })
+
 			return
 		}
 
 		// Keep a reference to removed items in order to perform diff and animation
-        let oldSections: [TableSection] = self.sections.map { $0.copy }
+        let oldSections: [TableSection] = self.sections
         let oldItemsInSections: [String: [ModelProtocol]] = oldSections.reduce(into: [:], { $0[$1.modelId] = $1.models })
 
-		// Execute callback and return animations to perform
-		let animationsToPerform = (task(self) ?? TableReloadAnimations.default())
-
-		func executeDiffAndUpdate() {
-			// Execute reload for sections
-			let changesInSection = SectionChanges.fromTableSections(old: oldSections, new: self.sections)
-			changesInSection.applyChanges(to: self.tableView, withAnimations: animationsToPerform)
-			
-			self.sections.enumerated().forEach { (newSectionIndex, newSection) in
-				if let oldSectionItems = oldItemsInSections[newSection.modelId] {
-					let changes = diff(old: oldSectionItems, new: newSection.models)
-					let itemChanges = SectionItemsChanges.create(fromChanges: changes, section: newSectionIndex)
-					itemChanges.applyChanges(ofTable: self.tableView, withAnimations: animationsToPerform)
-                } else {
-                    let indexPaths = (0..<newSection.models.count).map { IndexPath(item: $0, section: newSectionIndex) }
-                    self.tableView?.insertRows(at: indexPaths, with: animationsToPerform.animationForRow(action: .insert))
-                }
-			}
-		}
+        // Execute task
+		let animations = task(self)
 		
         self.tableView?.performBatchUpdates({
-            executeDiffAndUpdate()
+            // Apply changes for sections
+            let changesInSection = SectionChanges.fromTableSections(old: oldSections, new: self.sections)
+            changesInSection.applyChanges(to: self.tableView, withAnimations: animations)
+            
+            // Apply changes for items inside sections
+            for (newSectionIndex, newSection) in self.sections.enumerated() {
+                if let oldItemsInSection = oldItemsInSections[newSection.modelId] {
+                    let newItemsInSection = newSection.models
+
+                    let itemsDiff = diff(old: oldItemsInSection, new: newItemsInSection)
+                    let itemsChanges = SectionItemsChanges.create(fromChanges: itemsDiff, section: newSectionIndex)
+                    itemsChanges.applyChanges(ofTable: self.tableView, withAnimations: animations)
+                } else {
+                    let indexPaths = (0..<newSection.models.count).map { IndexPath(item: $0, section: newSectionIndex) }
+                    self.tableView?.insertRows(at: indexPaths, with: animations.animationForRow(action: .insert))
+                }
+            }
         }, completion: { _ in
             onEnd?()
         })

@@ -98,22 +98,6 @@ public class CollectionSection: Equatable, ModelProtocol {
         }
 		return idx
 	}
-
-    /// Initializer to create a copy of a TableSection
-    ///
-    /// - Parameter section: TableSection
-    public required init(_ section: CollectionSection) {
-        self.modelId = section.modelId
-        self.models = section.models
-        self.onModelsDidSet = section.onModelsDidSet
-        self.sectionInsets = section.sectionInsets
-        self.minimumInterItemSpacing = section.minimumInterItemSpacing
-        self.minimumLineSpacing = section.minimumLineSpacing
-        self.headerView = section.headerView
-        self.footerView = section.footerView
-        self.temporaryRemovedModels = section.temporaryRemovedModels
-        self.manager = section.manager
-    }
 	
 	/// Initialize a new section with given objects as models.
 	///
@@ -268,10 +252,4 @@ public class CollectionSection: Equatable, ModelProtocol {
 		let removed = self.models.remove(at: sourceIndex)
 		self.models.insert(removed, at: destIndex)
 	}
-
-    // MARK: Copy
-
-    var copy: CollectionSection {
-        return type(of: self).init(self)
-    }
 }

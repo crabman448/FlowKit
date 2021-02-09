@@ -72,19 +72,6 @@ public class TableSection: ModelProtocol {
 		}
 	}
 
-    /// Initializer to create a copy of a TableSection
-    ///
-    /// - Parameter section: TableSection
-    public required init(_ section: TableSection) {
-        self.modelId = section.modelId
-        self.models = section.models
-        self.onModelsDidSet = section.onModelsDidSet
-        self.headerTitle = section.headerTitle
-        self.footerTitle = section.footerTitle
-        self.headerView = section.headerView
-        self.footerView = section.footerView
-    }
-
 	/// Initialize a new section with given initial models.
 	///
 	/// - Parameter models: items to add (`nil` means empty array)
@@ -259,10 +246,4 @@ public class TableSection: ModelProtocol {
 		let removed = self.models.remove(at: sourceIndex)
 		self.models.insert(removed, at: destIndex)
 	}
-
-    // MARK: Copy
-
-    var copy: TableSection {
-        return type(of: self).init(self)
-    }
 }
