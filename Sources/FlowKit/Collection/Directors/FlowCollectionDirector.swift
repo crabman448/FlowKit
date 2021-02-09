@@ -35,51 +35,18 @@ open class FlowCollectionDirector: CollectionDirector, UICollectionViewDelegateF
     public var layout: UICollectionViewFlowLayout? {
         return collection.collectionViewLayout as? UICollectionViewFlowLayout
     }
-    
-    /// Define the cell size.
-    ///
-    /// - `default`: standard behaviour (no auto sizing, needs to implement `onGetItemSize` on adapters).
-    /// - estimated: uses autolayout to calculate the size of the cell. You can provide an
-    ///                 estimated size of the cell to speed up the calculation.
-    ///                 Implement preferredLayoutAttributesFitting(_:) method in your cell to evaluate the size.
-    /// - fixed: fixed size where each item has the same size
-    public enum ItemSize {
-        case `default`
-        case autoLayout(estimated: CGSize)
-        case fixed(size: CGSize)
-    }
-
-    /// Define the size of the items into the cell (valid with `UICollectionViewFlowLayout` layout).
-    public var itemSize: ItemSize = .default {
-        didSet {
-            switch itemSize {
-            case .autoLayout(let estimateSize):
-                layout?.estimatedItemSize = estimateSize
-                layout?.itemSize = CGSize(width: 50.0, height: 50.0) // default
-            case .fixed(let fixedSize):
-                layout?.estimatedItemSize = .zero
-                layout?.itemSize = fixedSize
-            case .default:
-                layout?.estimatedItemSize = .zero
-                layout?.itemSize = CGSize(width: 50.0, height: 50.0) // default
-            }
-        }
-    }
 	
-	//MARK: UICollectionViewDelegateFlowLayout Events
+	//MARK: Getting the Size of Items
 	
 	open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		let (model,adapter) = self.context(forItemAt: indexPath)
 
         let potentialItemSizeValue = adapter.dispatch(.itemSize, context: InternalContext(model, indexPath, nil, collectionView)) as? CGSize
 
-		switch self.itemSize {
-		case .default, .autoLayout(_):
-            return potentialItemSizeValue ?? self.layout?.itemSize ?? .zero
-		case .fixed(let itemSizeValue):
-			return potentialItemSizeValue ?? itemSizeValue
-		}
+        return potentialItemSizeValue ?? self.layout?.itemSize ?? .zero
 	}
+    
+    //MARK: Getting the Section Spacing
 	
 	open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
 		guard let value = self.sections[section].sectionInsets?() else {
@@ -101,9 +68,11 @@ open class FlowCollectionDirector: CollectionDirector, UICollectionViewDelegateF
 		}
 		return value
 	}
+    
+    // MARK: Getting the Header and Footer Sizes
 	
 	open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-		let headerView = (sections[section].headerView as? ICollectionSectionViewInternal)
+		let headerView = sections[section].headerView as? ICollectionSectionViewInternal
 		guard let size = headerView?.dispatch(.referenceSize, type: .header, view: nil, section: section, collection: collectionView) as? CGSize else {
 			return .zero
 		}
@@ -111,7 +80,7 @@ open class FlowCollectionDirector: CollectionDirector, UICollectionViewDelegateF
 	}
 	
 	open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-		let footerView = (sections[section].footerView as? ICollectionSectionViewInternal)
+		let footerView = sections[section].footerView as? ICollectionSectionViewInternal
 		guard let size = footerView?.dispatch(.referenceSize, type: .footer, view: nil, section: section, collection: collectionView) as? CGSize else {
 			return .zero
 		}
