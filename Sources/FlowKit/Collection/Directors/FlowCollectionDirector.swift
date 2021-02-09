@@ -39,52 +39,39 @@ open class FlowCollectionDirector: CollectionDirector, UICollectionViewDelegateF
 	//MARK: Getting the Size of Items
 	
 	open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-		let (model,adapter) = self.context(forItemAt: indexPath)
+		let (model, adapter) = self.context(forItemAt: indexPath)
 
-        let potentialItemSizeValue = adapter.dispatch(.itemSize, context: InternalContext(model, indexPath, nil, collectionView)) as? CGSize
+        let itemSize = adapter.dispatch(.itemSize, context: InternalContext(model, indexPath, nil, collectionView)) as? CGSize
 
-        return potentialItemSizeValue ?? self.layout?.itemSize ?? .zero
+        return itemSize ?? self.layout?.itemSize ?? .zero
 	}
     
     //MARK: Getting the Section Spacing
 	
 	open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-		guard let value = self.sections[section].sectionInsets?() else {
-            return self.layout?.sectionInset ?? .zero
-		}
-		return value
+        return self.sections[section].sectionInsets?() ?? self.layout?.sectionInset ?? .zero
 	}
 	
 	open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-		guard let value = self.sections[section].minimumInterItemSpacing?() else {
-            return self.layout?.minimumInteritemSpacing ?? .zero
-		}
-		return value
+        self.sections[section].minimumInterItemSpacing?() ?? self.layout?.minimumInteritemSpacing ?? .zero
 	}
 	
 	open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-		guard let value = self.sections[section].minimumLineSpacing?() else {
-            return self.layout?.minimumLineSpacing ?? .zero
-		}
-		return value
+		return self.sections[section].minimumLineSpacing?() ?? self.layout?.minimumLineSpacing ?? .zero
 	}
     
     // MARK: Getting the Header and Footer Sizes
 	
 	open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-		let headerView = sections[section].headerView as? ICollectionSectionViewInternal
-		guard let size = headerView?.dispatch(.referenceSize, type: .header, view: nil, section: section, collection: collectionView) as? CGSize else {
-			return .zero
-		}
-		return size
+        let item = self.sections[section].headerView as? ICollectionSectionViewInternal
+        let itemSize = item?.dispatch(.referenceSize, type: .header, view: nil, section: section, collection: collectionView) as? CGSize
+        return itemSize ?? .zero
 	}
 	
 	open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-		let footerView = sections[section].footerView as? ICollectionSectionViewInternal
-		guard let size = footerView?.dispatch(.referenceSize, type: .footer, view: nil, section: section, collection: collectionView) as? CGSize else {
-			return .zero
-		}
-		return size
+        let item = self.sections[section].footerView as? ICollectionSectionViewInternal
+		let itemSize = item?.dispatch(.referenceSize, type: .footer, view: nil, section: section, collection: collectionView) as? CGSize
+        return itemSize ?? .zero
 	}
 	
 }

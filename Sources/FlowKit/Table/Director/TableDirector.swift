@@ -404,7 +404,7 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	}
 	
 	public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let (model,adapter) = self.context(forItemAt: indexPath)
+		let (model, adapter) = self.context(forItemAt: indexPath)
 		let cell = adapter._instanceCell(in: tableView, at: indexPath)
 		adapter.dispatch(.dequeue, context: InternalContext(model, indexPath, cell, tableView))
 		return cell
@@ -509,24 +509,24 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	// MARK: Inserting or Deleting Table Rows
 	
     public func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-		let (model,adapter) = self.context(forItemAt: indexPath)
+		let (model, adapter) = self.context(forItemAt: indexPath)
 		adapter.dispatch(.commitEdit, context: InternalContext(model, indexPath, nil, tableView, param1: editingStyle))
 	}
 	
 	public func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-		let (model,adapter) = self.context(forItemAt: indexPath)
+		let (model, adapter) = self.context(forItemAt: indexPath)
 		return ((adapter.dispatch(.canEdit, context: InternalContext(model, indexPath, nil, tableView)) as? Bool) ?? false)
 	}
 	
 	// MARK: Reordering Table Rows
 
 	public func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-		let (model,adapter) = self.context(forItemAt: indexPath)
+		let (model, adapter) = self.context(forItemAt: indexPath)
 		return ((adapter.dispatch(.canMoveRow, context: InternalContext(model, indexPath, nil, tableView)) as? Bool) ?? false)
 	}
 
 	public func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-		let (model,adapter) = self.context(forItemAt: sourceIndexPath)
+		let (model, adapter) = self.context(forItemAt: sourceIndexPath)
 		adapter.dispatch(.moveRow, context: InternalContext(model, sourceIndexPath, nil, tableView, param1: destinationIndexPath))
 	}
 
@@ -546,39 +546,39 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	}
 	
 	public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-		let (model,adapter) = self.context(forItemAt: indexPath)
+		let (model, adapter) = self.context(forItemAt: indexPath)
         return ((adapter.dispatch(.rowHeightEstimated, context: InternalContext(model, indexPath, nil, tableView)) as? CGFloat) ?? UITableView.automaticDimension)
 	}
 
     // MARK: Row Indentation Level
 	
 	public func tableView(_ tableView: UITableView, indentationLevelForRowAt indexPath: IndexPath) -> Int {
-		let (model,adapter) = self.context(forItemAt: indexPath)
+		let (model, adapter) = self.context(forItemAt: indexPath)
 		return ((adapter.dispatch(.indentLevel, context: InternalContext(model,indexPath, nil, tableView)) as? Int) ?? 1)
 	}
 	
 	public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-		let (model,adapter) = self.context(forItemAt: indexPath)
+		let (model, adapter) = self.context(forItemAt: indexPath)
 		adapter.dispatch(.willDisplay, context: InternalContext.init(model, indexPath, cell, tableView))
 	}
 	
 	public func tableView(_ tableView: UITableView, shouldSpringLoadRowAt indexPath: IndexPath, with context: UISpringLoadedInteractionContext) -> Bool {
-		let (model,adapter) = self.context(forItemAt: indexPath)
+		let (model, adapter) = self.context(forItemAt: indexPath)
 		return ((adapter.dispatch(.shouldSpringLoad, context: InternalContext(model, indexPath, nil, tableView)) as? Bool) ?? true)
 	}
 
 	public func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-		let (model,adapter) = self.context(forItemAt: indexPath)
+		let (model, adapter) = self.context(forItemAt: indexPath)
 		adapter.dispatch(.tapOnAccessory, context: InternalContext(model, indexPath, nil, tableView))
 	}
 	
 	public func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-		let (model,adapter) = self.context(forItemAt: indexPath)
+		let (model, adapter) = self.context(forItemAt: indexPath)
 		return ((adapter.dispatch(.willSelect, context: InternalContext(model, indexPath, nil, tableView)) as? IndexPath) ?? indexPath)
 	}
 	
 	public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let (model,adapter) = self.context(forItemAt: indexPath)
+		let (model, adapter) = self.context(forItemAt: indexPath)
 		
 		let action = ((adapter.dispatch(.tap, context: InternalContext(model,indexPath,nil,tableView)) as? TableSelectionState) ?? .none)
 		switch action {
@@ -589,17 +589,17 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	}
 
 	public func tableView(_ tableView: UITableView, willDeselectRowAt indexPath: IndexPath) -> IndexPath? {
-		let (model,adapter) = self.context(forItemAt: indexPath)
+		let (model, adapter) = self.context(forItemAt: indexPath)
 		return (adapter.dispatch(.willDeselect, context: InternalContext(model, indexPath, nil, tableView)) as? IndexPath)
 	}
 	
 	public func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-		let (model,adapter) = self.context(forItemAt: indexPath)
+		let (model, adapter) = self.context(forItemAt: indexPath)
 		adapter.dispatch(.didDeselect, context: InternalContext(model, indexPath, nil, tableView))
 	}
 	
 	public func tableView(_ tableView: UITableView, willBeginEditingRowAt indexPath: IndexPath) {
-		let (model,adapter) = self.context(forItemAt: indexPath)
+		let (model, adapter) = self.context(forItemAt: indexPath)
 		adapter.dispatch(.willBeginEdit, context: InternalContext(model, indexPath, nil, tableView))
 	}
 	
@@ -607,27 +607,27 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 		guard let index = indexPath else {
             return
         }
-		let (model,adapter) = self.context(forItemAt: index)
+		let (model, adapter) = self.context(forItemAt: index)
 		adapter.dispatch(.didEndEdit, context: InternalContext(model, indexPath!, nil, tableView))
 	}
 	
     public func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-		let (model,adapter) = self.context(forItemAt: indexPath)
+		let (model, adapter) = self.context(forItemAt: indexPath)
         return ((adapter.dispatch(.editStyle, context: InternalContext(model, indexPath, nil, tableView)) as? UITableViewCell.EditingStyle) ?? .none)
 	}
 	
 	public func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
-		let (model,adapter) = self.context(forItemAt: indexPath)
+		let (model, adapter) = self.context(forItemAt: indexPath)
 		return (adapter.dispatch(.deleteConfirmTitle, context: InternalContext(model, indexPath, nil, tableView)) as? String)
 	}
 	
 	public func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
-		let (model,adapter) = self.context(forItemAt: indexPath)
+		let (model, adapter) = self.context(forItemAt: indexPath)
 		return ((adapter.dispatch(.editShouldIndent, context: InternalContext(model, indexPath, nil, tableView)) as? Bool) ?? true)
 	}
 	
 	public func tableView(_ tableView: UITableView, targetIndexPathForMoveFromRowAt sourceIndexPath: IndexPath, toProposedIndexPath proposedDestinationIndexPath: IndexPath) -> IndexPath {
-		let (model,adapter) = self.context(forItemAt: sourceIndexPath)
+		let (model, adapter) = self.context(forItemAt: sourceIndexPath)
 		return ((adapter.dispatch(.moveAdjustDestination, context: InternalContext.init(model, sourceIndexPath, nil, tableView, param1: proposedDestinationIndexPath)) as? IndexPath) ?? proposedDestinationIndexPath)
 	}
 	
@@ -638,47 +638,47 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	}
 	
 	public func tableView(_ tableView: UITableView, shouldShowMenuForRowAt indexPath: IndexPath) -> Bool {
-		let (model,adapter) = self.context(forItemAt: indexPath)
+		let (model, adapter) = self.context(forItemAt: indexPath)
 		return ((adapter.dispatch(.shouldShowMenu, context: InternalContext(model, indexPath, nil, tableView)) as? Bool) ?? false)
 	}
 	
 	public func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-		let (model,adapter) = self.context(forItemAt: indexPath)
+		let (model, adapter) = self.context(forItemAt: indexPath)
 		return ((adapter.dispatch(.canPerformMenuAction, context: InternalContext(model, indexPath, nil, tableView, param1: action, param2: sender)) as? Bool) ?? true)
 	}
 	
 	public func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) {
-		let (model,adapter) = self.context(forItemAt: indexPath)
+		let (model, adapter) = self.context(forItemAt: indexPath)
 		adapter.dispatch(.performMenuAction, context: InternalContext(model, indexPath, nil, tableView, param1: action, param2: sender))
 	}
 	
 	public func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
-		let (model,adapter) = self.context(forItemAt: indexPath)
+		let (model, adapter) = self.context(forItemAt: indexPath)
 		return ((adapter.dispatch(.shouldHighlight, context: InternalContext(model, indexPath, nil, tableView)) as? Bool) ?? true)
 	}
 	
 	public func tableView(_ tableView: UITableView, didHighlightRowAt indexPath: IndexPath) {
-		let (model,adapter) = self.context(forItemAt: indexPath)
+		let (model, adapter) = self.context(forItemAt: indexPath)
 		adapter.dispatch(.didHighlight, context: InternalContext(model, indexPath, nil, tableView))
 	}
 	
 	public func tableView(_ tableView: UITableView, didUnhighlightRowAt indexPath: IndexPath) {
-		let (model,adapter) = self.context(forItemAt: indexPath)
+		let (model, adapter) = self.context(forItemAt: indexPath)
 		adapter.dispatch(.didUnhighlight, context: InternalContext(model, indexPath, nil, tableView))
 	}
 	
 	public func tableView(_ tableView: UITableView, canFocusRowAt indexPath: IndexPath) -> Bool {
-		let (model,adapter) = self.context(forItemAt: indexPath)
+		let (model, adapter) = self.context(forItemAt: indexPath)
 		return ((adapter.dispatch(.canFocus, context: InternalContext(model, indexPath, nil, tableView)) as? Bool) ?? true)
 	}
 	
 	public func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-		let (model,adapter) = self.context(forItemAt: indexPath)
+		let (model, adapter) = self.context(forItemAt: indexPath)
 		return adapter.dispatch(.leadingSwipeActions, context: InternalContext.init(model, indexPath, nil, tableView)) as? UISwipeActionsConfiguration
 	}
 	
 	public func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-		let (model,adapter) = self.context(forItemAt: indexPath)
+		let (model, adapter) = self.context(forItemAt: indexPath)
 		return adapter.dispatch(.trailingSwipeActions, context: InternalContext.init(model, indexPath, nil, tableView)) as? UISwipeActionsConfiguration
 	}
 	
@@ -709,7 +709,7 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
     // MARK: - UIContextMenu
 
     public func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        let (model,adapter) = self.context(forItemAt: indexPath)
+        let (model, adapter) = self.context(forItemAt: indexPath)
         return adapter.dispatch(.contextMenuConfiguration, context: InternalContext.init(model, indexPath, nil, tableView)) as? UIContextMenuConfiguration
     }
 

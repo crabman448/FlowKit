@@ -218,7 +218,7 @@ public final class DragAndDropManager: NSObject, UICollectionViewDragDelegate, U
     }
     
     /*public func collectionView(_ collectionView: UICollectionView, dragPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
-     let (model,adapter) = self.manager!.context(forItemAt: indexPath)
+     let (model, adapter) = self.manager!.context(forItemAt: indexPath)
      return (adapter.dispatch(.generateDragPreview, context: InternalContext(model, indexPath, nil, collectionView)) as? UIDragPreviewParameters)
      }*/
     

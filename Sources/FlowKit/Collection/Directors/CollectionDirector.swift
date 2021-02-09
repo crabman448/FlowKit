@@ -351,7 +351,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
     //MARK: DataSource: Getting Views for Items
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let (model,adapter) = self.context(forItemAt: indexPath)
+        let (model, adapter) = self.context(forItemAt: indexPath)
         let cell = adapter._instanceCell(in: collectionView, at: indexPath)
         adapter.dispatch(.dequeue, context: InternalContext.init(model, indexPath, cell, collectionView))
         return cell
@@ -407,22 +407,22 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
     //MARK: Delegate: Managing the Selected Cells
     
     public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        let (model,adapter) = self.context(forItemAt: indexPath)
+        let (model, adapter) = self.context(forItemAt: indexPath)
         return ((adapter.dispatch(.shouldSelect, context: InternalContext.init(model, indexPath, nil, collectionView)) as? Bool) ?? true)
     }
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let (model,adapter) = self.context(forItemAt: indexPath)
+        let (model, adapter) = self.context(forItemAt: indexPath)
         adapter.dispatch(.didSelect, context: InternalContext.init(model, indexPath, nil, collectionView))
     }
     
     public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
-        let (model,adapter) = self.context(forItemAt: indexPath)
+        let (model, adapter) = self.context(forItemAt: indexPath)
         return ((adapter.dispatch(.shouldDeselect, context: InternalContext.init(model, indexPath, nil, collectionView)) as? Bool) ?? true)
     }
     
     public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        let (model,adapter) = self.context(forItemAt: indexPath)
+        let (model, adapter) = self.context(forItemAt: indexPath)
         adapter.dispatch(.didDeselect, context: InternalContext.init(model, indexPath, nil, collectionView))
     }
     
@@ -435,24 +435,24 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
     //MARK: Delegate: Managing Cell Highlighting
     
     public func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        let (model,adapter) = self.context(forItemAt: indexPath)
+        let (model, adapter) = self.context(forItemAt: indexPath)
         return ((adapter.dispatch(.shouldHighlight, context: InternalContext.init(model, indexPath, nil, collectionView)) as? Bool) ?? true)
     }
     
     public func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
-        let (model,adapter) = self.context(forItemAt: indexPath)
+        let (model, adapter) = self.context(forItemAt: indexPath)
         adapter.dispatch(.didHighlight, context: InternalContext.init(model, indexPath, nil, collectionView))
     }
     
     public func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath) {
-        let (model,adapter) = self.context(forItemAt: indexPath)
+        let (model, adapter) = self.context(forItemAt: indexPath)
         adapter.dispatch(.didUnhighlight, context: InternalContext.init(model, indexPath, nil, collectionView))
     }
     
     //MARK: Delegate: Tracking the Addition and Removal of Views
     
     public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        let (model,adapter) = self.context(forItemAt: indexPath)
+        let (model, adapter) = self.context(forItemAt: indexPath)
         adapter.dispatch(.willDisplay, context: InternalContext.init(model, indexPath, cell, collectionView))
     }
     
@@ -520,7 +520,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
     //MARK: Delegate: Managing Context Menus
     
     public func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        let (model,adapter) = self.context(forItemAt: indexPath)
+        let (model, adapter) = self.context(forItemAt: indexPath)
         return adapter.dispatch(.contextMenuConfiguration, context: InternalContext.init(model, indexPath, nil, collectionView)) as? UIContextMenuConfiguration
     }
     
@@ -535,7 +535,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
     //MARK: Delegate: Managing Focus in a Collection View
     
     public func collectionView(_ collectionView: UICollectionView, canFocusItemAt indexPath: IndexPath) -> Bool {
-        let (model,adapter) = self.context(forItemAt: indexPath)
+        let (model, adapter) = self.context(forItemAt: indexPath)
         return ((adapter.dispatch(.canFocus, context: InternalContext.init(model, indexPath, nil, collectionView)) as? Bool) ?? true)
     }
     
@@ -563,24 +563,24 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
     //MARK: Delegate: Controlling the Spring-Loading Behavior
     
     public func collectionView(_ collectionView: UICollectionView, shouldSpringLoadItemAt indexPath: IndexPath, with context: UISpringLoadedInteractionContext) -> Bool {
-        let (model,adapter) = self.context(forItemAt: indexPath)
+        let (model, adapter) = self.context(forItemAt: indexPath)
         return ((adapter.dispatch(.shouldSpringLoad, context: InternalContext.init(model, indexPath, nil, collectionView)) as? Bool) ?? true)
     }
     
     //MARK: Delegate: Managing Actions for Cells
     
     public func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-        let (model,adapter) = self.context(forItemAt: indexPath)
+        let (model, adapter) = self.context(forItemAt: indexPath)
         return ((adapter.dispatch(.shouldShowEditMenu, context: InternalContext.init(model, indexPath, nil, collectionView)) as? Bool) ?? false)
     }
     
     public func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        let (model,adapter) = self.context(forItemAt: indexPath)
+        let (model, adapter) = self.context(forItemAt: indexPath)
         return ((adapter.dispatch(.canPerformEditAction, context: InternalContext.init(model, indexPath, nil, collectionView, param1: action, param2: sender)) as? Bool) ?? true)
     }
     
     public func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
-        let (model,adapter) = self.context(forItemAt: indexPath)
+        let (model, adapter) = self.context(forItemAt: indexPath)
         adapter.dispatch(.performEditAction, context: InternalContext.init(model, indexPath, nil, collectionView, param1: action, param2: sender))
     }
     
