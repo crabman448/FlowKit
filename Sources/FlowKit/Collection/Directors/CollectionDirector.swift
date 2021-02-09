@@ -469,7 +469,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
         switch kind {
         case UICollectionView.elementKindSectionHeader:
             guard let header = section.headerView else {
-                return UICollectionReusableView()
+                fatalError("Header is nil for section with ModelId \(section.modelId) at IndexPath \(indexPath)")
             }
 
             let identifier = self.reusableRegister.registerHeaderFooter(header, type: kind, at: indexPath)
@@ -481,7 +481,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
             return view
         case UICollectionView.elementKindSectionFooter:
             guard let footer = section.footerView else {
-                return UICollectionReusableView()
+                fatalError("Footer is nil for section with ModelId \(section.modelId) at IndexPath \(indexPath)")
             }
 
             let identifier = self.reusableRegister.registerHeaderFooter(footer, type: kind, at: indexPath)
@@ -492,7 +492,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
             
             return view
         default:
-            return UICollectionReusableView()
+            fatalError("Unknown kind \(kind) for section with ModelId \(section.modelId) at IndexPath \(indexPath)")
         }
     }
 	
