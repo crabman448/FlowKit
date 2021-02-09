@@ -8,6 +8,4 @@
 
 import Foundation
 
-public protocol ITableSectionView: AbstractSectionViewProtocol {
-    var section: TableSection? { get set }
-}
+public protocol ITableSectionView: AbstractSectionViewProtocol {}

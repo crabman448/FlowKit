@@ -8,6 +8,4 @@
 
 import Foundation
 
-public protocol ICollectionSectionView: AbstractSectionViewProtocol {
-    var section: CollectionSection? { get set }
-}
+public protocol ICollectionSectionView: AbstractSectionViewProtocol {}

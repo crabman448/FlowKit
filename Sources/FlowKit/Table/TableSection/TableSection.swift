@@ -53,24 +53,10 @@ public class TableSection: ModelProtocol {
 	public var footerTitle: String?
 	
 	/// View of the header
-	public var headerView: ITableSectionView? {
-		willSet {
-			self.headerView?.section = nil
-		}
-		didSet {
-			self.headerView?.section = self
-		}
-	}
+	public var headerView: ITableSectionView?
 	
 	/// View of the footer
-	public var footerView: ITableSectionView? {
-		willSet {
-			self.footerView?.section = nil
-		}
-		didSet {
-			self.footerView?.section = self
-		}
-	}
+	public var footerView: ITableSectionView?
 
 	/// Initialize a new section with given initial models.
 	///
