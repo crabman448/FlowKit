@@ -56,7 +56,8 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
     public let reusableRegister: ReusableRegister
     
     /// Registered adapters for this collection manager
-    public private(set) var adapters: [String: AbstractAdapterProtocol] = [:]
+    public private(set) var adaptersByModel: [String: AbstractAdapterProtocol] = [:]
+    public private(set) var adaptersByCell: [String: AbstractAdapterProtocol] = [:]
     
     /// Set it to `true` to enable cell prefetching. By default is set to `false`.
     public var prefetchEnabled: Bool {
@@ -175,8 +176,10 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
     /// - Parameter adapter: adapter to register
     public func register(adapter: AbstractAdapterProtocol) {
         let modelId = String(describing: adapter.modelType)
-        self.adapters[modelId] = adapter // register adapter
-        self.reusableRegister.registerCell(forAdapter: adapter) // register associated cell types into the collection
+        let cellId = String(describing: adapter.cellType)
+        self.adaptersByModel[modelId] = adapter
+        self.adaptersByCell[cellId] = adapter
+        self.reusableRegister.registerCell(forAdapter: adapter)
     }
     
     /// Register multiple adapters for collection.
@@ -296,25 +299,29 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
         return self.sections.last
     }
     
-    //MARK: Helper Internal Methods
+    //MARK: Internal Functions
+    
+    internal func adapter(for cell: UICollectionViewCell) -> ICollectionAdapterInternal {
+        return adaptersByCell[String(describing: type(of: cell.self))] as! ICollectionAdapterInternal
+    }
     
     /// Return the context for an element at given index.
     /// It returns the instance of the model and the registered adapter used to represent it.
     ///
     /// - Parameter index: index path of the item.
     /// - Returns: context
-    internal func context(forItemAt index: IndexPath) -> (ModelProtocol,ICollectionAdapterInternal) {
-        let item: ModelProtocol = self.sections[index.section].models[index.row]
-        let modelId = String(describing: type(of: item.self))
-        guard let adapter = self.adapters[modelId] else {
+    internal func context(forItemAt index: IndexPath) -> (ModelProtocol, ICollectionAdapterInternal) {
+        let model: ModelProtocol = self.sections[index.section].models[index.item]
+        let modelId = String(describing: type(of: model.self))
+        guard let adapter = self.adaptersByModel[modelId] else {
             fatalError("Failed to found an adapter for \(modelId)")
         }
-        return (item,adapter as! ICollectionAdapterInternal)
+        return (model, adapter as! ICollectionAdapterInternal)
     }
     
     internal func context(forModel model: ModelProtocol) -> ICollectionAdapterInternal {
         let modelId = String(describing: type(of: item.self))
-        guard let adapter = self.adapters[modelId] else {
+        guard let adapter = self.adaptersByModel[modelId] else {
             fatalError("Failed to found an adapter for \(modelId)")
         }
         return (adapter as! ICollectionAdapterInternal)
@@ -326,13 +333,17 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
             let model = self.sections[indexPath.section].models[indexPath.item]
             let modelId = String(describing: type(of: model.self))
             
-            var context: PrefetchModelsGroup? = list[modelId]
-            if context == nil {
-                context = PrefetchModelsGroup(adapter: self.adapters[modelId] as! ICollectionAdapterInternal)
-                list[modelId] = context
+            let group: PrefetchModelsGroup
+            if let existingGroup = list[modelId] {
+                group = existingGroup
+            } else {
+                group = PrefetchModelsGroup(adapter: self.adaptersByModel[modelId] as! ICollectionAdapterInternal)
             }
-            context!.models.append(model)
-            context!.indexPaths.append(indexPath)
+            
+            list[modelId] = group
+
+            group.models.append(model)
+            group.indexPaths.append(indexPath)
         }
         
         return Array(list.values)
@@ -353,7 +364,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let (model, adapter) = self.context(forItemAt: indexPath)
         let cell = adapter._instanceCell(in: collectionView, at: indexPath)
-        adapter.dispatch(.dequeue, context: InternalContext.init(model, indexPath, cell, collectionView))
+        adapter.dispatch(.dequeue, context: InternalContext(model, indexPath, cell, collectionView))
         return cell
     }
     
@@ -408,22 +419,22 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
     
     public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         let (model, adapter) = self.context(forItemAt: indexPath)
-        return ((adapter.dispatch(.shouldSelect, context: InternalContext.init(model, indexPath, nil, collectionView)) as? Bool) ?? true)
+        return ((adapter.dispatch(.shouldSelect, context: InternalContext(model, indexPath, nil, collectionView)) as? Bool) ?? true)
     }
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let (model, adapter) = self.context(forItemAt: indexPath)
-        adapter.dispatch(.didSelect, context: InternalContext.init(model, indexPath, nil, collectionView))
+        adapter.dispatch(.didSelect, context: InternalContext(model, indexPath, nil, collectionView))
     }
     
     public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
         let (model, adapter) = self.context(forItemAt: indexPath)
-        return ((adapter.dispatch(.shouldDeselect, context: InternalContext.init(model, indexPath, nil, collectionView)) as? Bool) ?? true)
+        return ((adapter.dispatch(.shouldDeselect, context: InternalContext(model, indexPath, nil, collectionView)) as? Bool) ?? true)
     }
     
     public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         let (model, adapter) = self.context(forItemAt: indexPath)
-        adapter.dispatch(.didDeselect, context: InternalContext.init(model, indexPath, nil, collectionView))
+        adapter.dispatch(.didDeselect, context: InternalContext(model, indexPath, nil, collectionView))
     }
     
     //    TODO
@@ -436,24 +447,24 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
     
     public func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
         let (model, adapter) = self.context(forItemAt: indexPath)
-        return ((adapter.dispatch(.shouldHighlight, context: InternalContext.init(model, indexPath, nil, collectionView)) as? Bool) ?? true)
+        return ((adapter.dispatch(.shouldHighlight, context: InternalContext(model, indexPath, nil, collectionView)) as? Bool) ?? true)
     }
     
     public func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
         let (model, adapter) = self.context(forItemAt: indexPath)
-        adapter.dispatch(.didHighlight, context: InternalContext.init(model, indexPath, nil, collectionView))
+        adapter.dispatch(.didHighlight, context: InternalContext(model, indexPath, nil, collectionView))
     }
     
     public func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath) {
         let (model, adapter) = self.context(forItemAt: indexPath)
-        adapter.dispatch(.didUnhighlight, context: InternalContext.init(model, indexPath, nil, collectionView))
+        adapter.dispatch(.didUnhighlight, context: InternalContext(model, indexPath, nil, collectionView))
     }
     
     //MARK: Delegate: Tracking the Addition and Removal of Views
     
     public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        let (model, adapter) = self.context(forItemAt: indexPath)
-        adapter.dispatch(.willDisplay, context: InternalContext.init(model, indexPath, cell, collectionView))
+        let adapter = self.adapter(for: cell)
+        adapter.dispatch(.willDisplay, context: InternalContext(nil, indexPath, cell, collectionView))
     }
     
     public func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, at indexPath: IndexPath) {
@@ -474,8 +485,8 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
     }
     
     public func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        let (model, adapter) = self.context(forItemAt: indexPath)
-        adapter.dispatch(.endDisplay, context: InternalContext.init(model, indexPath, cell, collectionView))
+        let adapter = self.adapter(for: cell)
+        adapter.dispatch(.endDisplay, context: InternalContext(nil, indexPath, cell, collectionView))
     }
     
     public func collectionView(_ collectionView: UICollectionView, didEndDisplayingSupplementaryView view: UICollectionReusableView, forElementOfKind elementKind: String, at indexPath: IndexPath) {
@@ -497,7 +508,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
     
     public func collectionView(_ collectionView: UICollectionView, transitionLayoutForOldLayout fromLayout: UICollectionViewLayout, newLayout toLayout: UICollectionViewLayout) -> UICollectionViewTransitionLayout {
         guard let layout = self.on.layoutDidChange?(fromLayout,toLayout) else {
-            return UICollectionViewTransitionLayout.init(currentLayout: fromLayout, nextLayout: toLayout)
+            return UICollectionViewTransitionLayout(currentLayout: fromLayout, nextLayout: toLayout)
         }
         return layout
     }
@@ -520,7 +531,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
     
     public func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         let (model, adapter) = self.context(forItemAt: indexPath)
-        return adapter.dispatch(.contextMenuConfiguration, context: InternalContext.init(model, indexPath, nil, collectionView)) as? UIContextMenuConfiguration
+        return adapter.dispatch(.contextMenuConfiguration, context: InternalContext(model, indexPath, nil, collectionView)) as? UIContextMenuConfiguration
     }
     
     //    TODO
@@ -535,7 +546,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
     
     public func collectionView(_ collectionView: UICollectionView, canFocusItemAt indexPath: IndexPath) -> Bool {
         let (model, adapter) = self.context(forItemAt: indexPath)
-        return ((adapter.dispatch(.canFocus, context: InternalContext.init(model, indexPath, nil, collectionView)) as? Bool) ?? true)
+        return ((adapter.dispatch(.canFocus, context: InternalContext(model, indexPath, nil, collectionView)) as? Bool) ?? true)
     }
     
     //    TODO
@@ -563,24 +574,24 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
     
     public func collectionView(_ collectionView: UICollectionView, shouldSpringLoadItemAt indexPath: IndexPath, with context: UISpringLoadedInteractionContext) -> Bool {
         let (model, adapter) = self.context(forItemAt: indexPath)
-        return ((adapter.dispatch(.shouldSpringLoad, context: InternalContext.init(model, indexPath, nil, collectionView)) as? Bool) ?? true)
+        return ((adapter.dispatch(.shouldSpringLoad, context: InternalContext(model, indexPath, nil, collectionView)) as? Bool) ?? true)
     }
     
     //MARK: Delegate: Managing Actions for Cells
     
     public func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
         let (model, adapter) = self.context(forItemAt: indexPath)
-        return ((adapter.dispatch(.shouldShowEditMenu, context: InternalContext.init(model, indexPath, nil, collectionView)) as? Bool) ?? false)
+        return ((adapter.dispatch(.shouldShowEditMenu, context: InternalContext(model, indexPath, nil, collectionView)) as? Bool) ?? false)
     }
     
     public func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
         let (model, adapter) = self.context(forItemAt: indexPath)
-        return ((adapter.dispatch(.canPerformEditAction, context: InternalContext.init(model, indexPath, nil, collectionView, param1: action, param2: sender)) as? Bool) ?? true)
+        return ((adapter.dispatch(.canPerformEditAction, context: InternalContext(model, indexPath, nil, collectionView, param1: action, param2: sender)) as? Bool) ?? true)
     }
     
     public func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
         let (model, adapter) = self.context(forItemAt: indexPath)
-        adapter.dispatch(.performEditAction, context: InternalContext.init(model, indexPath, nil, collectionView, param1: action, param2: sender))
+        adapter.dispatch(.performEditAction, context: InternalContext(model, indexPath, nil, collectionView, param1: action, param2: sender))
     }
     
     //MARK: UICollectionViewDataSourcePrefetching
@@ -597,13 +608,13 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
     
     public func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         self.adapters(forIndexPath: indexPaths).forEach {
-            $0.adapter.dispatch(.prefetch, context: InternalContext.init($0.models, $0.indexPaths, collectionView))
+            $0.adapter.dispatch(.prefetch, context: InternalContext($0.models, $0.indexPaths, collectionView))
         }
     }
     
     public func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
         self.adapters(forIndexPath: indexPaths).forEach {
-            $0.adapter.dispatch(.cancelPrefetch, context: InternalContext.init($0.models, $0.indexPaths, collectionView))
+            $0.adapter.dispatch(.cancelPrefetch, context: InternalContext($0.models, $0.indexPaths, collectionView))
         }
     }
     
@@ -674,7 +685,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
         public private(set) weak var collection: UICollectionView?
         
         /// Registered cell identifiers
-        public private(set) var cellIDs: Set<String> = []
+        public private(set) var reuseIdentifiers: Set<String> = []
         
         /// Registered headers by IndexPath
         public private(set) var headers: [IndexPath: ICollectionSectionView] = [:]
@@ -695,18 +706,22 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
         /// - Parameter adapter: adapter to register
         @discardableResult
         internal func registerCell(forAdapter adapter: AbstractAdapterProtocol) -> Bool {
-            let identifier = adapter.cellReuseIdentifier
-            guard !cellIDs.contains(identifier) else {
+            let reuseIdentifier = adapter.cellReuseIdentifier
+
+            guard !reuseIdentifiers.contains(reuseIdentifier) else {
                 return false
             }
-            let bundle = Bundle.init(for: adapter.cellClass)
-            if let _ = bundle.path(forResource: identifier, ofType: "nib") {
-                let nib = UINib(nibName: identifier, bundle: bundle)
-                collection?.register(nib, forCellWithReuseIdentifier: identifier)
+
+            let bundle = Bundle(for: adapter.cellClass)
+
+            if bundle.path(forResource: reuseIdentifier, ofType: "nib") != nil {
+                collection?.register(UINib(nibName: reuseIdentifier, bundle: bundle), forCellWithReuseIdentifier: reuseIdentifier)
             } else if adapter.registerAsClass {
-                collection?.register(adapter.cellClass, forCellWithReuseIdentifier: identifier)
+                collection?.register(adapter.cellClass, forCellWithReuseIdentifier: reuseIdentifier)
             }
-            cellIDs.insert(identifier)
+
+            reuseIdentifiers.insert(reuseIdentifier)
+
             return true
         }
         

@@ -60,10 +60,11 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	public private(set) weak var tableView: UITableView?
 
 	/// Registered adapters for managed tables
-	public private(set) var adapters: [String: AbstractAdapterProtocol] = [:]
+	public private(set) var adaptersByModel: [String: AbstractAdapterProtocol] = [:]
+    public private(set) var adaptersByCell: [String: AbstractAdapterProtocol] = [:]
 
 	/// Registered cell reusable identifiers
-	private var cellIDs: Set<String> = []
+	private var reuseIdentifiers: Set<String> = []
 	
 	/// Visible sections of the table
 	public private(set) var sections: [TableSection] = []
@@ -133,7 +134,9 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	/// - Parameter adapter: adapter to register
 	public func register(adapter: AbstractAdapterProtocol) {
 		let modelId = String(describing: adapter.modelType)
-		self.adapters[modelId] = adapter // register adapter
+        let cellId = String(describing: adapter.cellType)
+		self.adaptersByModel[modelId] = adapter
+        self.adaptersByCell[cellId] = adapter
 		self.registerCell(forAdapter: adapter)
 	}
 	
@@ -330,18 +333,22 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	}
 		
 	//MARK: Internal Functions
-	
+    
+    internal func adapter(for cell: UITableViewCell) -> ITableAdapterInternal {
+        return adaptersByCell[String(describing: type(of: cell.self))] as! ITableAdapterInternal
+    }
+
 	/// Return the context of operation which includes model instance and associated adapter.
 	///
 	/// - Parameter index: index of target item.
 	/// - Returns: model and adapter
-	internal func context(forItemAt index: IndexPath) -> (ModelProtocol, ITableAdapterInternal) {
-		let item: ModelProtocol = self.sections[index.section].models[index.row]
-		let modelId = String(describing: type(of: item.self))
-		guard let adapter = self.adapters[modelId] else {
-			fatalError("Failed to found an adapter for model: \(modelId)")
+    internal func context(forItemAt indexPath: IndexPath) -> (ModelProtocol, ITableAdapterInternal) {
+        let model = self.sections[indexPath.section].models[indexPath.item]
+		let modelId = String(describing: type(of: model.self))
+		guard let adapter = self.adaptersByModel[modelId] else {
+			fatalError("Failed to found an adapter for \(modelId)")
 		}
-		return (item,adapter as! ITableAdapterInternal)
+		return (model, adapter as! ITableAdapterInternal)
 	}
 	
 	/// Return the adapter associated with type of model.
@@ -351,7 +358,7 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	/// - Returns: adapter.
 	internal func context(forModel model: AnyHashable) -> ITableAdapterInternal {
 		let modelId = String(describing: type(of: model.self))
-		guard let adapter = self.adapters[modelId] else {
+		guard let adapter = self.adaptersByModel[modelId] else {
 			fatalError("Failed to found an adapter for \(modelId)")
 		}
 		return (adapter as! ITableAdapterInternal)
@@ -369,13 +376,17 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 			let model = self.sections[indexPath.section].models[indexPath.item]
 			let modelId = String(describing: type(of: model.self))
 			
-			var context: PrefetchModelsGroup? = list[modelId]
-			if context == nil {
-				context = PrefetchModelsGroup(adapter: self.adapters[modelId] as! ITableAdapterInternal)
-				list[modelId] = context
-			}
-			context!.models.append(model)
-			context!.indexPaths.append(indexPath)
+            let group: PrefetchModelsGroup
+            if let existingGroup = list[modelId] {
+                group = existingGroup
+            } else {
+                group = PrefetchModelsGroup(adapter: self.adaptersByModel[modelId] as! ITableAdapterInternal)
+            }
+            
+            list[modelId] = group
+
+            group.models.append(model)
+            group.indexPaths.append(indexPath)
 		}
 		
 		return Array(list.values)
@@ -558,8 +569,8 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	}
 	
 	public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-		let (model, adapter) = self.context(forItemAt: indexPath)
-		adapter.dispatch(.willDisplay, context: InternalContext.init(model, indexPath, cell, tableView))
+        let adapter = self.adapter(for: cell)
+		adapter.dispatch(.willDisplay, context: InternalContext(nil, indexPath, cell, tableView))
 	}
 	
 	public func tableView(_ tableView: UITableView, shouldSpringLoadRowAt indexPath: IndexPath, with context: UISpringLoadedInteractionContext) -> Bool {
@@ -628,12 +639,12 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	
 	public func tableView(_ tableView: UITableView, targetIndexPathForMoveFromRowAt sourceIndexPath: IndexPath, toProposedIndexPath proposedDestinationIndexPath: IndexPath) -> IndexPath {
 		let (model, adapter) = self.context(forItemAt: sourceIndexPath)
-		return ((adapter.dispatch(.moveAdjustDestination, context: InternalContext.init(model, sourceIndexPath, nil, tableView, param1: proposedDestinationIndexPath)) as? IndexPath) ?? proposedDestinationIndexPath)
+		return ((adapter.dispatch(.moveAdjustDestination, context: InternalContext(model, sourceIndexPath, nil, tableView, param1: proposedDestinationIndexPath)) as? IndexPath) ?? proposedDestinationIndexPath)
 	}
 	
 	public func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let (model, adapter) = self.context(forItemAt: indexPath)
-        adapter.dispatch(.endDisplay, context: InternalContext.init(model, indexPath, cell, tableView))
+        let adapter = self.adapter(for: cell)
+        adapter.dispatch(.endDisplay, context: InternalContext(nil, indexPath, cell, tableView))
 	}
 	
 	public func tableView(_ tableView: UITableView, shouldShowMenuForRowAt indexPath: IndexPath) -> Bool {
@@ -673,12 +684,12 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	
 	public func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 		let (model, adapter) = self.context(forItemAt: indexPath)
-		return adapter.dispatch(.leadingSwipeActions, context: InternalContext.init(model, indexPath, nil, tableView)) as? UISwipeActionsConfiguration
+		return adapter.dispatch(.leadingSwipeActions, context: InternalContext(model, indexPath, nil, tableView)) as? UISwipeActionsConfiguration
 	}
 	
 	public func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 		let (model, adapter) = self.context(forItemAt: indexPath)
-		return adapter.dispatch(.trailingSwipeActions, context: InternalContext.init(model, indexPath, nil, tableView)) as? UISwipeActionsConfiguration
+		return adapter.dispatch(.trailingSwipeActions, context: InternalContext(model, indexPath, nil, tableView)) as? UISwipeActionsConfiguration
 	}
 	
 	// MARK: Indexes
@@ -709,7 +720,7 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 
     public func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         let (model, adapter) = self.context(forItemAt: indexPath)
-        return adapter.dispatch(.contextMenuConfiguration, context: InternalContext.init(model, indexPath, nil, tableView)) as? UIContextMenuConfiguration
+        return adapter.dispatch(.contextMenuConfiguration, context: InternalContext(model, indexPath, nil, tableView)) as? UIContextMenuConfiguration
     }
 
     // MARK: - UIScrollViewDelegate Events
@@ -783,18 +794,22 @@ public extension TableDirector {
 	/// - Returns: `true` if cell is registered, `false` otherwise. If cell is already registered it returns `false`.
 	@discardableResult
 	internal func registerCell(forAdapter adapter: AbstractAdapterProtocol) -> Bool {
-		let identifier = adapter.cellReuseIdentifier
-		guard !cellIDs.contains(identifier) else {
+		let reuseIdentifier = adapter.cellReuseIdentifier
+
+		guard !reuseIdentifiers.contains(reuseIdentifier) else {
 			return false
 		}
-		let bundle = Bundle.init(for: adapter.cellClass)
-		if let _ = bundle.path(forResource: identifier, ofType: "nib") {
-			let nib = UINib(nibName: identifier, bundle: bundle)
-			self.tableView?.register(nib, forCellReuseIdentifier: identifier)
+
+		let bundle = Bundle(for: adapter.cellClass)
+
+		if bundle.path(forResource: reuseIdentifier, ofType: "nib") != nil {
+			self.tableView?.register(UINib(nibName: reuseIdentifier, bundle: bundle), forCellReuseIdentifier: reuseIdentifier)
 		} else if adapter.registerAsClass {
-			self.tableView?.register(adapter.cellClass, forCellReuseIdentifier: identifier)
+			self.tableView?.register(adapter.cellClass, forCellReuseIdentifier: reuseIdentifier)
 		}
-		cellIDs.insert(identifier)
+
+		reuseIdentifiers.insert(reuseIdentifier)
+
 		return true
 	}
 	
@@ -803,19 +818,21 @@ public extension TableDirector {
 	/// - Parameter view: abstract view to register.
 	/// - Returns: `true` if view is registered, `false` otherwise. If view is already registered it returns `false`.
 	internal func registerView(_ view: ITableSectionView) -> String {
-		let identifier = view.reuseIdentifier
-		guard !self.headersFootersIDs.contains(identifier) else {
-            return identifier
+		let reuseIdentifier = view.reuseIdentifier
+
+		guard !self.headersFootersIDs.contains(reuseIdentifier) else {
+            return reuseIdentifier
         }
 		
 		let bundle = Bundle(for: view.viewClass)
-		if let _ = bundle.path(forResource: identifier, ofType: "nib") {
-			let nib = UINib(nibName: identifier, bundle: bundle)
-			self.tableView?.register(nib, forHeaderFooterViewReuseIdentifier: identifier)
+
+		if bundle.path(forResource: reuseIdentifier, ofType: "nib") != nil {
+			self.tableView?.register(UINib(nibName: reuseIdentifier, bundle: bundle), forHeaderFooterViewReuseIdentifier: reuseIdentifier)
 		} else if view.registerAsClass {
-			self.tableView?.register(view.viewClass, forCellReuseIdentifier: identifier)
+			self.tableView?.register(view.viewClass, forCellReuseIdentifier: reuseIdentifier)
 		}
-		return identifier
+
+		return reuseIdentifier
 	}
 	
 	

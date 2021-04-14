@@ -102,6 +102,7 @@ open class CollectionAdapter<M: ModelProtocol, C: UICollectionViewCell>: ICollec
             (String(describing: lhs.cellType) == String(describing: rhs.cellType))
     }
     
+    @discardableResult
     func dispatch(_ event: CollectionAdapterEventKey, context: InternalContext) -> Any? {
         switch event {
         
@@ -109,7 +110,7 @@ open class CollectionAdapter<M: ModelProtocol, C: UICollectionViewCell>: ICollec
             guard let callback = self.on.dequeue else {
                 return nil
             }
-            callback(Context<M,C>(generic: context))
+            return callback(Context<M,C>(generic: context))
             
         case .shouldSelect:
             guard let callback = self.on.shouldSelect else {
@@ -121,25 +122,25 @@ open class CollectionAdapter<M: ModelProtocol, C: UICollectionViewCell>: ICollec
             guard let callback = self.on.didSelect else {
                 return nil
             }
-            callback(Context<M,C>(generic: context))
+            return callback(Context<M,C>(generic: context))
             
         case .didDeselect:
             guard let callback = self.on.didDeselect else {
                 return nil
             }
-            callback(Context<M,C>(generic: context))
+            return callback(Context<M,C>(generic: context))
             
         case .didHighlight:
             guard let callback = self.on.didHighlight else {
                 return nil
             }
-            callback(Context<M,C>(generic: context))
+            return callback(Context<M,C>(generic: context))
             
         case .didUnhighlight:
             guard let callback = self.on.didUnhighlight else {
                 return nil
             }
-            callback(Context<M,C>(generic: context))
+            return callback(Context<M,C>(generic: context))
             
         case .shouldHighlight:
             guard let callback = self.on.shouldHighlight else {
@@ -151,13 +152,13 @@ open class CollectionAdapter<M: ModelProtocol, C: UICollectionViewCell>: ICollec
             guard let callback = self.on.willDisplay, let cell = context.cell as? C, let path = context.path else {
                 return nil
             }
-            callback(cell, path)
+            return callback(cell, path)
             
         case .endDisplay:
             guard let callback = self.on.endDisplay, let cell = context.cell as? C, let path = context.path else {
                 return nil
             }
-            callback(cell, path)
+            return callback(cell, path)
             
         case .shouldShowEditMenu:
             guard let callback = self.on.shouldShowEditMenu else {
@@ -210,7 +211,7 @@ open class CollectionAdapter<M: ModelProtocol, C: UICollectionViewCell>: ICollec
             else {
                 return nil
             }
-            callback(models, paths, container)
+            return callback(models, paths, container)
             
         case .cancelPrefetch:
             guard
@@ -221,7 +222,7 @@ open class CollectionAdapter<M: ModelProtocol, C: UICollectionViewCell>: ICollec
             else {
                 return nil
             }
-            callback(models, paths, container)
+            return callback(models, paths, container)
             
         case .shouldSpringLoad:
             guard let callback = self.on.shouldSpringLoad else {
@@ -242,7 +243,6 @@ open class CollectionAdapter<M: ModelProtocol, C: UICollectionViewCell>: ICollec
             return callback(Context<M,C>(generic: context))
             
         }
-        return nil
     }
     
     // MARK: Internal Protocol Methods

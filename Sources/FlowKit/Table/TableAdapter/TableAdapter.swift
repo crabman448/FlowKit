@@ -51,7 +51,6 @@ open class TableAdapter<M: ModelProtocol, C: UITableViewCell>: ITableAdapter, IT
         public var rowHeightEstimated: ((EventContext) -> CGFloat)? = nil
         
         public var indentLevel: ((EventContext) -> Int)? = nil
-        public var willDisplay: ((EventContext) -> Void)? = nil
         public var shouldSpringLoad: ((EventContext) -> Bool)? = nil
         
         public var tapOnAccessory: ((EventContext) -> Void)? = nil
@@ -69,6 +68,7 @@ open class TableAdapter<M: ModelProtocol, C: UITableViewCell>: ITableAdapter, IT
         
         public var moveAdjustDestination: ((_ ctx: EventContext, _ proposed: IndexPath) -> IndexPath?)? = nil
         
+        public var willDisplay: ((_ cell: C, _ path: IndexPath) -> Void)? = nil
         public var endDisplay: ((_ cell: C, _ path: IndexPath) -> Void)? = nil
         
         public var shouldShowMenu: ((EventContext) -> Bool)? = nil
@@ -133,6 +133,7 @@ open class TableAdapter<M: ModelProtocol, C: UITableViewCell>: ITableAdapter, IT
         return table.dequeueReusableCell(withIdentifier: C.reuseIdentifier, for: indexPath)
     }
     
+    @discardableResult
     func dispatch(_ event: TableAdapterEventsKey, context: InternalContext) -> Any? {
         switch event {
         
@@ -140,7 +141,7 @@ open class TableAdapter<M: ModelProtocol, C: UITableViewCell>: ITableAdapter, IT
             guard let callback = self.on.dequeue else {
                 return nil
             }
-            callback(Context<M,C>(generic: context))
+            return callback(Context<M,C>(generic: context))
             
         case .canEdit:
             guard let callback = self.on.canEdit else {
@@ -164,19 +165,19 @@ open class TableAdapter<M: ModelProtocol, C: UITableViewCell>: ITableAdapter, IT
             guard let callback = self.on.moveRow, let indexPath = context.param1 as? IndexPath else {
                 return nil
             }
-            callback(Context<M,C>(generic: context), indexPath)
+            return callback(Context<M,C>(generic: context), indexPath)
             
         case .prefetch:
             guard let callback = self.on.prefetch, let models = context.models as? [M], let paths = context.paths else {
                 return nil
             }
-            callback(models, paths)
+            return callback(models, paths)
             
         case .cancelPrefetch:
             guard let callback = self.on.cancelPrefetch, let models = context.models as? [M], let paths = context.paths else {
                 return nil
             }
-            callback(models, paths)
+            return callback(models, paths)
             
         case .rowHeight:
             guard let callback = self.on.rowHeight else {
@@ -196,12 +197,6 @@ open class TableAdapter<M: ModelProtocol, C: UITableViewCell>: ITableAdapter, IT
             }
             return callback(Context<M,C>(generic: context))
             
-        case .willDisplay:
-            guard let callback = self.on.willDisplay else {
-                return nil
-            }
-            return callback(Context<M,C>(generic: context))
-            
         case .shouldSpringLoad:
             guard let callback = self.on.shouldSpringLoad else {
                 return nil
@@ -212,7 +207,7 @@ open class TableAdapter<M: ModelProtocol, C: UITableViewCell>: ITableAdapter, IT
             guard let callback = self.on.tapOnAccessory else {
                 return nil
             }
-            callback(Context<M,C>(generic: context))
+            return callback(Context<M,C>(generic: context))
             
         case .willSelect:
             guard let callback = self.on.willSelect else {
@@ -242,13 +237,13 @@ open class TableAdapter<M: ModelProtocol, C: UITableViewCell>: ITableAdapter, IT
             guard let callback = self.on.willBeginEdit else {
                 return nil
             }
-            callback(Context<M,C>(generic: context))
+            return callback(Context<M,C>(generic: context))
             
         case .didEndEdit:
             guard let callback = self.on.didEndEdit else {
                 return nil
             }
-            callback(Context<M,C>(generic: context))
+            return callback(Context<M,C>(generic: context))
             
         case .editStyle:
             guard let callback = self.on.editStyle else {
@@ -274,11 +269,17 @@ open class TableAdapter<M: ModelProtocol, C: UITableViewCell>: ITableAdapter, IT
             }
             return callback(Context<M,C>(generic: context), indexPath)
             
-        case .endDisplay:
-            guard let callback = self.on.endDisplay, let cell = context.cell as? C else {
+        case .willDisplay:
+            guard let callback = self.on.willDisplay, let cell = context.cell as? C, let indexPath = context.path else {
                 return nil
             }
-            callback(cell, context.path!)
+            return callback(cell, indexPath)
+
+        case .endDisplay:
+            guard let callback = self.on.endDisplay, let cell = context.cell as? C, let indexPath = context.path else {
+                return nil
+            }
+            return callback(cell, indexPath)
             
         case .shouldShowMenu:
             guard let callback = self.on.shouldShowMenu else {
@@ -308,13 +309,13 @@ open class TableAdapter<M: ModelProtocol, C: UITableViewCell>: ITableAdapter, IT
             guard let callback = self.on.didHighlight else {
                 return nil
             }
-            callback(Context<M,C>(generic: context))
+            return callback(Context<M,C>(generic: context))
             
         case .didUnhighlight:
             guard let callback = self.on.didUnhighlight else {
                 return nil
             }
-            callback(Context<M,C>(generic: context))
+            return callback(Context<M,C>(generic: context))
             
         case .canFocus:
             guard let callback = self.on.canFocus else {
@@ -340,7 +341,6 @@ open class TableAdapter<M: ModelProtocol, C: UITableViewCell>: ITableAdapter, IT
             }
             return callback(Context<M,C>(generic: context))
         }
-        return nil
     }
     
 }
