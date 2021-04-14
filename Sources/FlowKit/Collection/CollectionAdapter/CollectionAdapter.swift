@@ -56,196 +56,196 @@ open class CollectionAdapter<M: ModelProtocol, C: UICollectionViewCell>: ICollec
         public var prefetch: ((_ items: [M], _ paths: [IndexPath], _ collection: UICollectionView) -> Void)? = nil
         public var cancelPrefetch: ((_ items: [M], _ paths: [IndexPath], _ collection: UICollectionView) -> Void)? = nil
         public var shouldSpringLoad: ((EventContext) -> Bool)? = nil
-
+        
         public lazy var contextMenuConfiguration: ((EventContext) -> UIContextMenuConfiguration?)? = nil
     }
-
-	public var modelType: Any.Type = M.self
-	public var cellType: Any.Type = C.self
-
-	public var cellReuseIdentifier: String {
-		return C.reuseIdentifier
-	}
-	
-	public var cellClass: AnyClass {
-		return C.self
-	}
-
+    
+    public var modelType: Any.Type = M.self
+    public var cellType: Any.Type = C.self
+    
+    public var cellReuseIdentifier: String {
+        return C.reuseIdentifier
+    }
+    
+    public var cellClass: AnyClass {
+        return C.self
+    }
+    
     /// Return true if you want to allocate the cell via class name using classic
     /// `initWithFrame`/`initWithCoder`. If your cell UI is defined inside a nib file
     /// or inside a storyboard you must return `false`.
     open var registerAsClass: Bool {
         return false
     }
-	
-	/// Events for adapter
-	public var on = CollectionAdapter.Events<M,C>()
-
-	/// Initialize a new adapter and allows its configuration via builder callback.
-	///
-	/// - Parameter configuration: configuration callback
-	public init(_ configuration: ((CollectionAdapter) -> (Void))? = nil) {
-		configuration?(self)
-	}
-	
-	//MARK: Standard Protocol Implementations
-	
-	/// Description of the adapter
-	public var description: String {
-		return "Adapter<\(String(describing: self.cellType)),\(String(describing: self.modelType))>"
-	}
-	
-	/// Equatable support.
-	/// Two adapters are equal if it manages the same pair of data.
-	public static func == (lhs: CollectionAdapter, rhs: CollectionAdapter) -> Bool {
-		return 	(String(describing: lhs.modelType) == String(describing: rhs.modelType)) &&
-				(String(describing: lhs.cellType) == String(describing: rhs.cellType))
-	}
-	
-	func dispatch(_ event: CollectionAdapterEventKey, context: InternalContext) -> Any? {
-		switch event {
-			
-		case .dequeue:
-			guard let callback = self.on.dequeue else {
-            return nil
-        }
-			callback(Context<M,C>(generic: context))
-			
-		case .shouldSelect:
-			guard let callback = self.on.shouldSelect else {
-            return nil
-        }
-			return callback(Context<M,C>(generic: context))
-			
-		case .didSelect:
-			guard let callback = self.on.didSelect else {
-            return nil
-        }
-			callback(Context<M,C>(generic: context))
-			
-		case .didDeselect:
-			guard let callback = self.on.didDeselect else {
-            return nil
-        }
-			callback(Context<M,C>(generic: context))
-			
-		case .didHighlight:
-			guard let callback = self.on.didHighlight else {
-            return nil
-        }
-			callback(Context<M,C>(generic: context))
-			
-		case .didUnhighlight:
-			guard let callback = self.on.didUnhighlight else {
-            return nil
-        }
-			callback(Context<M,C>(generic: context))
-			
-		case .shouldHighlight:
-			guard let callback = self.on.shouldHighlight else {
-            return nil
-        }
-			return callback(Context<M,C>(generic: context))
-			
-		case .willDisplay:
-			guard let callback = self.on.willDisplay else {
-            return nil
-        }
-			callback((context.cell as! C), context.path!)
-			
-		case .endDisplay:
-			guard let callback = self.on.endDisplay else {
-            return nil
-        }
-			callback((context.cell as! C), context.path!)
-			
-		case .shouldShowEditMenu:
-			guard let callback = self.on.shouldShowEditMenu else {
-            return nil
-        }
-			return callback(Context<M,C>(generic: context))
-
-		case .canPerformEditAction:
-			guard let callback = self.on.canPerformEditAction else {
-            return nil
-        }
-			return callback(Context<M,C>(generic: context))
-			
-		case .performEditAction:
-			guard let callback = self.on.performEditAction else {
-            return nil
-        }
-			return callback(Context<M,C>(generic: context), (context.param1 as! Selector), context.param2)
-			
-		case .canFocus:
-			guard let callback = self.on.canFocus else {
-            return nil
-        }
-			return callback(Context<M,C>(generic: context))
-			
-		case .itemSize:
-			guard let callback = self.on.itemSize else {
-            return nil
-        }
-			return callback(Context<M,C>(generic: context))
-			
-	/*	case .generateDragPreview:
-			guard let callback = self.on.generateDragPreview else {
-            return nil
-        }
-			return callback(Context<M,C>(generic: context))
-			
-		case .generateDropPreview:
-			guard let callback = self.on.generateDropPreview else {
-            return nil
-        }
-			return callback(Context<M,C>(generic: context))
-		*/
-		case .prefetch:
-			guard let callback = self.on.prefetch else {
-            return nil
-        }
-			callback((context.models as! [M]), context.paths!, (context.container as! UICollectionView))
-			
-		case .cancelPrefetch:
-			guard let callback = self.on.cancelPrefetch else {
-            return nil
-        }
-			callback((context.models as! [M]), context.paths!, (context.container as! UICollectionView))
-			
-		case .shouldSpringLoad:
-			guard let callback = self.on.shouldSpringLoad else {
-            return nil
-        }
-			return callback(Context<M,C>(generic: context))
-			
-		case .shouldDeselect:
-			guard let callback = self.on.shouldDeselect else {
-            return nil
-        }
-			return callback(Context<M,C>(generic: context))
-
+    
+    /// Events for adapter
+    public var on = CollectionAdapter.Events<M,C>()
+    
+    /// Initialize a new adapter and allows its configuration via builder callback.
+    ///
+    /// - Parameter configuration: configuration callback
+    public init(_ configuration: ((CollectionAdapter) -> (Void))? = nil) {
+        configuration?(self)
+    }
+    
+    //MARK: Standard Protocol Implementations
+    
+    /// Description of the adapter
+    public var description: String {
+        return "Adapter<\(String(describing: self.cellType)),\(String(describing: self.modelType))>"
+    }
+    
+    /// Equatable support.
+    /// Two adapters are equal if it manages the same pair of data.
+    public static func == (lhs: CollectionAdapter, rhs: CollectionAdapter) -> Bool {
+        return 	(String(describing: lhs.modelType) == String(describing: rhs.modelType)) &&
+            (String(describing: lhs.cellType) == String(describing: rhs.cellType))
+    }
+    
+    func dispatch(_ event: CollectionAdapterEventKey, context: InternalContext) -> Any? {
+        switch event {
+        
+        case .dequeue:
+            guard let callback = self.on.dequeue else {
+                return nil
+            }
+            callback(Context<M,C>(generic: context))
+            
+        case .shouldSelect:
+            guard let callback = self.on.shouldSelect else {
+                return nil
+            }
+            return callback(Context<M,C>(generic: context))
+            
+        case .didSelect:
+            guard let callback = self.on.didSelect else {
+                return nil
+            }
+            callback(Context<M,C>(generic: context))
+            
+        case .didDeselect:
+            guard let callback = self.on.didDeselect else {
+                return nil
+            }
+            callback(Context<M,C>(generic: context))
+            
+        case .didHighlight:
+            guard let callback = self.on.didHighlight else {
+                return nil
+            }
+            callback(Context<M,C>(generic: context))
+            
+        case .didUnhighlight:
+            guard let callback = self.on.didUnhighlight else {
+                return nil
+            }
+            callback(Context<M,C>(generic: context))
+            
+        case .shouldHighlight:
+            guard let callback = self.on.shouldHighlight else {
+                return nil
+            }
+            return callback(Context<M,C>(generic: context))
+            
+        case .willDisplay:
+            guard let callback = self.on.willDisplay else {
+                return nil
+            }
+            callback((context.cell as! C), context.path!)
+            
+        case .endDisplay:
+            guard let callback = self.on.endDisplay else {
+                return nil
+            }
+            callback((context.cell as! C), context.path!)
+            
+        case .shouldShowEditMenu:
+            guard let callback = self.on.shouldShowEditMenu else {
+                return nil
+            }
+            return callback(Context<M,C>(generic: context))
+            
+        case .canPerformEditAction:
+            guard let callback = self.on.canPerformEditAction else {
+                return nil
+            }
+            return callback(Context<M,C>(generic: context))
+            
+        case .performEditAction:
+            guard let callback = self.on.performEditAction else {
+                return nil
+            }
+            return callback(Context<M,C>(generic: context), (context.param1 as! Selector), context.param2)
+            
+        case .canFocus:
+            guard let callback = self.on.canFocus else {
+                return nil
+            }
+            return callback(Context<M,C>(generic: context))
+            
+        case .itemSize:
+            guard let callback = self.on.itemSize else {
+                return nil
+            }
+            return callback(Context<M,C>(generic: context))
+            
+        /*	case .generateDragPreview:
+         guard let callback = self.on.generateDragPreview else {
+         return nil
+         }
+         return callback(Context<M,C>(generic: context))
+         
+         case .generateDropPreview:
+         guard let callback = self.on.generateDropPreview else {
+         return nil
+         }
+         return callback(Context<M,C>(generic: context))
+         */
+        case .prefetch:
+            guard let callback = self.on.prefetch else {
+                return nil
+            }
+            callback((context.models as! [M]), context.paths!, (context.container as! UICollectionView))
+            
+        case .cancelPrefetch:
+            guard let callback = self.on.cancelPrefetch else {
+                return nil
+            }
+            callback((context.models as! [M]), context.paths!, (context.container as! UICollectionView))
+            
+        case .shouldSpringLoad:
+            guard let callback = self.on.shouldSpringLoad else {
+                return nil
+            }
+            return callback(Context<M,C>(generic: context))
+            
+        case .shouldDeselect:
+            guard let callback = self.on.shouldDeselect else {
+                return nil
+            }
+            return callback(Context<M,C>(generic: context))
+            
         case .contextMenuConfiguration:
             guard let callback = self.on.contextMenuConfiguration else {
-            return nil
-        }
+                return nil
+            }
             return callback(Context<M,C>(generic: context))
-			
-		}
-		return nil
-	}
-	
-	// MARK: Internal Protocol Methods
-	
-	func _instanceCell(in collection: UICollectionView, at indexPath: IndexPath?) -> UICollectionViewCell {
-		guard let indexPath = indexPath else {
-			let castedCell = self.cellClass as! UICollectionViewCell.Type
-			let cellInstance = castedCell.init()
-			return cellInstance
-		}
-		return collection.dequeueReusableCell(withReuseIdentifier: C.reuseIdentifier, for: indexPath)
-	}
-	
+            
+        }
+        return nil
+    }
+    
+    // MARK: Internal Protocol Methods
+    
+    func _instanceCell(in collection: UICollectionView, at indexPath: IndexPath?) -> UICollectionViewCell {
+        guard let indexPath = indexPath else {
+            let castedCell = self.cellClass as! UICollectionViewCell.Type
+            let cellInstance = castedCell.init()
+            return cellInstance
+        }
+        return collection.dequeueReusableCell(withReuseIdentifier: C.reuseIdentifier, for: indexPath)
+    }
+    
 }
 
 extension CollectionAdapter {
@@ -255,18 +255,18 @@ extension CollectionAdapter {
         
         /// Index path of represented context's cell instance
         public let indexPath: IndexPath
-
+        
         /// Represented model instance
         public let model: M
-
+        
         /// Managed source collection
         public private(set) weak var collection: UICollectionView?
-
+        
         /// Managed source collection's bounds size
         public var collectionSize: CGSize? {
             guard let c = collection else {
-            return nil
-        }
+                return nil
+            }
             return c.bounds.size
         }
         
