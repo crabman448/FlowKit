@@ -149,10 +149,10 @@ open class TableAdapter<M: ModelProtocol, C: UITableViewCell>: ITableAdapter, IT
             return callback(Context<M,C>(generic: context))
             
         case .commitEdit:
-            guard let callback = self.on.commitEdit else {
+            guard let callback = self.on.commitEdit, let style = context.param1 as? UITableViewCell.EditingStyle else {
                 return nil
             }
-            return callback(Context<M,C>(generic: context), (context.param1 as! UITableViewCell.EditingStyle))
+            return callback(Context<M,C>(generic: context), style)
             
         case .canMoveRow:
             guard let callback = self.on.canMoveRow else {
@@ -161,22 +161,22 @@ open class TableAdapter<M: ModelProtocol, C: UITableViewCell>: ITableAdapter, IT
             return callback(Context<M,C>(generic: context))
             
         case .moveRow:
-            guard let callback = self.on.moveRow else {
+            guard let callback = self.on.moveRow, let indexPath = context.param1 as? IndexPath else {
                 return nil
             }
-            callback(Context<M,C>(generic: context), (context.param1 as! IndexPath))
+            callback(Context<M,C>(generic: context), indexPath)
             
         case .prefetch:
-            guard let callback = self.on.prefetch else {
+            guard let callback = self.on.prefetch, let models = context.models as? [M], let paths = context.paths else {
                 return nil
             }
-            callback( (context.models as! [M]), context.paths!)
+            callback(models, paths)
             
         case .cancelPrefetch:
-            guard let callback = self.on.cancelPrefetch else {
+            guard let callback = self.on.cancelPrefetch, let models = context.models as? [M], let paths = context.paths else {
                 return nil
             }
-            callback( (context.models as! [M]), context.paths!)
+            callback(models, paths)
             
         case .rowHeight:
             guard let callback = self.on.rowHeight else {
@@ -269,16 +269,16 @@ open class TableAdapter<M: ModelProtocol, C: UITableViewCell>: ITableAdapter, IT
             return callback(Context<M,C>(generic: context))
             
         case .moveAdjustDestination:
-            guard let callback = self.on.moveAdjustDestination else {
+            guard let callback = self.on.moveAdjustDestination, let indexPath = context.param1 as? IndexPath else {
                 return nil
             }
-            return callback(Context<M,C>(generic: context), (context.param1 as! IndexPath))
+            return callback(Context<M,C>(generic: context), indexPath)
             
         case .endDisplay:
-            guard let callback = self.on.endDisplay else {
+            guard let callback = self.on.endDisplay, let cell = context.cell as? C else {
                 return nil
             }
-            callback((context.cell as! C), context.path!)
+            callback(cell, context.path!)
             
         case .shouldShowMenu:
             guard let callback = self.on.shouldShowMenu else {
@@ -287,16 +287,16 @@ open class TableAdapter<M: ModelProtocol, C: UITableViewCell>: ITableAdapter, IT
             return callback(Context<M,C>(generic: context))
             
         case .canPerformMenuAction:
-            guard let callback = self.on.canPerformMenuAction else {
+            guard let callback = self.on.canPerformMenuAction, let selector = context.param1 as? Selector else {
                 return nil
             }
-            return callback(Context<M,C>(generic: context), (context.param1 as! Selector), context.param2)
+            return callback(Context<M,C>(generic: context), selector, context.param2)
             
         case .performMenuAction:
-            guard let callback = self.on.performMenuAction else {
+            guard let callback = self.on.performMenuAction, let selector = context.param1 as? Selector else {
                 return nil
             }
-            return callback(Context<M,C>(generic: context), (context.param1 as! Selector), context.param2)
+            return callback(Context<M,C>(generic: context), selector, context.param2)
             
         case .shouldHighlight:
             guard let callback = self.on.shouldHighlight else {
