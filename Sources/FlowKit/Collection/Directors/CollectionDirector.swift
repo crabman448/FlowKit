@@ -391,7 +391,7 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
     }
     
     //MARK: DataSource: Reordering Items
-
+    
     //    TODO
     //
     //    public func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {}
@@ -474,9 +474,8 @@ open class CollectionDirector: NSObject, UICollectionViewDataSource, UICollectio
     }
     
     public func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        self.adapters.forEach {
-            ($0.value as! ICollectionAdapterInternal).dispatch(.endDisplay, context: InternalContext.init(nil, indexPath, cell, collectionView))
-        }
+        let (model, adapter) = self.context(forItemAt: indexPath)
+        adapter.dispatch(.endDisplay, context: InternalContext.init(model, indexPath, cell, collectionView))
     }
     
     public func collectionView(_ collectionView: UICollectionView, didEndDisplayingSupplementaryView view: UICollectionReusableView, forElementOfKind elementKind: String, at indexPath: IndexPath) {
