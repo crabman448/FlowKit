@@ -148,16 +148,16 @@ open class CollectionAdapter<M: ModelProtocol, C: UICollectionViewCell>: ICollec
             return callback(Context<M,C>(generic: context))
             
         case .willDisplay:
-            guard let callback = self.on.willDisplay else {
+            guard let callback = self.on.willDisplay, let cell = context.cell as? C, let path = context.path else {
                 return nil
             }
-            callback((context.cell as! C), context.path!)
+            callback(cell, path)
             
         case .endDisplay:
-            guard let callback = self.on.endDisplay else {
+            guard let callback = self.on.endDisplay, let cell = context.cell as? C, let path = context.path else {
                 return nil
             }
-            callback((context.cell as! C), context.path!)
+            callback(cell, path)
             
         case .shouldShowEditMenu:
             guard let callback = self.on.shouldShowEditMenu else {
@@ -172,10 +172,10 @@ open class CollectionAdapter<M: ModelProtocol, C: UICollectionViewCell>: ICollec
             return callback(Context<M,C>(generic: context))
             
         case .performEditAction:
-            guard let callback = self.on.performEditAction else {
+            guard let callback = self.on.performEditAction, let selector = context.param1 as? Selector else {
                 return nil
             }
-            return callback(Context<M,C>(generic: context), (context.param1 as! Selector), context.param2)
+            return callback(Context<M,C>(generic: context), selector, context.param2)
             
         case .canFocus:
             guard let callback = self.on.canFocus else {
@@ -202,16 +202,26 @@ open class CollectionAdapter<M: ModelProtocol, C: UICollectionViewCell>: ICollec
          return callback(Context<M,C>(generic: context))
          */
         case .prefetch:
-            guard let callback = self.on.prefetch else {
+            guard
+                let callback = self.on.prefetch,
+                let models = context.models as? [M],
+                let paths = context.paths,
+                let container = context.container as? UICollectionView
+            else {
                 return nil
             }
-            callback((context.models as! [M]), context.paths!, (context.container as! UICollectionView))
+            callback(models, paths, container)
             
         case .cancelPrefetch:
-            guard let callback = self.on.cancelPrefetch else {
+            guard
+                let callback = self.on.cancelPrefetch,
+                let models = context.models as? [M],
+                let paths = context.paths,
+                let container = context.container as? UICollectionView
+            else {
                 return nil
             }
-            callback((context.models as! [M]), context.paths!, (context.container as! UICollectionView))
+            callback(models, paths, container)
             
         case .shouldSpringLoad:
             guard let callback = self.on.shouldSpringLoad else {
