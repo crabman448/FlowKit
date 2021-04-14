@@ -632,9 +632,8 @@ public class TableDirector: NSObject, UITableViewDelegate, UITableViewDataSource
 	}
 	
 	public func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-		self.adapters.forEach {
-			($0.value as! ITableAdapterInternal).dispatch(.endDisplay, context: InternalContext(nil, indexPath, cell, tableView))
-		}
+        let (model, adapter) = self.context(forItemAt: indexPath)
+        adapter.dispatch(.endDisplay, context: InternalContext.init(model, indexPath, cell, tableView))
 	}
 	
 	public func tableView(_ tableView: UITableView, shouldShowMenuForRowAt indexPath: IndexPath) -> Bool {
