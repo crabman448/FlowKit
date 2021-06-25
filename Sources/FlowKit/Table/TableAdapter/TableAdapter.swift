@@ -99,9 +99,10 @@ open class TableAdapter<M: ModelProtocol, C: UITableViewCell>: ITableAdapter, IT
         return C.self
     }
     
-    /// Return true if you want to allocate the cell via class name using classic
-    /// `initWithFrame`/`initWithCoder`. If your cell UI is defined inside a nib file
-    /// or inside a storyboard you must return `false`.
+    /**
+     Return true if you want to allocate the view via class name using classic `initWithFrame`/`initWithCoder`.
+     If your view UI is defined inside a nib file or inside a storyboard you must return `false`.
+     */
     open var registerAsClass: Bool {
         return false
     }

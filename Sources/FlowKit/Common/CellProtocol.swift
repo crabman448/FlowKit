@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol CellProtocol: class {
+protocol CellProtocol: AnyObject {
     static var reuseIdentifier: String { get }
 }
 

@@ -46,7 +46,14 @@ open class CollectionSectionView<T: HeaderFooterProtocol>: ICollectionSectionVie
 	// Protocol default implementation
 	public var viewClass: AnyClass { return T.self }
 	public var reuseIdentifier: String { return T.reuseIdentifier }
-	public var registerAsClass: Bool { return T.registerAsClass }
+
+    /**
+     Return true if you want to allocate the view via class name using classic `initWithFrame`/`initWithCoder`.
+     If your view UI is defined inside a nib file or inside a storyboard you must return `false`.
+     */
+    open var registerAsClass: Bool {
+        return false
+    }
 	
 	public weak var section: CollectionSection? = nil
 
